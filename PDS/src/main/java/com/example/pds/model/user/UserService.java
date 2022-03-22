@@ -4,9 +4,15 @@ import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -17,6 +23,8 @@ public class UserService {
     private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     public UserSimpleResponseDTO register(RegisterDTO registerDTO) {
         String firstName = registerDTO.getFirstName();
@@ -84,5 +92,36 @@ public class UserService {
         return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
+    public void forgottenPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("Wrong email");
+        }
+        String token = createToken();
+        user.setPassword(passwordEncoder.encode(token));
+        userRepository.save(user);
 
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("pdsamadeus@abv.bg");
+        message.setTo(email);
+        message.setSubject("Reset password token");
+        message.setText(token);
+        javaMailSender.send(message);
+    }
+
+    private String createToken(){
+        String token = null;
+        Random random = new Random();
+        int chance = random.nextInt();
+        int finalNumber = 0;
+        for (int i = 0; i <10 ; i++) {
+            chance = random.nextInt(100)+25;
+            finalNumber +=chance*i*(10000);
+        }
+         token = finalNumber+"";
+        return token;
+
+    }
 }
+
+
