@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @RestController
 public class UserController {
     @Autowired
@@ -27,9 +30,20 @@ public class UserController {
     }
     @PostMapping("users/login")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody User user, HttpRequest request){
+    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody User user, HttpServletRequest request){
         UserSimpleResponseDTO dto = userService.login(user);
+        HttpSession session = request.getSession();
+        session.setAttribute("LOGGED",true);
+        return ResponseEntity.status(200).body(dto);
     }
+
+    @PostMapping("users/logout")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String logOut(HttpSession session){
+        session.invalidate();
+        return "Have a nice day";
+    }
+
 
 
 

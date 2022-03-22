@@ -1,6 +1,7 @@
 package com.example.pds.model.user;
 
 import com.example.pds.util.exceptions.BadRequestException;
+import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,14 +43,14 @@ public class UserService {
             throw new BadRequestException("Password must be at least 8 symbols");
         }
         String confirmPassword = registerDTO.getConfirmPassword();
-        if (!confirmPassword.equals(password)){
+        if (!confirmPassword.equals(password)) {
             throw new BadRequestException("Confirm password should match password");
         }
         String email = registerDTO.getEmail();
-        if (!email.matches("^(.+)@(.+)$")){
-            throw  new BadRequestException("invalid email address");
+        if (!email.matches("^(.+)@(.+)$")) {
+            throw new BadRequestException("invalid email address");
         }
-        if (userRepository.findByEmail(email)!=null){
+        if (userRepository.findByEmail(email) != null) {
             throw new BadRequestException("Email already exists");
         }
         User user = new User();
@@ -63,9 +64,24 @@ public class UserService {
         return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
-    public UserSimpleResponseDTO login(User u){
+    public UserSimpleResponseDTO login(User u) {
         String username = u.getUsername();
-        if ()
+        if (username.trim().length() < 5) {
+            throw new BadRequestException("Username should be at least 5 symbols");
+        }
+        String password = u.getPassword();
+        if (password.length() < 8) {
+            throw new BadRequestException("Password must be at least 8 symbols");
+        }
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new NotFoundException("No username found");
+        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadRequestException("Wrong credentials");
+        }
+
+        return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
 

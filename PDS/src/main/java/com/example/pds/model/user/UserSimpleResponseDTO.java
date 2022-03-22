@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserSimpleResponseDTO {
+    private int id;
     private String username;
     private String firstName;
     private String lastName;
