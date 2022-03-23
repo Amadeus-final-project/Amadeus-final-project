@@ -10,7 +10,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.Random;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -23,42 +26,39 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    private Validator validator;
 
     public UserSimpleResponseDTO register(RegisterDTO registerDTO) {
-        String firstName = registerDTO.getFirstName();
-        if (firstName.isBlank()) {
-            throw new BadRequestException("First name is mandatory");
-        } else if (!firstName.matches("^[A-Za-zА-Яа-я]+")) {
-            throw new BadRequestException("Last name should be only letters");
-        }
-        String lastName = registerDTO.getLastName();
-        if (lastName.isBlank()) {
 
-            throw new BadRequestException("Last name is mandatory");
-        } else if (!lastName.matches("^[A-Za-zА-Яа-я]+")) {
-            throw new BadRequestException("Last name should be only letters");
+        Set<ConstraintViolation<RegisterDTO>> violations = validator.validate(registerDTO);
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<RegisterDTO> violation : violations) {
+                throw new BadRequestException(violation.getMessage());
+            }
         }
+
+        String firstName = registerDTO.getFirstName();
+        String lastName = registerDTO.getLastName();
         String username = registerDTO.getUsername();
-        if (username.trim().length() < 5) {
-            throw new BadRequestException("Username should be at least 5 symbols");
-        } else if (userRepository.findByUsername(registerDTO.getUsername()) != null) {
-            throw new BadRequestException("Username already exists ");
-        }
-        String password = registerDTO.getPassword();
-        if (password.length() < 8) {
-            throw new BadRequestException("Password must be at least 8 symbols");
-        }
-        String confirmPassword = registerDTO.getConfirmPassword();
-        if (!confirmPassword.equals(password)) {
-            throw new BadRequestException("Confirm password should match password");
-        }
         String email = registerDTO.getEmail();
-        if (!email.matches("^(.+)@(.+)$")) {
-            throw new BadRequestException("invalid email address");
+        String password = registerDTO.getPassword();
+        String confirmPassword = registerDTO.getConfirmPassword();
+
+        if (userRepository.findByUsername(username) != null) {
+            throw new BadRequestException("Username already exists");
         }
+
+        if (!confirmPassword.equals(password)) {
+            throw new BadRequestException("Passwords don't match");
+        }
+
         if (userRepository.findByEmail(email) != null) {
             throw new BadRequestException("Email already exists");
         }
+
+
         User user = new User();
         user.setEmail(email);
         user.setFirstName(firstName);
@@ -70,20 +70,21 @@ public class UserService {
         return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
-    public UserSimpleResponseDTO login(User u) {
-        String username = u.getUsername();
-        if (username.trim().length() < 5) {
-            throw new BadRequestException("Username should be at least 5 symbols");
+    public UserSimpleResponseDTO login(LoginDTO loginDTO) {
+
+        Set<ConstraintViolation<LoginDTO>> violations = validator.validate(loginDTO);
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<LoginDTO> violation : violations) {
+                throw new BadRequestException(violation.getMessage());
+            }
         }
-        String password = u.getPassword();
-        if (password.length() < 8) {
-            throw new BadRequestException("Password must be at least 8 symbols");
-        }
-        User user = userRepository.findByUsername(username);
+
+        User user = userRepository.findByUsername(loginDTO.getUsername());
         if (user == null) {
             throw new NotFoundException("No username found");
         }
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new BadRequestException("Wrong credentials");
         }
 
@@ -107,9 +108,9 @@ public class UserService {
         javaMailSender.send(message);
     }
 
-    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object isLogged, Object id) {
+    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object id) {
 
-        if (isLogged == null) {
+        if (id == null) {
             throw new UnauthorizedException("You must Login first");
         }
         User user = userRepository.getById((int) id);
@@ -132,9 +133,19 @@ public class UserService {
     }
 
     public UserComplexResponseDTO editProfile(Object id, UserProfileChangeDTO userComplexResponseDTO) {
+
         if (id == null) {
             throw new BadRequestException("You must login first");
         }
+
+        Set<ConstraintViolation<UserProfileChangeDTO>> violations = validator.validate(userComplexResponseDTO);
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<UserProfileChangeDTO> violation : violations) {
+                throw new BadRequestException(violation.getMessage());
+            }
+        }
+
         User user = userRepository.getById((int) id);
         if (!user.getFirstName().equals(userComplexResponseDTO.getFirstName())) {
             user.setFirstName(userComplexResponseDTO.getFirstName());
@@ -143,7 +154,12 @@ public class UserService {
             user.setLastName(userComplexResponseDTO.getLastName());
         }
         if (!user.getEmail().equals(userComplexResponseDTO.getEmail())) {
-            user.setEmail(userComplexResponseDTO.getEmail());
+            String email = userComplexResponseDTO.getEmail();
+
+            if (userRepository.findByEmail(email) != null) {
+                throw new BadRequestException("Email already exists");
+            }
+            user.setEmail(email);
         }
         if (user.getPhoneNumber() == null) {
             user.setPhoneNumber(userComplexResponseDTO.getPhoneNumber());

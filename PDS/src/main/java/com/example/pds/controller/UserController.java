@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping("users/login")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody User user, HttpServletRequest request) {
+    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
         UserSimpleResponseDTO dto = userService.login(user);
         HttpSession session = request.getSession();
         session.setAttribute(LOGGED, true);
@@ -53,9 +53,8 @@ public class UserController {
     @PutMapping("users/changePassword")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserSimpleResponseDTO> changePassword(@RequestBody UserChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
-        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
         Object id = request.getSession().getAttribute(Constants.USER_ID);
-        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, isLogged, id);
+        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, id);
         return ResponseEntity.status(200).body(dto);
 
     }
