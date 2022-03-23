@@ -1,6 +1,5 @@
 package com.example.pds.model.user;
 
-import com.example.pds.util.Constants;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
@@ -10,11 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
-import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 @Service
@@ -112,40 +107,66 @@ public class UserService {
         javaMailSender.send(message);
     }
 
-    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object isLogged, Object id){
+    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object isLogged, Object id) {
 
-        if (isLogged==null){
+        if (isLogged == null) {
             throw new UnauthorizedException("You must Login first");
         }
-        User user = userRepository.getById((int)id);
+        User user = userRepository.getById((int) id);
         String oldPass = userChangePasswordDTO.getOldPass();
         String newPass = userChangePasswordDTO.getNewPass();
         String confirmPass = userChangePasswordDTO.getConfirmPass();
 
-        if (!passwordEncoder.matches(oldPass, user.getPassword())){
+        if (!passwordEncoder.matches(oldPass, user.getPassword())) {
             throw new BadRequestException("Password incorrect");
         }
-        if (newPass.length()<8){
+        if (newPass.length() < 8) {
             throw new BadRequestException("Length must be at least 8 symbols");
         }
-        if (!newPass.equals(confirmPass)){
-            throw  new BadRequestException("Passwords don't match");
+        if (!newPass.equals(confirmPass)) {
+            throw new BadRequestException("Passwords don't match");
         }
         user.setPassword(passwordEncoder.encode(newPass));
         userRepository.save(user);
         return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
-    private String createToken(){
+    public UserComplexResponseDTO editProfile(Object id, UserProfileChangeDTO userComplexResponseDTO) {
+        if (id == null) {
+            throw new BadRequestException("You must login first");
+        }
+        User user = userRepository.getById((int) id);
+        if (!user.getFirstName().equals(userComplexResponseDTO.getFirstName())) {
+            user.setFirstName(userComplexResponseDTO.getFirstName());
+        }
+        if (!user.getLastName().equals(userComplexResponseDTO.getLastName())) {
+            user.setLastName(userComplexResponseDTO.getLastName());
+        }
+        if (!user.getEmail().equals(userComplexResponseDTO.getEmail())) {
+            user.setEmail(userComplexResponseDTO.getEmail());
+        }
+        if (user.getPhoneNumber() == null) {
+            user.setPhoneNumber(userComplexResponseDTO.getPhoneNumber());
+        }
+        if (!user.getPhoneNumber().equals(userComplexResponseDTO.getPhoneNumber())) {
+            user.setPhoneNumber(userComplexResponseDTO.getPhoneNumber());
+        }
+        user.setPhoneNumber(userComplexResponseDTO.getPhoneNumber());
+
+        userRepository.save(user);
+        return modelMapper.map(user, UserComplexResponseDTO.class);
+    }
+
+    private String createToken() {
         String token = null;
         Random random = new Random();
         int chance = random.nextInt();
         int finalNumber = 0;
-        for (int i = 0; i <10 ; i++) {
-            chance = random.nextInt(100)+25;
-            finalNumber +=chance*i*(10000);
+        for (int i = 0; i < 10; i++) {
+            chance = random.nextInt(100) + 25;
+            finalNumber += chance * i * (10000);
         }
-         token = finalNumber+"";
+        token = finalNumber + "";
         return token;
     }
 }

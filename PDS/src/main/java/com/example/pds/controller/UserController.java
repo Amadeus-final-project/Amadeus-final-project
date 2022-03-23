@@ -3,7 +3,6 @@ package com.example.pds.controller;
 import com.example.pds.model.user.*;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +58,14 @@ public class UserController {
         UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, isLogged, id);
         return ResponseEntity.status(200).body(dto);
 
+    }
+
+    @PutMapping("users/edit")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<UserComplexResponseDTO> editProfile(@RequestBody UserProfileChangeDTO user, HttpServletRequest request) {
+        Object id = request.getSession().getAttribute(Constants.USER_ID);
+        UserComplexResponseDTO dto = userService.editProfile(id, user);
+        return ResponseEntity.status(200).body(dto);
     }
 
 
