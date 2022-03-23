@@ -1,7 +1,9 @@
 package com.example.pds.model.user;
 
+import com.example.pds.util.Constants;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
+import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
@@ -109,6 +112,30 @@ public class UserService {
         javaMailSender.send(message);
     }
 
+    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object isLogged, Object id){
+
+        if (isLogged==null){
+            throw new UnauthorizedException("You must Login first");
+        }
+        User user = userRepository.getById((int)id);
+        String oldPass = userChangePasswordDTO.getOldPass();
+        String newPass = userChangePasswordDTO.getNewPass();
+        String confirmPass = userChangePasswordDTO.getConfirmPass();
+
+        if (!passwordEncoder.matches(oldPass, user.getPassword())){
+            throw new BadRequestException("Password incorrect");
+        }
+        if (newPass.length()<8){
+            throw new BadRequestException("Length must be at least 8 symbols");
+        }
+        if (!newPass.equals(confirmPass)){
+            throw  new BadRequestException("Passwords don't match");
+        }
+        user.setPassword(passwordEncoder.encode(newPass));
+        userRepository.save(user);
+        return modelMapper.map(user, UserSimpleResponseDTO.class);
+    }
+
     private String createToken(){
         String token = null;
         Random random = new Random();
@@ -120,7 +147,6 @@ public class UserService {
         }
          token = finalNumber+"";
         return token;
-
     }
 }
 

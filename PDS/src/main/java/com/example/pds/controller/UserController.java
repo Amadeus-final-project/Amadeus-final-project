@@ -1,9 +1,7 @@
 package com.example.pds.controller;
 
-import com.example.pds.model.user.RegisterDTO;
-import com.example.pds.model.user.User;
-import com.example.pds.model.user.UserService;
-import com.example.pds.model.user.UserSimpleResponseDTO;
+import com.example.pds.model.user.*;
+import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -15,47 +13,53 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 public class UserController {
+    public static final String LOGGED = "LOGGED";
+
+
     @Autowired
     private UserService userService;
 
 
     @PostMapping("users/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<UserSimpleResponseDTO> register(@RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<UserSimpleResponseDTO> register(@RequestBody RegisterDTO registerDTO) {
         UserSimpleResponseDTO dto = userService.register(registerDTO);
         return ResponseEntity.status(201).body(dto);
     }
+
     @PostMapping("users/login")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody User user, HttpServletRequest request){
+    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody User user, HttpServletRequest request) {
         UserSimpleResponseDTO dto = userService.login(user);
         HttpSession session = request.getSession();
-        session.setAttribute("LOGGED",true);
+        session.setAttribute(LOGGED, true);
+        session.setAttribute(Constants.USER_ID, dto.getId());
         return ResponseEntity.status(200).body(dto);
     }
 
     @PostMapping("users/logout")
     @ResponseStatus(code = HttpStatus.OK)
-    public String logOut(HttpSession session){
+    public String logOut(HttpSession session) {
         session.invalidate();
         return "Have a nice day";
     }
 
     @PutMapping("users/forgottenPassword")
-
-    public String forgottenPassword(@RequestParam String email){
+    @ResponseStatus(code = HttpStatus.OK)
+    public String forgottenPassword(@RequestParam String email) {
         userService.forgottenPassword(email);
         return "New password token is sent to email";
     }
 
+    @PutMapping("users/changePassword")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<UserSimpleResponseDTO> changePassword(@RequestBody UserChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
+        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
+        Object id = request.getSession().getAttribute(Constants.USER_ID);
+        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, isLogged, id);
+        return ResponseEntity.status(200).body(dto);
 
-
-
-
-
-
-
-
+    }
 
 
 }
