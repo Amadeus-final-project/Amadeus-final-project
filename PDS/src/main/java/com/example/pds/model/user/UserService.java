@@ -1,5 +1,6 @@
 package com.example.pds.model.user;
 
+import com.example.pds.model.user.userDTO.*;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;

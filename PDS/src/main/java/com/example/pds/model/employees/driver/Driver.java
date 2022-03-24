@@ -1,6 +1,9 @@
 package com.example.pds.model.employees.driver;
 
 import com.example.pds.model.address.Address;
+import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
+import com.example.pds.model.offices.Office;
+import com.example.pds.model.vehicle.Vehicle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,11 +15,21 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Driver extends BaseEmployee{
-   // @OneToOne
-    //@JoinColumn(name = "vehicle_id", referencedColumnName = "id")
-   // private Vehicle vehicle;
+public class Driver {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column
+    private String email;
+    @Column
+    private String password;
+    @ManyToOne
+    @JoinColumn(name = "last_checked_in", referencedColumnName = "id")
+    private Office lastCheckedIn;
     @OneToOne
-    @JoinColumn(name="last_checked_in_office_id", referencedColumnName = "id")
-    private Address address;
+    @JoinColumn(name = "employee_info_id", referencedColumnName = "id")
+    private EmployeeInfo employeeInfo;
+    @OneToOne
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
+    private Vehicle vehicle;
 }

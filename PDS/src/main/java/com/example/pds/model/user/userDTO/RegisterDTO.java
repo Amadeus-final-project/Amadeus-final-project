@@ -1,4 +1,4 @@
-package com.example.pds.model.user;
+package com.example.pds.model.user.userDTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
