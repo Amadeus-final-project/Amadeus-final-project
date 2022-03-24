@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 public class UserController {
-    public static final String LOGGED = "LOGGED";
 
 
     @Autowired
@@ -32,7 +31,8 @@ public class UserController {
     public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
         UserSimpleResponseDTO dto = userService.login(user);
         HttpSession session = request.getSession();
-        session.setAttribute(LOGGED, true);
+        session.setAttribute(Constants.IS_USER,true);
+        session.setAttribute(Constants.LOGGED, true);
         session.setAttribute(Constants.USER_ID, dto.getId());
         return ResponseEntity.status(200).body(dto);
     }
@@ -55,7 +55,8 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserSimpleResponseDTO> changePassword(@RequestBody UserChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
-        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, id);
+        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
+        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, id, isUser);
         return ResponseEntity.status(200).body(dto);
 
     }
@@ -64,7 +65,8 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserComplexResponseDTO> editProfile(@RequestBody UserProfileChangeDTO user, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
-        UserComplexResponseDTO dto = userService.editProfile(id, user);
+        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
+        UserComplexResponseDTO dto = userService.editProfile(id, user, isUser);
         return ResponseEntity.status(200).body(dto);
     }
 

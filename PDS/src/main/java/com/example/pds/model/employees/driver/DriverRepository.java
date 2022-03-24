@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface DriverRepository extends JpaRepository<Driver,Integer> {
 
     Driver findByEmail(String email);
+    Driver findById(int id);
 }

@@ -11,15 +11,16 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@Table(name = "vehicles")
 @Entity
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    private boolean isAvailable;
+    private Boolean isAvailable;
     @Column
-    private double capacity;
+    private Double capacity;
     @ManyToOne
     @JoinColumn(name = "range_id", referencedColumnName = "id")
     private Range range;
@@ -27,7 +28,7 @@ public class Vehicle {
     @JoinColumn(name = "brand_id", referencedColumnName = "id")
     private Brand brand;
     @Column
-    private String year;
+    private Integer year;
     @Column
     private String fuelType;
 }

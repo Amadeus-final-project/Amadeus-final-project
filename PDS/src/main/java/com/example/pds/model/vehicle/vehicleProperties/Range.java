@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Setter
+@Table(name = "ranges")
 @Getter
 public class Range {
     @Id

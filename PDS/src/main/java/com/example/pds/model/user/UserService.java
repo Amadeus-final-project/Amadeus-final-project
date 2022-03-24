@@ -109,10 +109,13 @@ public class UserService {
         javaMailSender.send(message);
     }
 
-    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object id) {
+    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object id, Object isUser) {
 
         if (id == null) {
             throw new UnauthorizedException("You must Login first");
+        }
+        if (isUser==null){
+            throw new BadRequestException("You are not a user");
         }
         User user = userRepository.getById((int) id);
         String oldPass = userChangePasswordDTO.getOldPass();
@@ -133,10 +136,13 @@ public class UserService {
         return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
-    public UserComplexResponseDTO editProfile(Object id, UserProfileChangeDTO userComplexResponseDTO) {
+    public UserComplexResponseDTO editProfile(Object id, UserProfileChangeDTO userComplexResponseDTO, Object isUser) {
 
         if (id == null) {
             throw new BadRequestException("You must login first");
+        }
+        if (isUser==null){
+            throw new BadRequestException("You are not a user");
         }
 
         Set<ConstraintViolation<UserProfileChangeDTO>> violations = validator.validate(userComplexResponseDTO);
