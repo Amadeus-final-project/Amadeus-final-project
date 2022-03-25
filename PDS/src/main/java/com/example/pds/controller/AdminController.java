@@ -3,6 +3,9 @@ package com.example.pds.controller;
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.admin.AdminService;
+import com.example.pds.model.employees.agents.agentDTO.AgentRegisterDTO;
+import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
+import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.vehicle.VehicleComplexDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,4 +47,38 @@ public class AdminController {
         session.setAttribute(Constants.IS_ADMIN,true);
         return dto;
     }
+
+    @PostMapping("admin/addDriver")
+    @ResponseStatus(code = HttpStatus.OK)
+    public EmployeeSimpleResponseDTO addDriver(@RequestBody DriverRegisterDTO driverRegisterDTO, HttpServletRequest request){
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        EmployeeSimpleResponseDTO dto = adminService.addDriver(isAdmin, driverRegisterDTO);
+        return dto;
+    }
+
+    @PostMapping("admin/addAgent")
+    @ResponseStatus(code = HttpStatus.OK)
+    public EmployeeSimpleResponseDTO addAgent(@RequestBody AgentRegisterDTO agentRegisterDTO, HttpServletRequest request){
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        EmployeeSimpleResponseDTO dto = adminService.addAgent(isAdmin, agentRegisterDTO);
+        return dto;
+    }
+
+    @DeleteMapping(value = "admin/driver/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String deleteDriverByID(@PathVariable int id, HttpServletRequest request){
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        adminService.removeDriver(id,isAdmin);
+        return "Success";
+    }
+
+    @DeleteMapping("admin/agent/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String deleteAgentByID(@PathVariable int id, HttpServletRequest request){
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        adminService.removeAgent(id,isAdmin);
+        return "Success";
+    }
+
+
 }

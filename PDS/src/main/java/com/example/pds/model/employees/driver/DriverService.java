@@ -2,8 +2,10 @@ package com.example.pds.model.employees.driver;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
+import com.example.pds.model.employees.agents.Agent;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
+import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeRepository;
 import com.example.pds.model.user.User;
 import com.example.pds.model.user.UserRepository;
@@ -135,7 +137,43 @@ public class DriverService {
         return modelMapper.map(driver,DriverSimpleResponseDTO.class);
     }
 
-   // public void requestPaidLeave(Date start, Date end, String description, Object isLogged, Object isUser) {
+    public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isDriver) {
+        if (id == null) {
+            throw new BadRequestException("You must login first");
+        }
+        if (isDriver == null) {
+            throw new BadRequestException("You are not a driver");
+        }
+
+        Set<ConstraintViolation<EmployeeProfileChangeDTO>> violations = validator.validate(employeeProfileChangeDTO);
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<EmployeeProfileChangeDTO> violation : violations) {
+                throw new BadRequestException(violation.getMessage());
+            }
+        }
+        Driver driver = driverRepository.getById((int) id);
+        if (!driver.getEmployeeInfo().getFirstName().equals(employeeProfileChangeDTO.getFirstName())) {
+            driver.getEmployeeInfo().setFirstName(employeeProfileChangeDTO.getFirstName());
+        }
+        if (!driver.getEmployeeInfo().getLastName().equals(employeeProfileChangeDTO.getLastName())) {
+            driver.getEmployeeInfo().setLastName(employeeProfileChangeDTO.getLastName());
+        }
+
+        if (driver.getEmployeeInfo().getPhoneNumber() == null) {
+            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
+        }
+        if (!driver.getEmployeeInfo().getPhoneNumber().equals(employeeProfileChangeDTO.getPhoneNumber())) {
+            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
+        }
+        driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
+
+        driverRepository.save(driver);
+        return modelMapper.map(driver.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
+    }
+    }
+
+    // public void requestPaidLeave(Date start, Date end, String description, Object isLogged, Object isUser) {
      //TODO
    // }
-}
+

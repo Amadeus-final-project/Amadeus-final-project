@@ -5,6 +5,7 @@ import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.driver.Driver;
 import com.example.pds.model.employees.driver.DriverService;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
 import com.example.pds.model.user.userDTO.LoginDTO;
 import com.example.pds.model.user.userDTO.UserSimpleResponseDTO;
 import com.example.pds.model.vehicle.Vehicle;
@@ -88,6 +89,16 @@ public class DriverController {
         //TODO
       //  driverService.requestPaidLeave(start, end, description, isLogged, isUser);
         return null;
+    }
+
+
+    @PutMapping("driver/edit")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<EmployeeSimpleResponseDTO> editProfile(@RequestBody EmployeeProfileChangeDTO employeeProfileChangeDTO, HttpServletRequest request) {
+        Object id = request.getSession().getAttribute(Constants.USER_ID);
+        Object isDriver = request.getSession().getAttribute(Constants.IS_DRIVER);
+        EmployeeSimpleResponseDTO dto = driverService.editProfile(id, employeeProfileChangeDTO, isDriver);
+        return ResponseEntity.status(200).body(dto);
     }
 
 

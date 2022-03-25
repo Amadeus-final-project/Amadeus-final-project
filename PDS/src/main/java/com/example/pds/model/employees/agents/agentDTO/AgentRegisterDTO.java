@@ -1,16 +1,18 @@
-package com.example.pds.model.employees;
+package com.example.pds.model.employees.agents.agentDTO;
+
 
 import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
-public class EmployeeSimpleResponseDTO {
+public class AgentRegisterDTO {
+
     private int id;
+    private String email;
+    private String password;
     private EmployeeInfo employeeInfo;
 }
