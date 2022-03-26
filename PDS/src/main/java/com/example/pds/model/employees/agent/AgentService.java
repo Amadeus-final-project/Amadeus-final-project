@@ -6,6 +6,10 @@ import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeRepository;
+import com.example.pds.model.packages.Package;
+import com.example.pds.model.packages.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.PackageRepository;
+import com.example.pds.model.packages.Status;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -26,6 +32,8 @@ public class AgentService {
     ModelMapper modelMapper;
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    PackageRepository packageRepository;
 
 
     public EmployeeSimpleResponseDTO login(EmployeeLoginDTO login) {
@@ -74,6 +82,16 @@ public class AgentService {
     }
 
 
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Object isAgent) {
+        CheckAuthentications.checkIfAgent(isAgent);
+        List<PackageGetMyPackagesDTO> packageToReturn = new ArrayList<>();
+        List<Package> packages = packageRepository.findAllByStatusId(1);
+        for (Package pack : packages) {
+            packageToReturn.add(modelMapper.map(pack,PackageGetMyPackagesDTO.class));
+
+        }
+        return packageToReturn;
+    }
 }
 
 

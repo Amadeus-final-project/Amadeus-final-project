@@ -13,4 +13,6 @@ public interface PackageRepository extends JpaRepository<Package, Integer> {
     Package findByRecipient(int id);
 
     Package findById(int id);
+
+    List<Package> findAllByStatusId(int id);
 }

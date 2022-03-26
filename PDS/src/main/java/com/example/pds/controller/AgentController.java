@@ -4,18 +4,17 @@ import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.agent.AgentService;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
+import com.example.pds.model.packages.PackageGetMyPackagesDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class AgentController {
@@ -42,5 +41,14 @@ public class AgentController {
         Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
         EmployeeSimpleResponseDTO dto = agentService.editProfile(id, employeeProfileChangeDTO, isAgent);
         return ResponseEntity.status(200).body(dto);
+    }
+
+    @GetMapping("agent/getPendingPackages")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request){
+        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
+        List<PackageGetMyPackagesDTO> dto = agentService.getAllPendingPackages(isAgent);
+        return dto;
+
     }
 }
