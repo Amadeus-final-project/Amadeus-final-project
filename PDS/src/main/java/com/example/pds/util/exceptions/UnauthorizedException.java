@@ -1,7 +1,7 @@
 package com.example.pds.util.exceptions;
 
-public class UnauthorizedException extends RuntimeException{
-    public UnauthorizedException(String msg){
+public class UnauthorizedException extends RuntimeException {
+    public UnauthorizedException(String msg) {
         super(msg);
     }
 }

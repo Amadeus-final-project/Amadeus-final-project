@@ -1,5 +1,7 @@
 package com.example.pds.model.employees.admin;
 
+import com.example.pds.config.CheckAuthentications;
+import com.example.pds.config.CheckViolations;
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.agent.Agent;
@@ -21,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.Set;
 
 @Service
 public class AdminService {
@@ -45,11 +45,9 @@ public class AdminService {
     private AgentRepository agentRepository;
 
 
-
     public void removeVehicle(int id, Object isAdmin) {
-        if (isAdmin == null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         if (vehicleRepository.findById(id) == null) {
             throw new NotFoundException("No vehicle found");
         }
@@ -67,13 +65,9 @@ public class AdminService {
     }
 
     public EmployeeSimpleResponseDTO loginAdmin(EmployeeLoginDTO login) {
-        Set<ConstraintViolation<EmployeeLoginDTO>> violations = validator.validate(login);
 
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<EmployeeLoginDTO> violation : violations) {
-                throw new BadRequestException(violation.getMessage());
-            }
-        }
+        CheckViolations.check(validator, login);
+
 
         Admin admin = adminRepository.findByEmail(login.getEmail());
         if (admin == null) {
@@ -87,9 +81,9 @@ public class AdminService {
     }
 
     public EmployeeSimpleResponseDTO addDriver(Object isAdmin, DriverRegisterDTO driverRegisterDTO) {
-        if (isAdmin == null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         if (driverRepository.findByEmail(driverRegisterDTO.getEmail()) != null) {
             throw new BadRequestException("Email already exists");
         }
@@ -109,9 +103,9 @@ public class AdminService {
 
 
     public EmployeeSimpleResponseDTO addAgent(Object isAdmin, AgentRegisterDTO agentRegisterDTO) {
-        if (isAdmin == null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         if (agentRepository.findByEmail(agentRegisterDTO.getEmail()) != null) {
             throw new BadRequestException("Email already exists");
         }
@@ -130,9 +124,9 @@ public class AdminService {
     }
 
     public void removeDriver(int id, Object isAdmin) {
-        if (isAdmin == null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         if (driverRepository.findById(id) == null) {
             throw new NotFoundException("No such driver");
         }
@@ -143,9 +137,9 @@ public class AdminService {
     }
 
     public void removeAgent(int id, Object isAdmin) {
-        if (isAdmin == null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         if (agentRepository.findById(id) == null) {
             throw new NotFoundException("No such agent");
         }

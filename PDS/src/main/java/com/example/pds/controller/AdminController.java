@@ -21,15 +21,15 @@ public class AdminController {
 
     @DeleteMapping("admin/vehicle{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public String deleteVehicleByID(@PathVariable int id, HttpServletRequest request){
+    public String deleteVehicleByID(@PathVariable int id, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-        adminService.removeVehicle(id,isAdmin);
+        adminService.removeVehicle(id, isAdmin);
         return "Success";
     }
 
     @PostMapping("admin/addVehicle")
     @ResponseStatus(code = HttpStatus.OK)
-    public VehicleComplexDTO addVehicle(@RequestBody VehicleComplexDTO vehicleComplexDTO, HttpServletRequest request){
+    public VehicleComplexDTO addVehicle(@RequestBody VehicleComplexDTO vehicleComplexDTO, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
         VehicleComplexDTO dto = adminService.addVehicle(isAdmin, vehicleComplexDTO);
         return dto;
@@ -37,18 +37,18 @@ public class AdminController {
 
     @PostMapping("admin/login")
     @ResponseStatus(code = HttpStatus.OK)
-    public EmployeeSimpleResponseDTO adminLogin(@RequestBody EmployeeLoginDTO employeeLoginDTO, HttpServletRequest request){
+    public EmployeeSimpleResponseDTO adminLogin(@RequestBody EmployeeLoginDTO employeeLoginDTO, HttpServletRequest request) {
         EmployeeSimpleResponseDTO dto = adminService.loginAdmin(employeeLoginDTO);
         HttpSession session = request.getSession();
         session.setAttribute(Constants.LOGGED, true);
         session.setAttribute(Constants.USER_ID, dto.getId());
-        session.setAttribute(Constants.IS_ADMIN,true);
+        session.setAttribute(Constants.IS_ADMIN, true);
         return dto;
     }
 
     @PostMapping("admin/addDriver")
     @ResponseStatus(code = HttpStatus.OK)
-    public EmployeeSimpleResponseDTO addDriver(@RequestBody DriverRegisterDTO driverRegisterDTO, HttpServletRequest request){
+    public EmployeeSimpleResponseDTO addDriver(@RequestBody DriverRegisterDTO driverRegisterDTO, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
         EmployeeSimpleResponseDTO dto = adminService.addDriver(isAdmin, driverRegisterDTO);
         return dto;
@@ -56,7 +56,7 @@ public class AdminController {
 
     @PostMapping("admin/addAgent")
     @ResponseStatus(code = HttpStatus.OK)
-    public EmployeeSimpleResponseDTO addAgent(@RequestBody AgentRegisterDTO agentRegisterDTO, HttpServletRequest request){
+    public EmployeeSimpleResponseDTO addAgent(@RequestBody AgentRegisterDTO agentRegisterDTO, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
         EmployeeSimpleResponseDTO dto = adminService.addAgent(isAdmin, agentRegisterDTO);
         return dto;
@@ -64,17 +64,17 @@ public class AdminController {
 
     @DeleteMapping(value = "admin/driver/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public String deleteDriverByID(@PathVariable int id, HttpServletRequest request){
+    public String deleteDriverByID(@PathVariable int id, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-        adminService.removeDriver(id,isAdmin);
+        adminService.removeDriver(id, isAdmin);
         return "Success";
     }
 
     @DeleteMapping("admin/agent/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public String deleteAgentByID(@PathVariable int id, HttpServletRequest request){
+    public String deleteAgentByID(@PathVariable int id, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-        adminService.removeAgent(id,isAdmin);
+        adminService.removeAgent(id, isAdmin);
         return "Success";
     }
 

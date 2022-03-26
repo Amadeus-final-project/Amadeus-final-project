@@ -1,7 +1,7 @@
 package com.example.pds.controller;
 
 import com.example.pds.model.packages.PackageGetMyPackagesDTO;
-import com.example.pds.model.packages.PackageSimpleResponseDTO;
+import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.user.*;
 import com.example.pds.model.user.userDTO.*;
 import com.example.pds.util.Constants;
@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
         UserSimpleResponseDTO dto = userService.login(user);
         HttpSession session = request.getSession();
-        session.setAttribute(Constants.IS_USER,true);
+        session.setAttribute(Constants.IS_USER, true);
         session.setAttribute(Constants.LOGGED, true);
         session.setAttribute(Constants.USER_ID, dto.getId());
         return ResponseEntity.status(200).body(dto);
@@ -72,22 +72,32 @@ public class UserController {
         UserComplexResponseDTO dto = userService.editProfile(id, user, isUser);
         return ResponseEntity.status(200).body(dto);
     }
+
     @GetMapping("users/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPackages(HttpServletRequest request){
+    public List<PackageGetMyPackagesDTO> getAllPackages(HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-       List <PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id , isUser);
-       return dtoList;
+        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id, isUser);
+        return dtoList;
     }
 
     @GetMapping("users/getPackageById/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id, HttpServletRequest request){
+    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id, HttpServletRequest request) {
         Object userId = request.getSession().getAttribute(Constants.USER_ID);
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
         PackageGetMyPackagesDTO dto = userService.getPackageBydId(id, userId, isUser);
         return dto;
+    }
+
+    @GetMapping("users/getAllTransactions")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request) {
+        Object id = request.getSession().getAttribute(Constants.USER_ID);
+        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
+        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id, isUser);
+        return transactions;
     }
 
 }

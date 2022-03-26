@@ -1,11 +1,8 @@
 package com.example.pds.model.vehicle;
 
-import com.example.pds.model.employees.driver.Driver;
-import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.config.CheckAuthentications;
 import com.example.pds.model.vehicle.vehicleProperties.VehicleComplexResponseDTO;
-import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
-import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,36 +17,29 @@ public class VehicleService {
     VehicleRepository vehicleRepository;
     @Autowired
     ModelMapper modelMapper;
-    public List<VehicleComplexResponseDTO> getAllVehicles(Object isUser, Object isLogged) {
-        if (isLogged==null){
-            throw new BadRequestException("You are not logged in");
 
-        }
-        if (isUser!=null){
-            System.out.println(isUser);
-            throw new UnauthorizedException("You are unauthorized");
-        }
+    public List<VehicleComplexResponseDTO> getAllVehicles(Object isUser, Object isLogged) {
+
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfUser(isUser);
+
         List<VehicleComplexResponseDTO> complexVehicle = new ArrayList<>();
-        List<Vehicle> vehicles=vehicleRepository.findAll();
+        List<Vehicle> vehicles = vehicleRepository.findAll();
         for (Vehicle vehicle : vehicles) {
-            complexVehicle.add(modelMapper.map(vehicle,VehicleComplexResponseDTO.class));
+            complexVehicle.add(modelMapper.map(vehicle, VehicleComplexResponseDTO.class));
         }
         return complexVehicle;
     }
 
     public VehicleComplexResponseDTO getVehicleById(int id, Object isUser, Object isLogged) {
-        if (isLogged==null){
-            throw new BadRequestException("You are not logged in");
 
-        }
-        if (isUser!=null){
-            System.out.println(isUser);
-            throw new UnauthorizedException("You are unauthorized");
-        }
-        if (vehicleRepository.findById(id)==null){
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfUser(isUser);
+
+        if (vehicleRepository.findById(id) == null) {
             throw new NotFoundException("Driver does not exist");
         }
         Vehicle vehicle = vehicleRepository.getById(id);
-        return modelMapper.map(vehicle,VehicleComplexResponseDTO.class);
+        return modelMapper.map(vehicle, VehicleComplexResponseDTO.class);
     }
 }

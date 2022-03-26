@@ -1,9 +1,13 @@
 package com.example.pds.model.user;
 
+import com.example.pds.config.CheckAuthentications;
+import com.example.pds.config.CheckViolations;
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.PackageGetMyPackagesDTO;
 import com.example.pds.model.packages.PackageRepository;
-import com.example.pds.model.packages.PackageSimpleResponseDTO;
+import com.example.pds.model.transaction.Transaction;
+import com.example.pds.model.transaction.TransactionRepository;
+import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.user.userDTO.*;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
@@ -15,12 +19,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
+
 import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
+
 
 @Service
 public class UserService {
@@ -37,16 +41,12 @@ public class UserService {
     private Validator validator;
     @Autowired
     private PackageRepository packageRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     public UserSimpleResponseDTO register(RegisterDTO registerDTO) {
 
-        Set<ConstraintViolation<RegisterDTO>> violations = validator.validate(registerDTO);
-
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<RegisterDTO> violation : violations) {
-                throw new BadRequestException(violation.getMessage());
-            }
-        }
+        CheckViolations.check(validator, registerDTO);
 
         String firstName = registerDTO.getFirstName();
         String lastName = registerDTO.getLastName();
@@ -81,15 +81,11 @@ public class UserService {
 
     public UserSimpleResponseDTO login(LoginDTO loginDTO) {
 
-        Set<ConstraintViolation<LoginDTO>> violations = validator.validate(loginDTO);
+        CheckViolations.check(validator, loginDTO);
 
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<LoginDTO> violation : violations) {
-                throw new BadRequestException(violation.getMessage());
-            }
-        }
 
         User user = userRepository.findByUsername(loginDTO.getUsername());
+
         if (user == null) {
             throw new NotFoundException("No username found");
         }
@@ -119,12 +115,9 @@ public class UserService {
 
     public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object id, Object isUser) {
 
-        if (id == null) {
-            throw new UnauthorizedException("You must Login first");
-        }
-        if (isUser==null){
-            throw new BadRequestException("You are not a user");
-        }
+        CheckAuthentications.checkIfLogged(id);
+        CheckAuthentications.checkIfUser(isUser);
+
         User user = userRepository.getById((int) id);
         String oldPass = userChangePasswordDTO.getOldPass();
         String newPass = userChangePasswordDTO.getNewPass();
@@ -146,20 +139,11 @@ public class UserService {
 
     public UserComplexResponseDTO editProfile(Object id, UserProfileChangeDTO userComplexResponseDTO, Object isUser) {
 
-        if (id == null) {
-            throw new BadRequestException("You must login first");
-        }
-        if (isUser==null){
-            throw new BadRequestException("You are not a user");
-        }
+        CheckAuthentications.checkIfLogged(id);
+        CheckAuthentications.checkIfUser(isUser);
 
-        Set<ConstraintViolation<UserProfileChangeDTO>> violations = validator.validate(userComplexResponseDTO);
+        CheckViolations.check(validator, userComplexResponseDTO);
 
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<UserProfileChangeDTO> violation : violations) {
-                throw new BadRequestException(violation.getMessage());
-            }
-        }
 
         User user = userRepository.getById((int) id);
         if (!user.getFirstName().equals(userComplexResponseDTO.getFirstName())) {
@@ -202,19 +186,17 @@ public class UserService {
     }
 
     public List<PackageGetMyPackagesDTO> getAllPackages(Object id, Object isUser) {
-        if (id == null) {
-            throw new BadRequestException("You must login first");
-        }
-        if (isUser==null){
-            throw new BadRequestException("You are not a user");
-        }
-        System.out.println(id);
-        User recipient = userRepository.findById((int)id);
+
+        CheckAuthentications.checkIfLogged(id);
+        CheckAuthentications.checkIfUser(isUser);
+
+        User recipient = userRepository.findById((int) id);
+
         List<Package> packages = packageRepository.findAllByRecipient(recipient);
 
         List<PackageGetMyPackagesDTO> packagesToReturn = new ArrayList<>();
         for (Package aPackage : packages) {
-            PackageGetMyPackagesDTO dto = modelMapper.map(aPackage,PackageGetMyPackagesDTO.class);
+            PackageGetMyPackagesDTO dto = modelMapper.map(aPackage, PackageGetMyPackagesDTO.class);
             packagesToReturn.add(dto);
         }
         return packagesToReturn;
@@ -224,19 +206,35 @@ public class UserService {
         if (userId == null) {
             throw new BadRequestException("You must login first");
         }
-        if (isUser==null){
+        if (isUser == null) {
             throw new BadRequestException("You are not a user");
         }
-        if (packageRepository.findById(id)==null){
+        if (packageRepository.findById(id) == null) {
             throw new NotFoundException("Package doesn't  exist");
         }
         Package pack = packageRepository.findById(id);
-        if ((int)userId!=pack.getRecipient().getId()){
+        if ((int) userId != pack.getRecipient().getId()) {
             throw new UnauthorizedException("Not your package");
         }
-        return modelMapper.map(pack,PackageGetMyPackagesDTO.class);
+        return modelMapper.map(pack, PackageGetMyPackagesDTO.class);
 
 
+    }
+
+    public List<TransactionResponseDTO> getAllTransactions(Object id, Object isUser) {
+
+        CheckAuthentications.checkIfLogged(id);
+        CheckAuthentications.checkIfUser(isUser);
+
+        User payer = userRepository.findById((int) id);
+        List<Transaction> packages = transactionRepository.findAllByPayer(payer);
+
+        List<TransactionResponseDTO> packagesToReturn = new ArrayList<>();
+        for (Transaction transaction : packages) {
+            TransactionResponseDTO dto = modelMapper.map(transaction, TransactionResponseDTO.class);
+            packagesToReturn.add(dto);
+        }
+        return packagesToReturn;
     }
 }
 

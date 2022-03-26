@@ -1,6 +1,5 @@
 package com.example.pds.controller;
 
-import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.vehicle.VehicleService;
 import com.example.pds.model.vehicle.vehicleProperties.VehicleComplexResponseDTO;
 import com.example.pds.util.Constants;
@@ -22,19 +21,19 @@ public class VehicleController {
 
     @GetMapping("vehicle/getAllVehicles")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<VehicleComplexResponseDTO> getAllDrivers(HttpServletRequest request){
+    public List<VehicleComplexResponseDTO> getAllDrivers(HttpServletRequest request) {
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
         Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        List<VehicleComplexResponseDTO> vehicles=vehicleService.getAllVehicles(isUser, isLogged);
+        List<VehicleComplexResponseDTO> vehicles = vehicleService.getAllVehicles(isUser, isLogged);
         return vehicles;
     }
 
     @GetMapping("vehicle/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public VehicleComplexResponseDTO getVehicle(@PathVariable int id, HttpServletRequest request){
+    public VehicleComplexResponseDTO getVehicle(@PathVariable int id, HttpServletRequest request) {
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
         Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        VehicleComplexResponseDTO vehicle = vehicleService.getVehicleById(id,isUser, isLogged);
+        VehicleComplexResponseDTO vehicle = vehicleService.getVehicleById(id, isUser, isLogged);
         return vehicle;
     }
 }

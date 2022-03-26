@@ -19,6 +19,6 @@ public class Office {
     @Column
     private String name;
     @OneToOne
-    @JoinColumn(name="address_id", referencedColumnName = "id")
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 }

@@ -1,10 +1,11 @@
 package com.example.pds.model.employees.agent;
 
+import com.example.pds.config.CheckAuthentications;
+import com.example.pds.config.CheckViolations;
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeRepository;
-import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,11 @@ public class AgentService {
 
 
     public EmployeeSimpleResponseDTO login(EmployeeLoginDTO login) {
-        Set<ConstraintViolation<EmployeeLoginDTO>> violations = validator.validate(login);
 
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<EmployeeLoginDTO> violation : violations) {
-                throw new BadRequestException(violation.getMessage());
-            }
-        }
+        CheckViolations.check(validator, login);
 
         Agent agent = agentRepository.findByEmail(login.getEmail());
+
         if (agent == null) {
             throw new NotFoundException("Agent not found");
         }
@@ -47,21 +44,16 @@ public class AgentService {
 
     public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isAgent) {
 
-        if (id == null) {
-            throw new BadRequestException("You must login first");
-        }
-        if (isAgent == null) {
-            throw new BadRequestException("You are not an agent");
-        }
+        CheckAuthentications.checkIfLogged(id);
+        CheckAuthentications.checkIfAgent(isAgent);
+
+        CheckViolations.check(validator, employeeProfileChangeDTO);
 
         Set<ConstraintViolation<EmployeeProfileChangeDTO>> violations = validator.validate(employeeProfileChangeDTO);
 
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<EmployeeProfileChangeDTO> violation : violations) {
-                throw new BadRequestException(violation.getMessage());
-            }
-        }
+
         Agent agent = agentRepository.getById((int) id);
+
         if (!agent.getEmployeeInfo().getFirstName().equals(employeeProfileChangeDTO.getFirstName())) {
             agent.getEmployeeInfo().setFirstName(employeeProfileChangeDTO.getFirstName());
         }

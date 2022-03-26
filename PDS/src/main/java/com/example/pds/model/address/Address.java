@@ -1,6 +1,5 @@
 package com.example.pds.model.address;
 
-import com.example.pds.model.packages.Package;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

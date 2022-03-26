@@ -1,6 +1,5 @@
 package com.example.pds.model.employees.driver;
 
-import com.example.pds.model.address.Address;
 import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.vehicle.Vehicle;

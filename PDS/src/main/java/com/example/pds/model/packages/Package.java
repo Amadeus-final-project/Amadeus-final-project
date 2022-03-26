@@ -11,8 +11,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "packages")
@@ -26,22 +24,22 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne
-    @JoinColumn(name="sender_id", referencedColumnName = "id" )
+    @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User sender;
     @ManyToOne
-    @JoinColumn(name="recipient_id", referencedColumnName = "id" )
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private User recipient;
     @ManyToOne
-    @JoinColumn(name="delivery_address_id", referencedColumnName = "id")
+    @JoinColumn(name = "delivery_address_id", referencedColumnName = "id")
     private Address address;
     @ManyToOne
-    @JoinColumn(name ="assigned_driver_id", referencedColumnName = "id")
+    @JoinColumn(name = "assigned_driver_id", referencedColumnName = "id")
     private Driver driver;
     @ManyToOne
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
     @ManyToOne
-    @JoinColumn(name ="current_location_office_id",referencedColumnName = "id")
+    @JoinColumn(name = "current_location_office_id", referencedColumnName = "id")
     private Office office;
     @OneToOne
     @JoinColumn(name = "transaction_id", referencedColumnName = "id")
@@ -52,8 +50,8 @@ public class Package {
     @Column
     private Boolean isSigned;
     //@ManyToOne
-   // @JoinColumn(name = "package_dimensions_id", referencedColumnName = "id")
-   // private PackageDimensions packageDimensions;
+    // @JoinColumn(name = "package_dimensions_id", referencedColumnName = "id")
+    // private PackageDimensions packageDimensions;
     @Column
     private Double volume;
     @Column

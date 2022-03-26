@@ -1,10 +1,9 @@
 package com.example.pds.model.packages;
 
+import com.example.pds.config.CheckAuthentications;
 import com.example.pds.model.user.User;
 import com.example.pds.model.user.UserRepository;
-import com.example.pds.model.user.userDTO.UserReceivePackageDTO;
-import com.example.pds.util.exceptions.BadRequestException;
-import com.example.pds.util.exceptions.UnauthorizedException;
+import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,8 @@ public class PackageService {
     UserRepository userRepository;
 
     public PackageSimpleResponseDTO sendPackage(Object id, Object isUser, SendPackageDTO sendPackageDTO) {
-        if (isUser == null) {
-            throw new BadRequestException("You must login");
-        }
+
+        CheckAuthentications.checkIfUser(isUser);
 
         User recipient = userRepository.findByUsername(sendPackageDTO.getRecipient());
 
@@ -51,23 +49,31 @@ public class PackageService {
     }
 
     public List<PackageComplexResponseDTO> getAllPackages(Object isAdmin, Object isAgent, Object isLogged) {
-        if (isLogged == null) {
-            throw new BadRequestException("You are not logged in");
 
-        }
-        if (isAdmin != null && isAgent != null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfAgent(isAgent);
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         List<PackageComplexResponseDTO> complexPackages = new ArrayList<>();
         List<Package> packages = packageRepository.findAll();
         for (Package package1 : packages) {
-            // PackageComplexResponseDTO dto = modelMapper.map(package1, PackageComplexResponseDTO.class);
-            //dto.setSender(package1.getSender());
             complexPackages.add(modelMapper.map(package1, PackageComplexResponseDTO.class));
         }
         return complexPackages;
-
     }
 
+
+    public PackageComplexResponseDTO getPackage(int id, Object isAdmin, Object isAgent, Object isLogged) {
+
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfAgent(isAgent);
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
+        if (packageRepository.findById(id) == null) {
+            throw new NotFoundException("Package does not exist");
+        }
+        Package package1 = packageRepository.getById(id);
+        return modelMapper.map(package1, PackageComplexResponseDTO.class);
+    }
 }
 

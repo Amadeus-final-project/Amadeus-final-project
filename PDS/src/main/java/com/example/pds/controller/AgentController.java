@@ -30,7 +30,7 @@ public class AgentController {
         HttpSession session = request.getSession();
         session.setAttribute(Constants.LOGGED, true);
         session.setAttribute(Constants.USER_ID, dto.getId());
-        session.setAttribute(Constants.IS_AGENT,true);
+        session.setAttribute(Constants.IS_AGENT, true);
         return ResponseEntity.status(200).body(dto);
     }
 
