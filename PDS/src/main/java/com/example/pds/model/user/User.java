@@ -1,6 +1,7 @@
 package com.example.pds.model.user;
 
 
+import com.example.pds.model.address.Address;
 import com.example.pds.model.packages.Package;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class User {
     private String email;
     @Column
     private String phoneNumber;
+    @ManyToOne
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
     //MIGHT NOT WORK
     //@OneToMany(mappedBy="sender")
     //private Set<Package> packages;

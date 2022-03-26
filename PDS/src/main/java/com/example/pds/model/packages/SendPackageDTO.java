@@ -16,11 +16,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SendPackageDTO {
     private int id;
-    private User recipient;
-    private Address address;
-    private DeliveryType deliveryType;
+    private String recipient;
+//    private User recipient;
+   // private Address address;
+    private String deliveryType;
     private Boolean isSigned;
-    private PackageDimensions packageDimensions;
     private Boolean isFragile;
     private String description;
+    private Double weight;
+    private Double height;
+    private Double width;
+    private Double length;
 }

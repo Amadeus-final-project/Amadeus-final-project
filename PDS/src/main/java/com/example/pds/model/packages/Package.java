@@ -51,9 +51,13 @@ public class Package {
     private DeliveryType deliveryType;
     @Column
     private Boolean isSigned;
-    @ManyToOne
-    @JoinColumn(name = "package_dimensions_id", referencedColumnName = "id")
-    private PackageDimensions packageDimensions;
+    //@ManyToOne
+   // @JoinColumn(name = "package_dimensions_id", referencedColumnName = "id")
+   // private PackageDimensions packageDimensions;
+    @Column
+    private Double volume;
+    @Column
+    private Double weight;
     @Column
     private Boolean isFragile;
     @Column
