@@ -38,9 +38,10 @@ public class PackageService {
         currentPackage.setIsFragile(sendPackageDTO.getIsFragile());
         currentPackage.setIsSigned(sendPackageDTO.getIsSigned());
         currentPackage.setDescription(sendPackageDTO.getDescription());
+        currentPackage.setWeight(sendPackageDTO.getWeight());
 
         packageRepository.save(currentPackage);
         return modelMapper.map(currentPackage,PackageSimpleResponseDTO.class);
-
     }
+
 }

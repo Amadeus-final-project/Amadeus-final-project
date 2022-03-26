@@ -1,5 +1,7 @@
 package com.example.pds.controller;
 
+import com.example.pds.model.packages.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.PackageSimpleResponseDTO;
 import com.example.pds.model.user.*;
 import com.example.pds.model.user.userDTO.*;
 import com.example.pds.util.Constants;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -69,6 +72,22 @@ public class UserController {
         UserComplexResponseDTO dto = userService.editProfile(id, user, isUser);
         return ResponseEntity.status(200).body(dto);
     }
+    @GetMapping("users/getAllPackages")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PackageGetMyPackagesDTO> getAllPackages(HttpServletRequest request){
+        Object id = request.getSession().getAttribute(Constants.USER_ID);
+        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
+       List <PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id , isUser);
+       return dtoList;
+    }
 
+    @GetMapping("users/getPackageById/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id, HttpServletRequest request){
+        Object userId = request.getSession().getAttribute(Constants.USER_ID);
+        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
+        PackageGetMyPackagesDTO dto = userService.getPackageBydId(id, userId, isUser);
+        return dto;
+    }
 
 }

@@ -1,5 +1,9 @@
 package com.example.pds.model.user;
 
+import com.example.pds.model.packages.Package;
+import com.example.pds.model.packages.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.PackageRepository;
+import com.example.pds.model.packages.PackageSimpleResponseDTO;
 import com.example.pds.model.user.userDTO.*;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -29,6 +35,8 @@ public class UserService {
     private JavaMailSender javaMailSender;
     @Autowired
     private Validator validator;
+    @Autowired
+    private PackageRepository packageRepository;
 
     public UserSimpleResponseDTO register(RegisterDTO registerDTO) {
 
@@ -191,6 +199,44 @@ public class UserService {
         }
         token = finalNumber + "";
         return token;
+    }
+
+    public List<PackageGetMyPackagesDTO> getAllPackages(Object id, Object isUser) {
+        if (id == null) {
+            throw new BadRequestException("You must login first");
+        }
+        if (isUser==null){
+            throw new BadRequestException("You are not a user");
+        }
+        System.out.println(id);
+        User recipient = userRepository.findById((int)id);
+        List<Package> packages = packageRepository.findAllByRecipient(recipient);
+
+        List<PackageGetMyPackagesDTO> packagesToReturn = new ArrayList<>();
+        for (Package aPackage : packages) {
+            PackageGetMyPackagesDTO dto = modelMapper.map(aPackage,PackageGetMyPackagesDTO.class);
+            packagesToReturn.add(dto);
+        }
+        return packagesToReturn;
+    }
+
+    public PackageGetMyPackagesDTO getPackageBydId(int id, Object userId, Object isUser) {
+        if (userId == null) {
+            throw new BadRequestException("You must login first");
+        }
+        if (isUser==null){
+            throw new BadRequestException("You are not a user");
+        }
+        if (packageRepository.findById(id)==null){
+            throw new NotFoundException("Package doesn't  exist");
+        }
+        Package pack = packageRepository.findById(id);
+        if ((int)userId!=pack.getRecipient().getId()){
+            throw new UnauthorizedException("Not your package");
+        }
+        return modelMapper.map(pack,PackageGetMyPackagesDTO.class);
+
+
     }
 }
 
