@@ -77,7 +77,7 @@ public class AdminService {
 
         Admin admin = adminRepository.findByEmail(login.getEmail());
         if (admin == null) {
-            throw new NotFoundException("Driver not found");
+            throw new NotFoundException("No such user");
         }
         //if (!passwordEncoder.matches(login.getPassword(), driver.getPassword())) {
         //  throw new BadRequestException("Wrong credentials");

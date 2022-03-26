@@ -1,8 +1,10 @@
 package com.example.pds.controller;
 
+import com.example.pds.model.packages.PackageComplexResponseDTO;
 import com.example.pds.model.packages.PackageService;
 import com.example.pds.model.packages.PackageSimpleResponseDTO;
 import com.example.pds.model.packages.SendPackageDTO;
+import com.example.pds.model.vehicle.vehicleProperties.VehicleComplexResponseDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class PackageController {
@@ -24,4 +27,16 @@ public class PackageController {
         PackageSimpleResponseDTO dto = packageService.sendPackage(id, isUser, sendPackageDTO);
         return dto;
     }
+
+    @GetMapping("package/getAllPackages")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PackageComplexResponseDTO> getAllPackages(HttpServletRequest request){
+    Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+    Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
+    Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
+    List<PackageComplexResponseDTO> packages = packageService.getAllPackages(isAdmin, isAgent, isLogged);
+    return packages;
+
+    }
+
 }
