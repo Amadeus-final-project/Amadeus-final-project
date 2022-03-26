@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
 
@@ -22,14 +23,14 @@ public class UserController {
     private UserService userService;
 
 
-    @PostMapping("users/register")
+    @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<UserSimpleResponseDTO> register(@RequestBody RegisterDTO registerDTO) {
         UserSimpleResponseDTO dto = userService.register(registerDTO);
         return ResponseEntity.status(201).body(dto);
     }
 
-    @PostMapping("users/login")
+    @PostMapping("/login")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
         UserSimpleResponseDTO dto = userService.login(user);
@@ -40,21 +41,21 @@ public class UserController {
         return ResponseEntity.status(200).body(dto);
     }
 
-    @PostMapping("users/logout")
+    @PostMapping("/logout")
     @ResponseStatus(code = HttpStatus.OK)
     public String logOut(HttpSession session) {
         session.invalidate();
         return "Have a nice day";
     }
 
-    @PutMapping("users/forgottenPassword")
+    @PutMapping("/forgottenPassword")
     @ResponseStatus(code = HttpStatus.OK)
     public String forgottenPassword(@RequestParam String email) {
         userService.forgottenPassword(email);
         return "New password token is sent to email";
     }
 
-    @PutMapping("users/changePassword")
+    @PutMapping("/changePassword")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserSimpleResponseDTO> changePassword(@RequestBody UserChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
@@ -64,7 +65,7 @@ public class UserController {
 
     }
 
-    @PutMapping("users/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserComplexResponseDTO> editProfile(@RequestBody UserProfileChangeDTO user, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
@@ -73,7 +74,7 @@ public class UserController {
         return ResponseEntity.status(200).body(dto);
     }
 
-    @GetMapping("users/getAllPackages")
+    @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
     public List<PackageGetMyPackagesDTO> getAllPackages(HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
@@ -82,7 +83,7 @@ public class UserController {
         return dtoList;
     }
 
-    @GetMapping("users/getPackageById/{id}")
+    @GetMapping("/getPackageById/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public PackageGetMyPackagesDTO getPackageById(@PathVariable int id, HttpServletRequest request) {
         Object userId = request.getSession().getAttribute(Constants.USER_ID);
@@ -91,7 +92,7 @@ public class UserController {
         return dto;
     }
 
-    @GetMapping("users/getAllTransactions")
+    @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
     public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);

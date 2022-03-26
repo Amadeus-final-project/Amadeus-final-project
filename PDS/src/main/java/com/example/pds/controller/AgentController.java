@@ -17,12 +17,13 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
+@RequestMapping("/agent")
 public class AgentController {
 
     @Autowired
     AgentService agentService;
 
-    @PostMapping("agent/login")
+    @PostMapping("/login")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<EmployeeSimpleResponseDTO> logIn(@RequestBody EmployeeLoginDTO agent, HttpServletRequest request) {
         EmployeeSimpleResponseDTO dto = agentService.login(agent);
@@ -34,7 +35,7 @@ public class AgentController {
     }
 
 
-    @PutMapping("agent/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<EmployeeSimpleResponseDTO> editProfile(@RequestBody EmployeeProfileChangeDTO employeeProfileChangeDTO, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
@@ -43,7 +44,7 @@ public class AgentController {
         return ResponseEntity.status(200).body(dto);
     }
 
-    @GetMapping("agent/getPendingPackages")
+    @GetMapping("/getPendingPackages")
     @ResponseStatus(code = HttpStatus.OK)
     public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request){
         Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);

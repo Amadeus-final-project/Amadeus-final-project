@@ -13,11 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequestMapping("/package")
 public class PackageController {
     @Autowired
     PackageService packageService;
 
-    @PostMapping("package/send")
+    @PostMapping("/send")
     @ResponseStatus(code = HttpStatus.OK)
     public PackageSimpleResponseDTO sendPackage(@RequestBody SendPackageDTO sendPackageDTO, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
@@ -26,7 +27,7 @@ public class PackageController {
         return dto;
     }
 
-    @GetMapping("package/getAllPackages")
+    @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
     public List<PackageComplexResponseDTO> getAllPackages(HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
@@ -37,7 +38,7 @@ public class PackageController {
 
     }
 
-    @GetMapping("package/{id}")
+    @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public PackageComplexResponseDTO getPackageById(@PathVariable int id, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);

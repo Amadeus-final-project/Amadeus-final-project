@@ -20,12 +20,13 @@ import java.util.Set;
 
 
 @RestController
+@RequestMapping("driver")
 public class DriverController {
 
     @Autowired
     private DriverService driverService;
 
-    @PostMapping("driver/login")
+    @PostMapping("/login")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<EmployeeSimpleResponseDTO> logIn(@RequestBody EmployeeLoginDTO driver, HttpServletRequest request) {
         EmployeeSimpleResponseDTO dto = driverService.login(driver);
@@ -36,14 +37,14 @@ public class DriverController {
         return ResponseEntity.status(200).body(dto);
     }
 
-    @PostMapping("driver/logout")
+    @PostMapping("/logout")
     @ResponseStatus(code = HttpStatus.OK)
     public String logOut(HttpSession session) {
         session.invalidate();
         return "Have a nice day";
     }
 
-    @PutMapping("driver/vehicle/{id}")
+    @PutMapping("/vehicle/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public void getCar(@PathVariable int id, HttpServletRequest request) {
         Object driverId = request.getSession().getAttribute(Constants.USER_ID);
@@ -51,7 +52,7 @@ public class DriverController {
         driverService.getVehicle(driverId, id, isDriver);
     }
 
-    @PutMapping("driver/vehicle/releaseCar")
+    @PutMapping("/vehicle/releaseCar")
     @ResponseStatus(code = HttpStatus.OK)
     public String releaseCar(HttpServletRequest request) {
         Object driverId = request.getSession().getAttribute(Constants.USER_ID);
@@ -60,7 +61,7 @@ public class DriverController {
         return "Done";
     }
 
-    @GetMapping("driver/getAllDrivers")
+    @GetMapping("/getAllDrivers")
     @ResponseStatus(code = HttpStatus.OK)
     public List<DriverSimpleResponseDTO> getAllDrivers(HttpServletRequest request) {
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
@@ -70,7 +71,7 @@ public class DriverController {
 
     }
 
-    @GetMapping("driver/{id}")
+    @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public DriverSimpleResponseDTO getDriver(@PathVariable int id, HttpServletRequest request) {
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
@@ -79,7 +80,7 @@ public class DriverController {
         return driver;
     }
 
-    @PutMapping("driver/requestPaidLeave")
+    @PutMapping("/requestPaidLeave")
     @ResponseStatus(code = HttpStatus.OK)
     public String requestPaidLeave(@RequestBody Date start, Date end, String description, HttpServletRequest request) {
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);

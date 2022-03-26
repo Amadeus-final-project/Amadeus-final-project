@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:fragment="navigation">
+    <nav class="main-nav">
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <a href="/users/login">Login</a>
+            </li>
+            <li>
+                <a href="/users/register">Register</a>
+            </li>
+            <li>
+                <a href="/users/profile">Profile</a>
+            </li>
+            <li>
+                <a href="/users/register">Register</a>
+            </li>
+            <li>
+                <a href="/">Admin</a>
+            </li>
+            <li>
+                <a href="/users/logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+
+</body>
+<footer th:fragment="footer" class="footer bg-blur rounded">
+    <div class="container-fluid text-center">
+        <div class="h5 text-white">
+            Powerhouse, Cronjob gurus and others.
+        </div>
+    </div>
+</footer>
+</html>

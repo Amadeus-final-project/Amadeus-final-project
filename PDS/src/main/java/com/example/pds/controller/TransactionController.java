@@ -5,21 +5,19 @@ import com.example.pds.model.transaction.TransactionService;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequestMapping("/transaction")
 public class TransactionController {
 
     @Autowired
     TransactionService transactionService;
 
-    @GetMapping("transaction/getAllTransactions")
+    @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
     public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
@@ -29,7 +27,7 @@ public class TransactionController {
         return transaction;
     }
 
-    @GetMapping("transaction/{id}")
+    @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public TransactionResponseDTO getTransaction(@PathVariable int id, HttpServletRequest request) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);

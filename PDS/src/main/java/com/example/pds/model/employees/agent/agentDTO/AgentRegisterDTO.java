@@ -1,10 +1,10 @@
 package com.example.pds.model.employees.agent.agentDTO;
 
 
-import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @Getter
 @Setter
@@ -14,5 +14,9 @@ public class AgentRegisterDTO {
     private int id;
     private String email;
     private String password;
-    private EmployeeInfo employeeInfo;
+    private String phoneNumber;
+    private String firstName;
+    private String lastName;
+    private Boolean isWorking;
+    private Integer remainingPaidLeave;
 }
