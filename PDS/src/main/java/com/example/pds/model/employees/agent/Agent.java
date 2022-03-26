@@ -1,8 +1,6 @@
-package com.example.pds.model.employees.agents;
+package com.example.pds.model.employees.agent;
 
 import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
-import com.example.pds.model.offices.Office;
-import com.example.pds.model.vehicle.Vehicle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

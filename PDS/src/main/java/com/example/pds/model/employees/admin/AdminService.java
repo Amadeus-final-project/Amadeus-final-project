@@ -2,9 +2,9 @@ package com.example.pds.model.employees.admin;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
-import com.example.pds.model.employees.agents.Agent;
-import com.example.pds.model.employees.agents.AgentRepository;
-import com.example.pds.model.employees.agents.agentDTO.AgentRegisterDTO;
+import com.example.pds.model.employees.agent.Agent;
+import com.example.pds.model.employees.agent.AgentRepository;
+import com.example.pds.model.employees.agent.agentDTO.AgentRegisterDTO;
 import com.example.pds.model.employees.driver.Driver;
 import com.example.pds.model.employees.driver.DriverRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;

@@ -2,14 +2,10 @@ package com.example.pds.model.employees.driver;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
-import com.example.pds.model.employees.agents.Agent;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeRepository;
-import com.example.pds.model.user.User;
-import com.example.pds.model.user.UserRepository;
-import com.example.pds.model.user.userDTO.RegisterDTO;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleRepository;
 import com.example.pds.util.exceptions.BadRequestException;

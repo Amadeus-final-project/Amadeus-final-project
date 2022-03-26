@@ -32,8 +32,8 @@ public class User {
     @Column
     private String phoneNumber;
     //MIGHT NOT WORK
-    @OneToMany(mappedBy="sender")
-    private Set<Package> packages;
+    //@OneToMany(mappedBy="sender")
+    //private Set<Package> packages;
 
 
 

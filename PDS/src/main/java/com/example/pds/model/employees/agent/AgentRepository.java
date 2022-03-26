@@ -1,4 +1,4 @@
-package com.example.pds.model.employees.agents;
+package com.example.pds.model.employees.agent;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

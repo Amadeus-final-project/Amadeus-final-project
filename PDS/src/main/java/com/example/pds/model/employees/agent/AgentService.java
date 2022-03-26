@@ -1,14 +1,9 @@
-package com.example.pds.model.employees.agents;
+package com.example.pds.model.employees.agent;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
-import com.example.pds.model.employees.driver.Driver;
-import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
 import com.example.pds.model.employees.employeeInfo.EmployeeRepository;
-import com.example.pds.model.user.User;
-import com.example.pds.model.user.userDTO.UserComplexResponseDTO;
-import com.example.pds.model.user.userDTO.UserProfileChangeDTO;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;

@@ -1,4 +1,4 @@
-package com.example.pds.model.employees.agents.agentDTO;
+package com.example.pds.model.employees.agent.agentDTO;
 
 
 import com.example.pds.model.employees.employeeInfo.EmployeeInfo;

@@ -2,10 +2,8 @@ package com.example.pds.controller;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
-import com.example.pds.model.employees.agents.AgentService;
+import com.example.pds.model.employees.agent.AgentService;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
-import com.example.pds.model.user.userDTO.UserComplexResponseDTO;
-import com.example.pds.model.user.userDTO.UserProfileChangeDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
