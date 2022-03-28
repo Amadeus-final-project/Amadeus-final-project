@@ -19,7 +19,7 @@ public class VehicleController {
 
     @GetMapping("/getAllVehicles")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<VehicleComplexResponseDTO> getAllDrivers(HttpServletRequest request) {
+    public List<VehicleComplexResponseDTO> getAllVehicles(HttpServletRequest request) {
         Object isUser = request.getSession().getAttribute(Constants.IS_USER);
         Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
         List<VehicleComplexResponseDTO> vehicles = vehicleService.getAllVehicles(isUser, isLogged);

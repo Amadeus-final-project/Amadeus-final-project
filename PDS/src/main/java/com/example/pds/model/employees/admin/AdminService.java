@@ -56,9 +56,9 @@ public class AdminService {
     }
 
     public VehicleComplexDTO addVehicle(Object isAdmin, VehicleComplexDTO vehicleComplexDTO) {
-        if (isAdmin == null) {
-            throw new UnauthorizedException("You are unauthorized");
-        }
+
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
         Vehicle vehicle = modelMapper.map(vehicleComplexDTO, Vehicle.class);
         vehicleRepository.save(vehicle);
         return modelMapper.map(vehicle, VehicleComplexDTO.class);

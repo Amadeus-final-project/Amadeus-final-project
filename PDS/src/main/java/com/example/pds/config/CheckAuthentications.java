@@ -43,4 +43,10 @@ public class CheckAuthentications {
             throw new BadRequestException("You are not logged in");
         }
     }
+
+    public static void checkIfHasAboveAgentPermission(Object isAgent, Object isAdmin) {
+        if (isAgent == null && isAdmin == null) {
+            throw new UnauthorizedException("You are not authorized");
+        }
+    }
 }

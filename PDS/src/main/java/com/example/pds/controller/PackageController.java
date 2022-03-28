@@ -1,10 +1,7 @@
 package com.example.pds.controller;
 
 
-import com.example.pds.model.packages.PackageComplexResponseDTO;
-import com.example.pds.model.packages.PackageService;
-import com.example.pds.model.packages.PackageSimpleResponseDTO;
-import com.example.pds.model.packages.SendPackageDTO;
+import com.example.pds.model.packages.*;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +43,17 @@ public class PackageController {
         Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
         PackageComplexResponseDTO packageDto = packageService.getPackage(id, isAdmin, isAgent, isLogged);
         return packageDto;
+    }
+
+    @GetMapping("/getPendingPackages")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request){
+        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
+        List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages(isAdmin, isAgent, isLogged);
+        return dto;
+
     }
 
 }

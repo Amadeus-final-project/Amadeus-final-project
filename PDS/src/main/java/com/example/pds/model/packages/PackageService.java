@@ -4,6 +4,7 @@ import com.example.pds.config.CheckAuthentications;
 import com.example.pds.model.user.User;
 import com.example.pds.model.user.UserRepository;
 import com.example.pds.util.exceptions.NotFoundException;
+import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,8 +52,7 @@ public class PackageService {
     public List<PackageComplexResponseDTO> getAllPackages(Object isAdmin, Object isAgent, Object isLogged) {
 
         CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfAgent(isAgent);
-        CheckAuthentications.checkIfAdmin(isAdmin);
+        CheckAuthentications.checkIfHasAboveAgentPermission(isAgent, isAdmin);
 
         List<PackageComplexResponseDTO> complexPackages = new ArrayList<>();
         List<Package> packages = packageRepository.findAll();
@@ -66,14 +66,28 @@ public class PackageService {
     public PackageComplexResponseDTO getPackage(int id, Object isAdmin, Object isAgent, Object isLogged) {
 
         CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfAgent(isAgent);
-        CheckAuthentications.checkIfAdmin(isAdmin);
+
+        CheckAuthentications.checkIfHasAboveAgentPermission(isAgent, isAdmin);
 
         if (packageRepository.findById(id) == null) {
             throw new NotFoundException("Package does not exist");
         }
         Package package1 = packageRepository.getById(id);
         return modelMapper.map(package1, PackageComplexResponseDTO.class);
+    }
+
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Object isAdmin, Object isAgent, Object isLogged) {
+
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfHasAboveAgentPermission(isAdmin, isAgent);
+
+        List<PackageGetMyPackagesDTO> packageToReturn = new ArrayList<>();
+        List<Package> packages = packageRepository.findAllByStatusId(1);
+        for (Package pack : packages) {
+            packageToReturn.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));
+
+        }
+        return packageToReturn;
     }
 }
 

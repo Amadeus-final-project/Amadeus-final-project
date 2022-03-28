@@ -43,13 +43,4 @@ public class AgentController {
         EmployeeSimpleResponseDTO dto = agentService.editProfile(id, employeeProfileChangeDTO, isAgent);
         return ResponseEntity.status(200).body(dto);
     }
-
-    @GetMapping("/getPendingPackages")
-    @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request){
-        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
-        List<PackageGetMyPackagesDTO> dto = agentService.getAllPendingPackages(isAgent);
-        return dto;
-
-    }
 }

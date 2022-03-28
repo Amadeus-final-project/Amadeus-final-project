@@ -21,7 +21,7 @@ public class VehicleService {
     public List<VehicleComplexResponseDTO> getAllVehicles(Object isUser, Object isLogged) {
 
         CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfUser(isUser);
+        CheckAuthentications.checkIfEmployee(isUser);
 
         List<VehicleComplexResponseDTO> complexVehicle = new ArrayList<>();
         List<Vehicle> vehicles = vehicleRepository.findAll();

@@ -57,9 +57,6 @@ public class AgentService {
 
         CheckViolations.check(validator, employeeProfileChangeDTO);
 
-        Set<ConstraintViolation<EmployeeProfileChangeDTO>> violations = validator.validate(employeeProfileChangeDTO);
-
-
         Agent agent = agentRepository.getById((int) id);
 
         if (!agent.getEmployeeInfo().getFirstName().equals(employeeProfileChangeDTO.getFirstName())) {
@@ -81,17 +78,6 @@ public class AgentService {
         return modelMapper.map(agent.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
     }
 
-
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Object isAgent) {
-        CheckAuthentications.checkIfAgent(isAgent);
-        List<PackageGetMyPackagesDTO> packageToReturn = new ArrayList<>();
-        List<Package> packages = packageRepository.findAllByStatusId(1);
-        for (Package pack : packages) {
-            packageToReturn.add(modelMapper.map(pack,PackageGetMyPackagesDTO.class));
-
-        }
-        return packageToReturn;
-    }
 }
 
 
