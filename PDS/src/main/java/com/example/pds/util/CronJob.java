@@ -1,9 +1,9 @@
 package com.example.pds.util;
 
-import com.example.pds.model.entity.Package;
-import com.example.pds.repository.PackageRepository;
-import com.example.pds.model.entity.User;
-import com.example.pds.repository.UserRepository;
+import com.example.pds.model.packages.Package;
+import com.example.pds.model.packages.PackageRepository;
+import com.example.pds.model.user.User;
+import com.example.pds.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
