@@ -17,8 +17,4 @@ public class SpringFoxxConfiguration {
                 .paths(PathSelectors.any())
                 .build();
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> fdf6fab3f3dcbd5bf28a056c0ec4c34383ed4f5a
