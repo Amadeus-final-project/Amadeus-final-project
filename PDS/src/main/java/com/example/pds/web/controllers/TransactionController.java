@@ -1,4 +1,4 @@
-package com.example.pds.controller;
+package com.example.pds.web.controllers;
 
 import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.transaction.TransactionService;

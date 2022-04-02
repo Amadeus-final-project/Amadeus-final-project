@@ -1,10 +1,9 @@
-package com.example.pds.controller;
+package com.example.pds.web.controllers;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.agent.AgentService;
 import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
-import com.example.pds.model.packages.PackageGetMyPackagesDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequestMapping("/agent")

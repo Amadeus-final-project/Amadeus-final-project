@@ -1,12 +1,16 @@
-package com.example.pds.controller;
+package com.example.pds.web.controllers;
 
 
 import com.example.pds.model.packages.*;
+import com.example.pds.model.user.User;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -26,11 +30,9 @@ public class PackageController {
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageComplexResponseDTO> getAllPackages(HttpServletRequest request) {
-        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
-        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        List<PackageComplexResponseDTO> packages = packageService.getAllPackages(isAdmin, isAgent, isLogged);
+    public List<PackageComplexResponseDTO> getAllPackages(Authentication authentication) {
+        var test = authentication.getCredentials();
+        List<PackageComplexResponseDTO> packages = packageService.getAllPackages(false, false, true);
         return packages;
 
     }
