@@ -1,4 +1,4 @@
-package com.example.pds.controller;
+package com.example.pds.web.controllers;
 
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @RestController
