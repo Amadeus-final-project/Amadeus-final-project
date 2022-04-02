@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>PDS</title>
+    <title>Pathfinder</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/mobile.css">
@@ -18,10 +18,14 @@
             crossorigin=""></script>
 </head>
 <body>
-<header th:replace="fragments/common::header"></header>
-
-<footer th:replace="fragments/common::footer"></footer>
-</footer>
+<header>
+    <header th:replace="fragments/common::header"></header>
+</header>
+<h2>Hello user</h2>
 </body>
-
+<footer class="footer bg-blur rounded">
+    <div class="container-fluid text-center">
+        <div class="h5 text-white"></div>
+    </div>
+</footer>
 </html>
