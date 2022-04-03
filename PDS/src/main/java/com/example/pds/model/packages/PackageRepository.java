@@ -10,7 +10,7 @@ import java.util.List;
 public interface PackageRepository extends JpaRepository<Package, Integer> {
     List<Package> findAllByRecipient(User recipient);
 
-    Package findByRecipient(int id);
+    Package findByRecipient(User recipient);
 
     Package findById(int id);
 

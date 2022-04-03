@@ -21,14 +21,11 @@ public class PackageService {
     @Autowired
     UserRepository userRepository;
 
-    public PackageSimpleResponseDTO sendPackage(Object id, Object isUser, SendPackageDTO sendPackageDTO) {
-
-        CheckAuthentications.checkIfUser(isUser);
-
+    public PackageSimpleResponseDTO sendPackage(int id, SendPackageDTO sendPackageDTO) {
         User recipient = userRepository.findByUsername(sendPackageDTO.getRecipient());
 
         Package currentPackage = new Package();
-        currentPackage.setSender(userRepository.getById((int) id));
+        currentPackage.setSender(userRepository.getById(id));
 
         currentPackage.setAddress(recipient.getAddress());
         currentPackage.setRecipient(recipient);
@@ -49,11 +46,7 @@ public class PackageService {
 
     }
 
-    public List<PackageComplexResponseDTO> getAllPackages(Object isAdmin, Object isAgent, Object isLogged) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfHasAboveAgentPermission(isAgent, isAdmin);
-
+    public List<PackageComplexResponseDTO> getAllPackages() {
         List<PackageComplexResponseDTO> complexPackages = new ArrayList<>();
         List<Package> packages = packageRepository.findAll();
         for (Package package1 : packages) {
@@ -63,11 +56,7 @@ public class PackageService {
     }
 
 
-    public PackageComplexResponseDTO getPackage(int id, Object isAdmin, Object isAgent, Object isLogged) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-
-        CheckAuthentications.checkIfHasAboveAgentPermission(isAgent, isAdmin);
+    public PackageComplexResponseDTO getPackage(int id) {
 
         if (packageRepository.findById(id) == null) {
             throw new NotFoundException("Package does not exist");
@@ -76,11 +65,7 @@ public class PackageService {
         return modelMapper.map(package1, PackageComplexResponseDTO.class);
     }
 
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Object isAdmin, Object isAgent, Object isLogged) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfHasAboveAgentPermission(isAdmin, isAgent);
-
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages() {
         List<PackageGetMyPackagesDTO> packageToReturn = new ArrayList<>();
         List<Package> packages = packageRepository.findAllByStatusId(1);
         for (Package pack : packages) {
@@ -89,5 +74,24 @@ public class PackageService {
         }
         return packageToReturn;
     }
+
+    public List<PackageGetMyPackagesDTO> getAllMyPackages(int id) {
+        User user = userRepository.findById(id);
+        List<Package> myPackages = packageRepository.findAllByRecipient(user);
+        List <PackageGetMyPackagesDTO> dtoList = new ArrayList<>();
+        for (Package pack : myPackages) {
+            dtoList.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));
+        }
+        return dtoList;
+    }
+    public PackageGetMyPackagesDTO getMyPackage(int id, int userID){
+        User user = userRepository.findById(id);
+        if (id != userID){
+            throw new UnauthorizedException("Not your package");
+        }
+        Package myPackage = packageRepository.findByRecipient(user);
+        return modelMapper.map(myPackage,PackageGetMyPackagesDTO.class);
+    }
+
 }
 
