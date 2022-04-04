@@ -54,6 +54,7 @@ public class PackageController {
     }
 
     @GetMapping("/getAllMyPackages")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
     public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication){
         Map map=(Map) authentication.getCredentials();

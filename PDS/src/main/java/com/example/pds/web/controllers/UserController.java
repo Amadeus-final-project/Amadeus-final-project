@@ -8,6 +8,7 @@ import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,7 @@ public class UserController {
     }
 
     @PutMapping("/edit")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<UserComplexResponseDTO> editProfile(@RequestBody UserProfileChangeDTO user, HttpServletRequest request) {
         Object id = request.getSession().getAttribute(Constants.USER_ID);
