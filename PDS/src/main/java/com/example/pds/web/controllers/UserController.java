@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -58,48 +60,47 @@ public class UserController {
 
     @PutMapping("/changePassword")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<UserSimpleResponseDTO> changePassword(@RequestBody UserChangePasswordDTO changePasswordDTO, HttpServletRequest request) {
-        Object id = request.getSession().getAttribute(Constants.USER_ID);
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, id, isUser);
+    public ResponseEntity<UserSimpleResponseDTO> changePassword(@RequestBody UserChangePasswordDTO changePasswordDTO,Authentication authentication) {
+        Map map=(Map) authentication.getCredentials();
+        int id =(int) map.get("id");
+        UserSimpleResponseDTO dto = userService.changePassword(changePasswordDTO, id);
         return ResponseEntity.status(200).body(dto);
 
     }
 
     @PutMapping("/edit")
-    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<UserComplexResponseDTO> editProfile(@RequestBody UserProfileChangeDTO user, HttpServletRequest request) {
-        Object id = request.getSession().getAttribute(Constants.USER_ID);
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        UserComplexResponseDTO dto = userService.editProfile(id, user, isUser);
+    public ResponseEntity<UserComplexResponseDTO> editProfile(@RequestBody UserProfileChangeDTO user, Authentication authentication) {
+        Map map=(Map) authentication.getCredentials();
+        int id =(int) map.get("id");
+        UserComplexResponseDTO dto = userService.editProfile(id, user);
         return ResponseEntity.status(200).body(dto);
     }
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPackages(HttpServletRequest request) {
-        Object id = request.getSession().getAttribute(Constants.USER_ID);
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id, isUser);
+    public List<PackageGetMyPackagesDTO> getAllPackages( Authentication authentication) {
+        Map map=(Map) authentication.getCredentials();
+        int id =(int) map.get("id");
+        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id);
         return dtoList;
     }
 
     @GetMapping("/getPackageById/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id, HttpServletRequest request) {
-        Object userId = request.getSession().getAttribute(Constants.USER_ID);
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        PackageGetMyPackagesDTO dto = userService.getPackageBydId(id, userId, isUser);
+    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id,  Authentication authentication) {
+        Map map=(Map) authentication.getCredentials();
+        int userID =(int) map.get("id");
+        PackageGetMyPackagesDTO dto = userService.getPackageBydId(id, userID);
         return dto;
     }
 
     @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request) {
-        Object id = request.getSession().getAttribute(Constants.USER_ID);
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id, isUser);
+    public List<TransactionResponseDTO> getAllTransactions(Authentication authentication) {
+        Map map=(Map) authentication.getCredentials();
+        int id =(int) map.get("id");
+        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id);
         return transactions;
     }
 

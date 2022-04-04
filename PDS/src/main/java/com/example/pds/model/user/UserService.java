@@ -120,12 +120,9 @@ public class UserService implements UserDetailsService {
         javaMailSender.send(message);
     }
 
-    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, Object id, Object isUser) {
+    public UserSimpleResponseDTO changePassword(UserChangePasswordDTO userChangePasswordDTO, int id) {
 
-        CheckAuthentications.checkIfLogged(id);
-        CheckAuthentications.checkIfUser(isUser);
-
-        User user = userRepository.getById((int) id);
+        User user = userRepository.getById(id);
         String oldPass = userChangePasswordDTO.getOldPass();
         String newPass = userChangePasswordDTO.getNewPass();
         String confirmPass = userChangePasswordDTO.getConfirmPass();
@@ -144,15 +141,9 @@ public class UserService implements UserDetailsService {
         return modelMapper.map(user, UserSimpleResponseDTO.class);
     }
 
-    public UserComplexResponseDTO editProfile(Object id, UserProfileChangeDTO userComplexResponseDTO, Object isUser) {
+    public UserComplexResponseDTO editProfile(int id, UserProfileChangeDTO userComplexResponseDTO) {
 
-        CheckAuthentications.checkIfLogged(id);
-        CheckAuthentications.checkIfUser(isUser);
-
-        CheckViolations.check(validator, userComplexResponseDTO);
-
-
-        User user = userRepository.getById((int) id);
+        User user = userRepository.getById(id);
         if (!user.getFirstName().equals(userComplexResponseDTO.getFirstName())) {
             user.setFirstName(userComplexResponseDTO.getFirstName());
         }
@@ -192,12 +183,9 @@ public class UserService implements UserDetailsService {
         return token;
     }
 
-    public List<PackageGetMyPackagesDTO> getAllPackages(Object id, Object isUser) {
+    public List<PackageGetMyPackagesDTO> getAllPackages(int id) {
 
-        CheckAuthentications.checkIfLogged(id);
-        CheckAuthentications.checkIfUser(isUser);
-
-        User recipient = userRepository.findById((int) id);
+        User recipient = userRepository.findById(id);
 
         List<Package> packages = packageRepository.findAllByRecipient(recipient);
 
@@ -209,13 +197,7 @@ public class UserService implements UserDetailsService {
         return packagesToReturn;
     }
 
-    public PackageGetMyPackagesDTO getPackageBydId(int id, Object userId, Object isUser) {
-        if (userId == null) {
-            throw new BadRequestException("You must login first");
-        }
-        if (isUser == null) {
-            throw new BadRequestException("You are not a user");
-        }
+    public PackageGetMyPackagesDTO getPackageBydId(int id, int userId) {
         if (packageRepository.findById(id) == null) {
             throw new NotFoundException("Package doesn't  exist");
         }
@@ -228,12 +210,9 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<TransactionResponseDTO> getAllTransactions(Object id, Object isUser) {
+   public List<TransactionResponseDTO> getAllTransactions(int id) {
 
-        CheckAuthentications.checkIfLogged(id);
-        CheckAuthentications.checkIfUser(isUser);
-
-        User payer = userRepository.findById((int) id);
+        User payer = userRepository.findById(id);
         List<Transaction> packages = transactionRepository.findAllByPayer(payer);
 
         List<TransactionResponseDTO> packagesToReturn = new ArrayList<>();
