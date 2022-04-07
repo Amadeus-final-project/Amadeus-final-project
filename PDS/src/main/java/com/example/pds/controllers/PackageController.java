@@ -3,6 +3,8 @@ package com.example.pds.controllers;
 
 import com.example.pds.model.packages.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,10 +30,8 @@ public class PackageController {
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageComplexResponseDTO> getAllPackages(Authentication authentication) {
-        List<PackageComplexResponseDTO> packages = packageService.getAllPackages();
-        return packages;
-
+    public List<PackageComplexResponseDTO> getAllPackages(Authentication authentication, Pageable page) {
+        return packageService.getAllPackages(page);
     }
 
     @GetMapping("/{id}")

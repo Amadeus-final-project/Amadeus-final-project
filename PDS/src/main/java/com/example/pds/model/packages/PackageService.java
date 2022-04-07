@@ -8,6 +8,9 @@ import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,9 +52,9 @@ public class PackageService {
 
     }
 
-    public List<PackageComplexResponseDTO> getAllPackages() {
+    public List<PackageComplexResponseDTO> getAllPackages(Pageable page) {
         List<PackageComplexResponseDTO> complexPackages = new ArrayList<>();
-        List<Package> packages = packageRepository.findAll();
+        List<Package> packages = packageRepository.findAll(page).getContent();
         for (Package package1 : packages) {
             complexPackages.add(modelMapper.map(package1, PackageComplexResponseDTO.class));
         }
@@ -78,8 +81,9 @@ public class PackageService {
         return packageToReturn;
     }
 
-    public List<PackageGetMyPackagesDTO> getAllMyPackages(int id) {
-        UserProfile user = userRepository.findByProfileId(id);
+    public List<PackageGetMyPackagesDTO> getAllMyPackages(int userId) {
+        UserProfile user = userRepository.findByProfileId(userId);
+        List<Package> neshtoTypo = packageRepository.findAll();
         List<Package> myPackages = packageRepository.findAllByRecipient(user);
         List <PackageGetMyPackagesDTO> dtoList = new ArrayList<>();
         for (Package pack : myPackages) {

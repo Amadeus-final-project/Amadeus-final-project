@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<UserProfile,Integer> {
 
 
-    UserProfile findByProfileId(int id);
+    UserProfile findByProfileId(int profileId);
 
 }
