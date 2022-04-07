@@ -3,6 +3,9 @@ package com.example.pds.model.employees.driver;
 import com.example.pds.config.CheckAuthentications;
 import com.example.pds.config.CheckViolations;
 import com.example.pds.model.employees.EmployeeLoginDTO;
+import com.example.pds.model.employees.agent.AgentProfile;
+import com.example.pds.model.employees.agent.agentDTO.AgentEditProfileDTO;
+import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleRepository;
@@ -50,7 +53,7 @@ public class DriverService {
 //    }
 
     public void getVehicle(int id, int vehicleId) {
-        DriverProfile driver = driverRepository.getById( id);
+        DriverProfile driver = driverRepository.getById(id);
 
         Vehicle vehicle = vehicleRepository.getById(vehicleId);
         if (driver.getVehicle() != null) {
@@ -95,36 +98,28 @@ public class DriverService {
         DriverProfile driver = driverRepository.getById(driverId);
         return modelMapper.map(driver, DriverSimpleResponseDTO.class);
     }
-}
 
-//    public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isDriver) {
+    //    public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isDriver) {
 //
-//        CheckAuthentications.checkIfLogged(id);
-//
-//        CheckAuthentications.checkIfDriver(isDriver);
-//
-//        CheckViolations.check(validator, employeeProfileChangeDTO);
-//
-//        DriverProfile driver = driverRepository.getById((int) id);
-//        if (!driver.getEmployeeInfo().getFirstName().equals(employeeProfileChangeDTO.getFirstName())) {
-//            driver.getEmployeeInfo().setFirstName(employeeProfileChangeDTO.getFirstName());
-//        }
-//        if (!driver.getEmployeeInfo().getLastName().equals(employeeProfileChangeDTO.getLastName())) {
-//            driver.getEmployeeInfo().setLastName(employeeProfileChangeDTO.getLastName());
-//        }
-//
-//        if (driver.getEmployeeInfo().getPhoneNumber() == null) {
-//            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
-//        }
-//        if (!driver.getEmployeeInfo().getPhoneNumber().equals(employeeProfileChangeDTO.getPhoneNumber())) {
-//            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
-//        }
-//        driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
-//
-//        driverRepository.save(driver);
-//        return modelMapper.map(driver.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
-//    }
-//}
+    public void editProfile(int id, DriverEditProfileDTO driverDTO) {
+
+        CheckViolations.check(validator, driverDTO);
+
+        DriverProfile driver = driverRepository.findByProfileId(id);
+
+        if (!driver.getFirstName().equals(driverDTO.getFirstName())) {
+            driver.setFirstName(driverDTO.getFirstName());
+        }
+        if (!driver.getLastName().equals(driverDTO.getLastName())) {
+            driver.setLastName(driverDTO.getLastName());
+        }
+
+        if (!driver.getPhoneNumber().equals(driverDTO.getPhoneNumber())) {
+            driver.setPhoneNumber(driverDTO.getPhoneNumber());
+        }
+        driverRepository.save(driver);
+    }
+}
 
 // public void requestPaidLeave(Date start, Date end, String description, Object isLogged, Object isUser) {
 //TODO

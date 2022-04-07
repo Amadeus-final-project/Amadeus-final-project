@@ -1,6 +1,6 @@
-package com.example.pds.model.employees.admin;
+package com.example.pds.model.employees.agent;
 
-import com.example.pds.model.user.UserProfile;
+import com.example.pds.profiles.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,12 +8,11 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "admins")
-@Setter
+@Table(name = "agents")
 @Getter
+@Setter
 @NoArgsConstructor
-
-public class Admin {
+public class AgentProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,8 +20,9 @@ public class Admin {
     private String firstName;
     @Column
     private String lastName;
+    @Column
+    private String phoneNumber;
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfile profile;
-
+    private Profile profile;
 }

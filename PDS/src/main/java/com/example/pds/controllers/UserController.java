@@ -31,25 +31,6 @@ public class UserController {
         UserSimpleResponseDTO dto = userService.register(registerDTO);
         return ResponseEntity.status(201).body(dto);
     }
-
-//    @PostMapping("/login")
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
-//        UserSimpleResponseDTO dto = userService.login(user);
-//        HttpSession session = request.getSession();
-//        session.setAttribute(Constants.IS_USER, true);
-//        session.setAttribute(Constants.LOGGED, true);
-//        session.setAttribute(Constants.USER_ID, dto.getId());
-//        return ResponseEntity.status(200).body(dto);
-//    }
-
-//    @PostMapping("/logout")
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public String logOut(HttpSession session) {
-//        session.invalidate();
-//        return "Have a nice day";
-//    }
-
     @PutMapping("/forgottenPassword")
     @ResponseStatus(code = HttpStatus.OK)
     public String forgottenPassword(@RequestParam String email) {

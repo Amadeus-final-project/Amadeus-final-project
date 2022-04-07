@@ -1,17 +1,14 @@
 package com.example.pds.controllers;
 
-import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.admin.AdminService;
+import com.example.pds.model.employees.agent.AgentProfile;
 import com.example.pds.model.employees.agent.agentDTO.AgentRegisterDTO;
+import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
 import com.example.pds.model.vehicle.VehicleComplexDTO;
-import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/admin")
@@ -32,33 +29,19 @@ public class AdminController {
         VehicleComplexDTO dto = adminService.addVehicle(vehicleComplexDTO);
         return dto;
     }
+    @PostMapping("/addDriver")
+    @ResponseStatus(code = HttpStatus.OK)
+    public DriverProfile addDriver(@RequestBody DriverRegisterDTO driverRegisterDTO) {
+        DriverProfile dto = adminService.addDriver(driverRegisterDTO);
+        return dto;
+    }
 
-//    @PostMapping("/login")
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public EmployeeSimpleResponseDTO adminLogin(@RequestBody EmployeeLoginDTO employeeLoginDTO, HttpServletRequest request) {
-//        EmployeeSimpleResponseDTO dto = adminService.loginAdmin(employeeLoginDTO);
-//        HttpSession session = request.getSession();
-//        session.setAttribute(Constants.LOGGED, true);
-//        session.setAttribute(Constants.USER_ID, dto.getId());
-//        session.setAttribute(Constants.IS_ADMIN, true);
-//        return dto;
-//    }
-
-//    @PostMapping("/addDriver")
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public EmployeeSimpleResponseDTO addDriver(@RequestBody DriverRegisterDTO driverRegisterDTO, HttpServletRequest request) {
-//        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-//        EmployeeSimpleResponseDTO dto = adminService.addDriver(isAdmin, driverRegisterDTO);
-//        return dto;
-//    }
-
-//    @PostMapping("/addAgent")
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public EmployeeSimpleResponseDTO addAgent(@RequestBody AgentRegisterDTO agentRegisterDTO, HttpServletRequest request) {
-//        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-//        EmployeeSimpleResponseDTO dto = adminService.addAgent(isAdmin, agentRegisterDTO);
-//        return dto;
-//    }
+   @PostMapping("/addAgent")
+    @ResponseStatus(code = HttpStatus.OK)
+    public AgentProfile addAgent(@RequestBody AgentRegisterDTO agentRegisterDTO) {
+        AgentProfile dto = adminService.addAgent( agentRegisterDTO);
+        return dto;
+    }
 
     @DeleteMapping(value = "/driver/{id}")
     @ResponseStatus(code = HttpStatus.OK)

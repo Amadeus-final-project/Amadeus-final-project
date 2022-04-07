@@ -38,7 +38,7 @@ public class Profile implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
         System.out.println(authorities);
         return authorities;
     }

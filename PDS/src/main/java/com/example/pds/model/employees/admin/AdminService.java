@@ -1,17 +1,17 @@
 package com.example.pds.model.employees.admin;
 
-import com.example.pds.config.CheckAuthentications;
-import com.example.pds.config.CheckViolations;
-import com.example.pds.model.employees.EmployeeLoginDTO;
-import com.example.pds.model.employees.agent.Agent;
+import com.example.pds.model.employees.agent.AgentProfile;
 import com.example.pds.model.employees.agent.AgentRepository;
 import com.example.pds.model.employees.agent.agentDTO.AgentRegisterDTO;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
+import com.example.pds.model.roles.RoleRepository;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleComplexDTO;
 import com.example.pds.model.vehicle.VehicleRepository;
+import com.example.pds.profiles.Profile;
+import com.example.pds.profiles.ProfilesRepository;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Validator;
 
 @Service
@@ -37,6 +38,10 @@ public class AdminService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private ProfilesRepository profilesRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
 
     public void removeVehicle(int id) {
@@ -52,65 +57,51 @@ public class AdminService {
         vehicleRepository.save(vehicle);
         return modelMapper.map(vehicle, VehicleComplexDTO.class);
     }
+    @Transactional
+    public DriverProfile addDriver(DriverRegisterDTO driverRegisterDTO) {
 
-//    public EmployeeSimpleResponseDTO loginAdmin(EmployeeLoginDTO login) {
-//
-//        CheckViolations.check(validator, login);
-//
-//
-//        Admin admin = adminRepository.findByEmail(login.getEmail());
-//        if (admin == null) {
-//            throw new NotFoundException("No such user");
-//        }
-//        //if (!passwordEncoder.matches(login.getPassword(), driver.getPassword())) {
-//        //  throw new BadRequestException("Wrong credentials");
-//        //}
-//        EmployeeInfo employeeInfo = employeeRepository.findById(admin.getId());
-//        return modelMapper.map(employeeInfo, EmployeeSimpleResponseDTO.class);
-//    }
+        if (profilesRepository.findByEmail(driverRegisterDTO.getEmail()) != null) {
+            throw new BadRequestException("Email already exists");
+        }
+        Profile profile = new Profile();
+        profile.setUsername(driverRegisterDTO.getEmail());
+        profile.setPassword(passwordEncoder.encode(driverRegisterDTO.getPassword()));
+        profile.setEmail(driverRegisterDTO.getEmail());
+        profile.setRole(roleRepository.findRoleById(2));
+        profilesRepository.save(profile);
 
-//    public EmployeeSimpleResponseDTO addDriver(Object isAdmin, DriverRegisterDTO driverRegisterDTO) {
-//
-//        CheckAuthentications.checkIfAdmin(isAdmin);
-//
-//        if (driverRepository.findByEmail(driverRegisterDTO.getEmail()) != null) {
-//            throw new BadRequestException("Email already exists");
-//        }
-//
-//        DriverProfile driver = new DriverProfile();
-//        driver.setEmail(driverRegisterDTO.getEmail());
-//        driver.setPassword(passwordEncoder.encode(driverRegisterDTO.getPassword()));
-//
-//        EmployeeInfo employeeInfo = modelMapper.map(driverRegisterDTO, EmployeeInfo.class);
-//        driver.setEmployeeInfo(employeeInfo);
-//
-//        employeeRepository.save(employeeInfo);
-//        driverRepository.save(driver);
-//
-//        return modelMapper.map(driver.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
-//    }
+        DriverProfile driver = new DriverProfile();
+        driver.setFirstName(driverRegisterDTO.getFirstName());
+        driver.setLastName(driverRegisterDTO.getLastName());
+        driver.setPhoneNumber(driverRegisterDTO.getPhoneNumber());
+        driver.setProfile(profile);
+        driverRepository.save(driver);
 
+        return driver;
+    }
 
-//    public EmployeeSimpleResponseDTO addAgent(Object isAdmin, AgentRegisterDTO agentRegisterDTO) {
-//
-//        CheckAuthentications.checkIfAdmin(isAdmin);
-//
-//        if (agentRepository.findByEmail(agentRegisterDTO.getEmail()) != null) {
-//            throw new BadRequestException("Email already exists");
-//        }
-//
-//        Agent agent = new Agent();
-//        agent.setEmail(agentRegisterDTO.getEmail());
-//        agent.setPassword(passwordEncoder.encode(agentRegisterDTO.getPassword()));
-//
-//        EmployeeInfo employeeInfo = modelMapper.map(agentRegisterDTO, EmployeeInfo.class);
-//        agent.setEmployeeInfo(employeeInfo);
-//
-//        employeeRepository.save(employeeInfo);
-//        agentRepository.save(agent);
-//
-//        return modelMapper.map(agent.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
-//    }
+@Transactional
+   public AgentProfile addAgent(AgentRegisterDTO agentRegisterDTO) {
+
+        if (profilesRepository.findByEmail(agentRegisterDTO.getEmail()) != null) {
+            throw new BadRequestException("Email already exists");
+        }
+       Profile profile = new Profile();
+       profile.setUsername(agentRegisterDTO.getEmail());
+       profile.setPassword(passwordEncoder.encode(agentRegisterDTO.getPassword()));
+       profile.setEmail(agentRegisterDTO.getEmail());
+       profile.setRole(roleRepository.findRoleById(3));
+       profilesRepository.save(profile);
+
+       AgentProfile agent = new AgentProfile();
+       agent.setFirstName(agentRegisterDTO.getFirstName());
+       agent.setLastName(agentRegisterDTO.getLastName());
+       agent.setPhoneNumber(agentRegisterDTO.getPhoneNumber());
+       agent.setProfile(profile);
+       agentRepository.save(agent);
+
+        return agent;
+    }
 
     public void removeDriver(int id) {
         if (driverRepository.findById(id) == null) {
@@ -124,7 +115,7 @@ public class AdminService {
         if (agentRepository.findById(id) == null) {
             throw new NotFoundException("No such agent");
         }
-        Agent agent = agentRepository.getById(id);
+        AgentProfile agent = agentRepository.getById(id);
         agentRepository.delete(agent);
     }
 }

@@ -3,6 +3,7 @@ package com.example.pds.model.employees.driver;
 import com.example.pds.model.user.UserProfile;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.vehicle.Vehicle;
+import com.example.pds.profiles.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class DriverProfile {
     private String driverStatus;
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfile profile;
+    private Profile profile;
     @ManyToOne
     @JoinColumn(name = "last_checked_in", referencedColumnName = "id")
     private Office lastCheckedIn;

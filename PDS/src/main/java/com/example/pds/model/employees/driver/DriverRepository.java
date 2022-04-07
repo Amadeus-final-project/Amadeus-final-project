@@ -1,5 +1,6 @@
 package com.example.pds.model.employees.driver;
 
+import com.example.pds.model.employees.agent.AgentProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -7,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface DriverRepository extends JpaRepository<DriverProfile, Integer> {
 
     DriverProfile findById(int id);
+
+    DriverProfile findByProfileId(int id);
 }
