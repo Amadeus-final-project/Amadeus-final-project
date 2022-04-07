@@ -1,16 +1,13 @@
-package com.example.pds.web.controllers;
+package com.example.pds.controllers;
 
 
 import com.example.pds.model.packages.*;
-import com.example.pds.model.user.User;
-import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 

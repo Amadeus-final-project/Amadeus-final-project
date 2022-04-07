@@ -1,4 +1,4 @@
-package com.example.pds.web.controllers;
+package com.example.pds.controllers;
 
 import com.example.pds.model.packages.PackageGetMyPackagesDTO;
 import com.example.pds.model.transaction.TransactionResponseDTO;
@@ -8,7 +8,6 @@ import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,23 +32,23 @@ public class UserController {
         return ResponseEntity.status(201).body(dto);
     }
 
-    @PostMapping("/login")
-    @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
-        UserSimpleResponseDTO dto = userService.login(user);
-        HttpSession session = request.getSession();
-        session.setAttribute(Constants.IS_USER, true);
-        session.setAttribute(Constants.LOGGED, true);
-        session.setAttribute(Constants.USER_ID, dto.getId());
-        return ResponseEntity.status(200).body(dto);
-    }
+//    @PostMapping("/login")
+//    @ResponseStatus(code = HttpStatus.OK)
+//    public ResponseEntity<UserSimpleResponseDTO> logIn(@RequestBody LoginDTO user, HttpServletRequest request) {
+//        UserSimpleResponseDTO dto = userService.login(user);
+//        HttpSession session = request.getSession();
+//        session.setAttribute(Constants.IS_USER, true);
+//        session.setAttribute(Constants.LOGGED, true);
+//        session.setAttribute(Constants.USER_ID, dto.getId());
+//        return ResponseEntity.status(200).body(dto);
+//    }
 
-    @PostMapping("/logout")
-    @ResponseStatus(code = HttpStatus.OK)
-    public String logOut(HttpSession session) {
-        session.invalidate();
-        return "Have a nice day";
-    }
+//    @PostMapping("/logout")
+//    @ResponseStatus(code = HttpStatus.OK)
+//    public String logOut(HttpSession session) {
+//        session.invalidate();
+//        return "Have a nice day";
+//    }
 
     @PutMapping("/forgottenPassword")
     @ResponseStatus(code = HttpStatus.OK)

@@ -1,4 +1,4 @@
-package com.example.pds.web.controllers;
+package com.example.pds.controllers;
 
 import com.example.pds.model.vehicle.VehicleService;
 import com.example.pds.model.vehicle.vehicleProperties.VehicleComplexResponseDTO;

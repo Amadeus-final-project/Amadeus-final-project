@@ -1,6 +1,6 @@
 package com.example.pds.model.transaction;
 
-import com.example.pds.model.user.User;
+import com.example.pds.profiles.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class Transaction {
     private Boolean isPaid;
     @ManyToOne
     @JoinColumn(name = "payer_id", referencedColumnName = "id")
-    private User payer;
+    private Profile payer;
     @Column
     private BigDecimal price;
     @Column(name = "paid_at")

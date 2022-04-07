@@ -1,8 +1,9 @@
 package com.example.pds.model.packages;
 
-import com.example.pds.config.CheckAuthentications;
-import com.example.pds.model.user.User;
+import com.example.pds.model.user.UserProfile;
+import com.example.pds.profiles.Profile;
 import com.example.pds.model.user.UserRepository;
+import com.example.pds.profiles.ProfilesRepository;
 import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
@@ -20,15 +21,17 @@ public class PackageService {
     ModelMapper modelMapper;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ProfilesRepository profilesRepository;
 
     public PackageSimpleResponseDTO sendPackage(int id, SendPackageDTO sendPackageDTO) {
-        User recipient = userRepository.findByUsername(sendPackageDTO.getRecipient());
+        Profile recipient = profilesRepository.findByUsername(sendPackageDTO.getRecipient());
 
         Package currentPackage = new Package();
-        currentPackage.setSender(userRepository.getById(id));
+        currentPackage.setSender(userRepository.findByProfileId(id));
 
-        currentPackage.setAddress(recipient.getAddress());
-        currentPackage.setRecipient(recipient);
+        //currentPackage.setAddress(recipient.getAddress());
+        currentPackage.setRecipient(userRepository.findByProfileId(recipient.getId()));
 
 
         Double volume = sendPackageDTO.getHeight() * sendPackageDTO.getWidth() * sendPackageDTO.getLength();
@@ -76,7 +79,7 @@ public class PackageService {
     }
 
     public List<PackageGetMyPackagesDTO> getAllMyPackages(int id) {
-        User user = userRepository.findById(id);
+        UserProfile user = userRepository.findByProfileId(id);
         List<Package> myPackages = packageRepository.findAllByRecipient(user);
         List <PackageGetMyPackagesDTO> dtoList = new ArrayList<>();
         for (Package pack : myPackages) {
@@ -85,7 +88,7 @@ public class PackageService {
         return dtoList;
     }
     public PackageGetMyPackagesDTO getMyPackage(int id, int userID){
-        User user = userRepository.findById(id);
+        UserProfile user = userRepository.findByProfileId(id);
         if (id != userID){
             throw new UnauthorizedException("Not your package");
         }

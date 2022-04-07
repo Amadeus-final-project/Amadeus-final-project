@@ -1,13 +1,11 @@
 package com.example.pds.web.filters;
 
-import com.example.pds.model.user.User;
-import com.example.pds.model.user.UserService;
+import com.example.pds.profiles.Profile;
+import com.example.pds.profiles.ProfilesService;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -17,17 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    private final UserService userService;
+    private final ProfilesService profilesService;
 
     private final String authSecret = "SUPER_DUPER_MEGA_GIGA_SECRET";
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserService userService) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, ProfilesService profilesService) {
         super(authenticationManager);
-        this.userService = userService;
+        this.profilesService = profilesService;
     }
 
     @Override
@@ -60,13 +57,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .getSubject();
 
             if(username != null) {
-                User user = (User) this.userService.loadUserByUsername(username);
+                Profile user = (Profile) this.profilesService.loadUserByUsername(username);
 
                 Map<String, Object> credentials = new LinkedHashMap<>();
 
                 credentials.put("id", user.getId());
                 credentials.put("email", user.getEmail());
-                credentials.put("fullName", user.getFirstName() + " " + user.getLastName());
 
                 usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         username,

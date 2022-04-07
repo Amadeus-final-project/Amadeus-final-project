@@ -1,8 +1,7 @@
-package com.example.pds.model.user;
+package com.example.pds.profiles;
 
 
-import com.example.pds.model.Role;
-import com.example.pds.model.address.Address;
+import com.example.pds.model.roles.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +15,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "profiles")
 @Getter
 @Setter
 @NoArgsConstructor
-public class User implements UserDetails {
+public class Profile implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,21 +27,12 @@ public class User implements UserDetails {
     @Column
     private String username;
     @Column
-    private String firstName;
-    @Column
-    private String lastName;
-    @Column
     private String password;
     @Column
     private String email;
-    @Column
-    private String phoneNumber;
-    @ManyToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
-    private Role role ;
+    private Role role;
 
 
     @Override

@@ -1,6 +1,6 @@
 package com.example.pds.model.employees.agent;
 
-import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
+import com.example.pds.model.user.UserProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,13 +16,13 @@ public class Agent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToOne
-    @JoinColumn(name = "employee_info_id", referencedColumnName = "id")
-    private EmployeeInfo employeeInfo;
-
     @Column
-    private String email;
+    private String firstName;
     @Column
-    private String password;
-
+    private String lastName;
+    @Column
+    private String phoneNumber;
+    @OneToOne
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private UserProfile profile;
 }

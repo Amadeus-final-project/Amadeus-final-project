@@ -3,13 +3,10 @@ package com.example.pds.model.employees.driver;
 import com.example.pds.config.CheckAuthentications;
 import com.example.pds.config.CheckViolations;
 import com.example.pds.model.employees.EmployeeLoginDTO;
-import com.example.pds.model.employees.EmployeeSimpleResponseDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
-import com.example.pds.model.employees.employeeInfo.EmployeeInfo;
-import com.example.pds.model.employees.employeeInfo.EmployeeProfileChangeDTO;
-import com.example.pds.model.employees.employeeInfo.EmployeeRepository;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleRepository;
+import com.example.pds.profiles.ProfilesRepository;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
 
@@ -35,30 +31,26 @@ public class DriverService {
     @Autowired
     private VehicleRepository vehicleRepository;
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private ProfilesRepository profilesRepository;
 
-    public EmployeeSimpleResponseDTO login(EmployeeLoginDTO login) {
+//    public EmployeeSimpleResponseDTO login(EmployeeLoginDTO login) {
+//
+//        CheckViolations.check(validator, login);
+//
+//        DriverProfile driver = driverRepository.findByEmail(login.getEmail());
+//        if (driver == null) {
+//            throw new NotFoundException("Driver not found");
+//        }
+//        //if (!passwordEncoder.matches(login.getPassword(), driver.getPassword())) {
+//        //  throw new BadRequestException("Wrong credentials");
+//        //}
+//        EmployeeInfo employeeInfo = employeeRepository.findById(driver.getId());
+//        return modelMapper.map(employeeInfo, EmployeeSimpleResponseDTO.class);
+//
+//    }
 
-        CheckViolations.check(validator, login);
-
-        Driver driver = driverRepository.findByEmail(login.getEmail());
-        if (driver == null) {
-            throw new NotFoundException("Driver not found");
-        }
-        //if (!passwordEncoder.matches(login.getPassword(), driver.getPassword())) {
-        //  throw new BadRequestException("Wrong credentials");
-        //}
-        EmployeeInfo employeeInfo = employeeRepository.findById(driver.getId());
-        return modelMapper.map(employeeInfo, EmployeeSimpleResponseDTO.class);
-
-    }
-
-    public void getVehicle(Object id, int vehicleId, Object isDriver) {
-        CheckAuthentications.checkIfLogged(id);
-
-        Driver driver = driverRepository.getById((int) id);
-
-        CheckAuthentications.checkIfDriver(isDriver);
+    public void getVehicle(int id, int vehicleId) {
+        DriverProfile driver = driverRepository.getById( id);
 
         Vehicle vehicle = vehicleRepository.getById(vehicleId);
         if (driver.getVehicle() != null) {
@@ -75,13 +67,8 @@ public class DriverService {
         vehicleRepository.save(vehicle);
     }
 
-    public void releaseVehicle(Object id, Object isDriver) {
-        CheckAuthentications.checkIfLogged(id);
-
-        Driver driver = driverRepository.getById((int) id);
-
-        CheckAuthentications.checkIfDriver(isDriver);
-
+    public void releaseVehicle(int id) {
+        DriverProfile driver = driverRepository.getById((id));
         if (driver.getVehicle() != null) {
             Vehicle vehicle = driver.getVehicle();
             vehicle.setIsAvailable(true);
@@ -92,62 +79,52 @@ public class DriverService {
 
     }
 
-    public List<DriverSimpleResponseDTO> getAllDrivers(Object isUser, Object isLogged) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-
-        CheckAuthentications.checkIfEmployee(isUser);
-
+    public List<DriverSimpleResponseDTO> getAllDrivers() {
         List<DriverSimpleResponseDTO> simpleDriver = new ArrayList<>();
-        List<Driver> drivers = driverRepository.findAll();
-        for (Driver driver : drivers) {
+        List<DriverProfile> drivers = driverRepository.findAll();
+        for (DriverProfile driver : drivers) {
             simpleDriver.add(modelMapper.map(driver, DriverSimpleResponseDTO.class));
-
-
         }
         return simpleDriver;
     }
 
-    public DriverSimpleResponseDTO getDriverById(int driverId, Object isUser, Object isLogged) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfEmployee(isUser);
-
+    public DriverSimpleResponseDTO getDriverById(int driverId) {
         if (driverRepository.findById(driverId) == null) {
             throw new NotFoundException("Driver does not exist");
         }
-        Driver driver = driverRepository.getById(driverId);
+        DriverProfile driver = driverRepository.getById(driverId);
         return modelMapper.map(driver, DriverSimpleResponseDTO.class);
     }
-
-    public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isDriver) {
-
-        CheckAuthentications.checkIfLogged(id);
-
-        CheckAuthentications.checkIfDriver(isDriver);
-
-        CheckViolations.check(validator, employeeProfileChangeDTO);
-
-        Driver driver = driverRepository.getById((int) id);
-        if (!driver.getEmployeeInfo().getFirstName().equals(employeeProfileChangeDTO.getFirstName())) {
-            driver.getEmployeeInfo().setFirstName(employeeProfileChangeDTO.getFirstName());
-        }
-        if (!driver.getEmployeeInfo().getLastName().equals(employeeProfileChangeDTO.getLastName())) {
-            driver.getEmployeeInfo().setLastName(employeeProfileChangeDTO.getLastName());
-        }
-
-        if (driver.getEmployeeInfo().getPhoneNumber() == null) {
-            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
-        }
-        if (!driver.getEmployeeInfo().getPhoneNumber().equals(employeeProfileChangeDTO.getPhoneNumber())) {
-            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
-        }
-        driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
-
-        driverRepository.save(driver);
-        return modelMapper.map(driver.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
-    }
 }
+
+//    public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isDriver) {
+//
+//        CheckAuthentications.checkIfLogged(id);
+//
+//        CheckAuthentications.checkIfDriver(isDriver);
+//
+//        CheckViolations.check(validator, employeeProfileChangeDTO);
+//
+//        DriverProfile driver = driverRepository.getById((int) id);
+//        if (!driver.getEmployeeInfo().getFirstName().equals(employeeProfileChangeDTO.getFirstName())) {
+//            driver.getEmployeeInfo().setFirstName(employeeProfileChangeDTO.getFirstName());
+//        }
+//        if (!driver.getEmployeeInfo().getLastName().equals(employeeProfileChangeDTO.getLastName())) {
+//            driver.getEmployeeInfo().setLastName(employeeProfileChangeDTO.getLastName());
+//        }
+//
+//        if (driver.getEmployeeInfo().getPhoneNumber() == null) {
+//            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
+//        }
+//        if (!driver.getEmployeeInfo().getPhoneNumber().equals(employeeProfileChangeDTO.getPhoneNumber())) {
+//            driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
+//        }
+//        driver.getEmployeeInfo().setPhoneNumber(employeeProfileChangeDTO.getPhoneNumber());
+//
+//        driverRepository.save(driver);
+//        return modelMapper.map(driver.getEmployeeInfo(), EmployeeSimpleResponseDTO.class);
+//    }
+//}
 
 // public void requestPaidLeave(Date start, Date end, String description, Object isLogged, Object isUser) {
 //TODO

@@ -1,8 +1,6 @@
 package com.example.pds.model.transaction;
 
-import com.example.pds.model.user.User;
 import com.example.pds.model.user.userDTO.UserComplexResponseDTO;
-import com.example.pds.model.user.userDTO.UserSimpleResponseDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
