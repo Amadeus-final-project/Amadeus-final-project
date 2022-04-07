@@ -70,6 +70,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .compact();
 
         response.getWriter()
-                .append("Authorization: Bearer " + token);
+                .append("{\"token\":" + "\"" + token + "\"}");
     }
 }
