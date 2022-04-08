@@ -1,7 +1,7 @@
 package com.example.pds.model.user;
 
 import com.example.pds.model.address.Address;
-import com.example.pds.profiles.Profile;
+import com.example.pds.controllers.profiles.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

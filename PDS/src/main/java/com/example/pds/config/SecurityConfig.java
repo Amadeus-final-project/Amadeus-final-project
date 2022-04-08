@@ -1,7 +1,6 @@
 package com.example.pds.config;
 
-import com.example.pds.model.user.UserService;
-import com.example.pds.profiles.ProfilesService;
+import com.example.pds.controllers.profiles.ProfilesService;
 import com.example.pds.web.filters.JwtAuthenticationFilter;
 import com.example.pds.web.filters.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;

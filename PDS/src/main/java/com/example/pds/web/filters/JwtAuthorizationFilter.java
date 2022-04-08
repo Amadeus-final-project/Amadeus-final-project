@@ -1,7 +1,7 @@
 package com.example.pds.web.filters;
 
-import com.example.pds.profiles.Profile;
-import com.example.pds.profiles.ProfilesService;
+import com.example.pds.controllers.profiles.Profile;
+import com.example.pds.controllers.profiles.ProfilesService;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

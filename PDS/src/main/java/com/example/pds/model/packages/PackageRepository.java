@@ -1,7 +1,6 @@
 package com.example.pds.model.packages;
 
 import com.example.pds.model.user.UserProfile;
-import com.example.pds.profiles.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

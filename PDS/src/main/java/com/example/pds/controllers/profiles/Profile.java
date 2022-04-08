@@ -1,7 +1,8 @@
-package com.example.pds.profiles;
+package com.example.pds.controllers.profiles;
 
 
 import com.example.pds.model.roles.Role;
+import com.example.pds.model.vacations.Vacation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,15 +25,25 @@ public class Profile implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column
     private String username;
+
     @Column
     private String password;
+
     @Column
     private String email;
+
     @OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
+
+    @OneToMany
+    @JoinTable(name = "profiles_vacations",
+                joinColumns = @JoinColumn(name = "profile_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "vacation_id", referencedColumnName = "id"))
+    private List<Vacation> vacations;
 
 
     @Override

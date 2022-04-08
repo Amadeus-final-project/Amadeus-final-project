@@ -1,6 +1,6 @@
 package com.example.pds.web.filters;
 
-import com.example.pds.profiles.Profile;
+import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.user.userDTO.LoginDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;

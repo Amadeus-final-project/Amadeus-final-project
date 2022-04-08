@@ -6,12 +6,16 @@ import com.example.pds.model.employees.agent.agentDTO.AgentRegisterDTO;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
+import com.example.pds.model.roles.Role;
 import com.example.pds.model.roles.RoleRepository;
+import com.example.pds.model.vacations.Vacation;
+import com.example.pds.model.vacations.VacationInformationDTO;
+import com.example.pds.model.vacations.VacationRepository;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleComplexDTO;
 import com.example.pds.model.vehicle.VehicleRepository;
-import com.example.pds.profiles.Profile;
-import com.example.pds.profiles.ProfilesRepository;
+import com.example.pds.controllers.profiles.Profile;
+import com.example.pds.controllers.profiles.ProfilesRepository;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -21,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -43,6 +49,9 @@ public class AdminService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private VacationRepository vacationRepository;
+
 
     public void removeVehicle(int id) {
         if (vehicleRepository.findById(id) == null) {
@@ -57,6 +66,7 @@ public class AdminService {
         vehicleRepository.save(vehicle);
         return modelMapper.map(vehicle, VehicleComplexDTO.class);
     }
+
     @Transactional
     public DriverProfile addDriver(DriverRegisterDTO driverRegisterDTO) {
 
@@ -80,25 +90,25 @@ public class AdminService {
         return driver;
     }
 
-@Transactional
-   public AgentProfile addAgent(AgentRegisterDTO agentRegisterDTO) {
+    @Transactional
+    public AgentProfile addAgent(AgentRegisterDTO agentRegisterDTO) {
 
         if (profilesRepository.findByEmail(agentRegisterDTO.getEmail()) != null) {
             throw new BadRequestException("Email already exists");
         }
-       Profile profile = new Profile();
-       profile.setUsername(agentRegisterDTO.getEmail());
-       profile.setPassword(passwordEncoder.encode(agentRegisterDTO.getPassword()));
-       profile.setEmail(agentRegisterDTO.getEmail());
-       profile.setRole(roleRepository.findRoleById(3));
-       profilesRepository.save(profile);
+        Profile profile = new Profile();
+        profile.setUsername(agentRegisterDTO.getEmail());
+        profile.setPassword(passwordEncoder.encode(agentRegisterDTO.getPassword()));
+        profile.setEmail(agentRegisterDTO.getEmail());
+        profile.setRole(roleRepository.findRoleById(3));
+        profilesRepository.save(profile);
 
-       AgentProfile agent = new AgentProfile();
-       agent.setFirstName(agentRegisterDTO.getFirstName());
-       agent.setLastName(agentRegisterDTO.getLastName());
-       agent.setPhoneNumber(agentRegisterDTO.getPhoneNumber());
-       agent.setProfile(profile);
-       agentRepository.save(agent);
+        AgentProfile agent = new AgentProfile();
+        agent.setFirstName(agentRegisterDTO.getFirstName());
+        agent.setLastName(agentRegisterDTO.getLastName());
+        agent.setPhoneNumber(agentRegisterDTO.getPhoneNumber());
+        agent.setProfile(profile);
+        agentRepository.save(agent);
 
         return agent;
     }
@@ -117,5 +127,55 @@ public class AdminService {
         }
         AgentProfile agent = agentRepository.getById(id);
         agentRepository.delete(agent);
+    }
+
+    public List<VacationInformationDTO> getAllUnapprovedVacations() {
+        List<Vacation> vacations = vacationRepository.getAllByApprovedFalse();
+
+        List<VacationInformationDTO> DTOs = new ArrayList<>();
+
+        for (Vacation vacation : vacations) {
+            VacationInformationDTO dto = new VacationInformationDTO();
+
+
+            dto.setId(vacation.getProfile().getId());
+            dto.setStartDate(vacation.getStartDate());
+            dto.setEndDate(vacation.getEndDate());
+            dto.setDescription(vacation.getDescription());
+
+            // TODO: Move firstName and lastName fields from AgentProfile, DriverProfile and UserProfile to Profile Class (DB table)
+            // dto.setFirstName(vacation.getProfile().getFirstName());
+            // dto.setLastName(vacation.getProfile().getLastName());
+
+            dto.setRoleName(vacation.getProfile().getRole().getName());
+
+            DTOs.add(dto);
+        }
+        return DTOs;
+    }
+
+    public String reviewVacation(VacationInformationDTO dto, boolean isApproved) {
+
+        int id = dto.getId();
+
+        Vacation vacation = vacationRepository.getById(id);
+
+        if (isApproved) {
+            vacation.setApproved(true);
+            vacationRepository.save(vacation);
+            return String.format("Vacation of employee %s %s from %s to %s approved successfully.",
+                    dto.getFirstName(),
+                    dto.getLastName(),
+                    dto.getStartDate().toString(),
+                    dto.getEndDate().toString());
+        } else {
+            return String.format("Vacation of employee %s %s from %s to %s denied.",
+                    dto.getFirstName(),
+                    dto.getLastName(),
+                    dto.getStartDate().toString(),
+                    dto.getEndDate().toString());
+        }
+
+        //TODO: Send email to employee?
     }
 }
