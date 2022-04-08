@@ -73,6 +73,7 @@ public class AdminService {
         if (profilesRepository.findByEmail(driverRegisterDTO.getEmail()) != null) {
             throw new BadRequestException("Email already exists");
         }
+
         Profile profile = new Profile();
         profile.setUsername(driverRegisterDTO.getEmail());
         profile.setPassword(passwordEncoder.encode(driverRegisterDTO.getPassword()));
@@ -143,9 +144,16 @@ public class AdminService {
             dto.setEndDate(vacation.getEndDate());
             dto.setDescription(vacation.getDescription());
 
-            // TODO: Move firstName and lastName fields from AgentProfile, DriverProfile and UserProfile to Profile Class (DB table)
-            // dto.setFirstName(vacation.getProfile().getFirstName());
-            // dto.setLastName(vacation.getProfile().getLastName());
+
+            if (vacation.getProfile().getRole().getId() == 2) {
+                DriverProfile driver = driverRepository.findByProfileId(vacation.getProfile().getId());
+                dto.setFirstName(driver.getFirstName());
+                dto.setLastName(driver.getLastName());
+            } else if (vacation.getProfile().getRole().getId() == 3) {
+                AgentProfile agent = agentRepository.findByProfileId(vacation.getProfile().getId());
+                dto.setFirstName(agent.getFirstName());
+                dto.setLastName(agent.getLastName());
+            }
 
             dto.setRoleName(vacation.getProfile().getRole().getName());
 

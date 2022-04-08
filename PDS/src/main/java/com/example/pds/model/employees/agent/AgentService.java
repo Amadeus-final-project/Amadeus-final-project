@@ -123,6 +123,7 @@ public class AgentService {
 
     public List<VacationSimpleInfoDTO> getAllMyVacations(int id) {
         List<Vacation> vacations = vacationRepository.getAllByProfileId(id);
+
         List<VacationSimpleInfoDTO> DTOs = new ArrayList<>();
 
         for (Vacation vacation : vacations) {
