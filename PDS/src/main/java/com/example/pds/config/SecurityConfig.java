@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/","/users/register","/login").permitAll()
+                .antMatchers("/","/users/register","/login", "/users/forgottenPassword").permitAll()
                 .antMatchers("/", "/users/**","/package/getAllMyPackages").hasAnyAuthority("USER")
                 .antMatchers("/", "/agent/**","/package/**").hasAnyAuthority("AGENT")
                 .antMatchers("/", "/driver/**") .hasAnyAuthority("DRIVER")
