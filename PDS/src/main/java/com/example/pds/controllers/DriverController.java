@@ -1,22 +1,20 @@
 package com.example.pds.controllers;
 
 import com.example.pds.model.address.AddressSimpleDTO;
-import com.example.pds.model.employees.EmployeeLoginDTO;
-import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverService;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
+import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.packages.PackageDriverRelatedInformationDTO;
-import com.example.pds.util.Constants;
+import com.example.pds.model.vacations.VacationInformationDTO;
+import com.example.pds.model.vacations.VacationSimpleInfoDTO;
+import com.example.pds.model.vacations.VacationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -27,19 +25,20 @@ public class DriverController {
 
     @Autowired
     private DriverService driverService;
+
     @PutMapping("/vehicle/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public void getCar(@PathVariable int id, Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int driverID =(int) map.get("id");
+        Map map = (Map) authentication.getCredentials();
+        int driverID = (int) map.get("id");
         driverService.getVehicle(driverID, id);
     }
 
     @PutMapping("/vehicle/releaseCar")
     @ResponseStatus(code = HttpStatus.OK)
     public String releaseCar(Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int id =(int) map.get("id");
+        Map map = (Map) authentication.getCredentials();
+        int id = (int) map.get("id");
         driverService.releaseVehicle(id);
         return "Done";
     }
@@ -59,30 +58,32 @@ public class DriverController {
         return driver;
     }
 
-//    @PutMapping("/requestPaidLeave")
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public String requestPaidLeave(@RequestBody Date start, Date end, String description, HttpServletRequest request) {
-//        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-//        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-//        //TODO
-//        //  driverService.requestPaidLeave(start, end, description, isLogged, isUser);
-//        return null;
-//    }
+    @PutMapping("/requestVacation")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String requestVacation(@RequestBody DriverRequestVacationDTO dto) {
+        int id = dto.getId();
+        LocalDate startDate = dto.getStartDate();
+        LocalDate endDate = dto.getEndDate();
+        String description = dto.getDescription();
+        VacationType vacationType = dto.getVacationType();
+
+        return driverService.requestVacation(id, startDate, endDate, description, vacationType);
+    }
 
     @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.OK)
     public void editProfile(@RequestBody DriverEditProfileDTO driverEditProfileDTO, Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int id =(int) map.get("id");
-         driverService.editProfile(id, driverEditProfileDTO);
+        Map map = (Map) authentication.getCredentials();
+        int id = (int) map.get("id");
+        driverService.editProfile(id, driverEditProfileDTO);
 
     }
 
     @PostMapping("/workingAddress")
     @ResponseStatus(code = HttpStatus.OK)
     public AddressSimpleDTO workingAddress(@RequestBody AddressSimpleDTO addressSimpleDTO, Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int id =(int) map.get("id");
+        Map map = (Map) authentication.getCredentials();
+        int id = (int) map.get("id");
         AddressSimpleDTO dto = driverService.addWorkingAddress(addressSimpleDTO, id);
         return dto;
     }
@@ -93,6 +94,15 @@ public class DriverController {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
         List<PackageDriverRelatedInformationDTO> dto = driverService.getAllPackagesInMyCity(id);
+        return dto;
+    }
+
+    @GetMapping("/viewAllVacations")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<VacationSimpleInfoDTO> getAllVacations(Authentication authentication) {
+        Map map = (Map) authentication.getCredentials();
+        int id = (int) map.get("id");
+        List<VacationSimpleInfoDTO> dto = driverService.getAllMyVacations(id);
         return dto;
     }
 

@@ -20,6 +20,7 @@ public class DriverEditProfileDTO {
     @NotBlank(message = "Last name is mandatory")
     @Pattern(regexp = "^[A-Za-zА-Яа-я]+", message = "Last name should be only letters")
     private String lastName;
+
     @Email(message = "Invalid email address")
     private String email;
 

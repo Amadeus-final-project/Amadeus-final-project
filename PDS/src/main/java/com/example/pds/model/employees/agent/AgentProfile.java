@@ -1,6 +1,6 @@
 package com.example.pds.model.employees.agent;
 
-import com.example.pds.profiles.Profile;
+import com.example.pds.controllers.profiles.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +22,11 @@ public class AgentProfile {
     private String lastName;
     @Column
     private String phoneNumber;
+
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
+
+    @Column(name = "available_paid_leave")
+    private int availablePaidLeave;
 }

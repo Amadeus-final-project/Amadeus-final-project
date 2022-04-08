@@ -1,9 +1,9 @@
 package com.example.pds.model.packages;
 
 import com.example.pds.model.user.UserProfile;
-import com.example.pds.profiles.Profile;
+import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.user.UserRepository;
-import com.example.pds.profiles.ProfilesRepository;
+import com.example.pds.controllers.profiles.ProfilesRepository;
 import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
