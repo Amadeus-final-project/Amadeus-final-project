@@ -28,7 +28,7 @@ public class PackageController {
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageComplexResponseDTO> getAllPackages(Authentication authentication) {
+    public List<PackageComplexResponseDTO> getAllPackages() {
         List<PackageComplexResponseDTO> packages = packageService.getAllPackages();
         return packages;
 
@@ -44,7 +44,7 @@ public class PackageController {
 
     @GetMapping("/getPendingPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request){
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(){
         List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages();
         return dto;
 

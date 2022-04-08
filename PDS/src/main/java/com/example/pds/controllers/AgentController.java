@@ -23,4 +23,16 @@ public class AgentController {
         int id =(int) map.get("id");
         agentService.editProfile(id, agentEditProfileDTO);
     }
+    @PutMapping("/approvePackage/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void approvePackage(@PathVariable int id ){
+        agentService.approvePackage(id);
+    }
+
+    @PutMapping("/disapprovePackage/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void disapprovePackage(@PathVariable int id){
+        agentService.disapprovePackage(id);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.pds.model.employees.driver;
 
+import com.example.pds.model.address.Address;
 import com.example.pds.model.user.UserProfile;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.vehicle.Vehicle;
@@ -36,5 +37,8 @@ public class DriverProfile {
     @OneToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     private Vehicle vehicle;
+    @ManyToOne
+    @JoinColumn(name = "working_address_id", referencedColumnName = "id")
+    private Address workingAddress;
 
 }

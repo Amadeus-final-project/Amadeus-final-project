@@ -2,11 +2,18 @@ package com.example.pds.model.employees.driver;
 
 import com.example.pds.config.CheckAuthentications;
 import com.example.pds.config.CheckViolations;
+import com.example.pds.model.address.Address;
+import com.example.pds.model.address.AddressRepository;
+import com.example.pds.model.address.AddressSimpleDTO;
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.agent.AgentProfile;
 import com.example.pds.model.employees.agent.agentDTO.AgentEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.model.offices.OfficeRepository;
+import com.example.pds.model.packages.Package;
+import com.example.pds.model.packages.PackageDriverRelatedInformationDTO;
+import com.example.pds.model.packages.PackageRepository;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleRepository;
 import com.example.pds.profiles.ProfilesRepository;
@@ -17,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Validator;
 import java.util.*;
 
@@ -35,22 +43,12 @@ public class DriverService {
     private VehicleRepository vehicleRepository;
     @Autowired
     private ProfilesRepository profilesRepository;
-
-//    public EmployeeSimpleResponseDTO login(EmployeeLoginDTO login) {
-//
-//        CheckViolations.check(validator, login);
-//
-//        DriverProfile driver = driverRepository.findByEmail(login.getEmail());
-//        if (driver == null) {
-//            throw new NotFoundException("Driver not found");
-//        }
-//        //if (!passwordEncoder.matches(login.getPassword(), driver.getPassword())) {
-//        //  throw new BadRequestException("Wrong credentials");
-//        //}
-//        EmployeeInfo employeeInfo = employeeRepository.findById(driver.getId());
-//        return modelMapper.map(employeeInfo, EmployeeSimpleResponseDTO.class);
-//
-//    }
+    @Autowired
+    private AddressRepository addressRepository;
+    @Autowired
+    private PackageRepository packageRepository;
+    @Autowired
+    private OfficeRepository officeRepository;
 
     public void getVehicle(int id, int vehicleId) {
         DriverProfile driver = driverRepository.getById(id);
@@ -118,6 +116,33 @@ public class DriverService {
             driver.setPhoneNumber(driverDTO.getPhoneNumber());
         }
         driverRepository.save(driver);
+    }
+
+    @Transactional
+    public AddressSimpleDTO addWorkingAddress(AddressSimpleDTO addressSimpleDTO, int id) {
+        DriverProfile driver = driverRepository.findByProfileId(id);
+        Address address = modelMapper.map(addressSimpleDTO, Address.class);
+        driver.setWorkingAddress(address);
+        addressRepository.save(address);
+        return modelMapper.map(address, AddressSimpleDTO.class);
+    }
+
+    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(int id) {
+        DriverProfile driverProfile = driverRepository.findByProfileId(id);
+
+        List<Package> listOfPackagesInMyCity = packageRepository.findAll();
+
+        List<PackageDriverRelatedInformationDTO> packagesToReturn = new LinkedList<>();
+
+        PackageDriverRelatedInformationDTO pack = new PackageDriverRelatedInformationDTO();
+        for (Package aPackage : listOfPackagesInMyCity) {
+            if (aPackage.getOffice().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity())){
+                pack.setCurrentLocation(aPackage.getOffice());
+                pack.setDeliveryAddress(aPackage.getAddress());
+                packagesToReturn.add(pack);
+            }
+        }
+        return packagesToReturn;
     }
 }
 

@@ -1,10 +1,12 @@
 package com.example.pds.controllers;
 
+import com.example.pds.model.address.AddressSimpleDTO;
 import com.example.pds.model.employees.EmployeeLoginDTO;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverService;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.model.packages.PackageDriverRelatedInformationDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,7 +69,7 @@ public class DriverController {
 //        return null;
 //    }
 
-    @PutMapping("driver/edit")
+    @PutMapping("/edit")
     @ResponseStatus(code = HttpStatus.OK)
     public void editProfile(@RequestBody DriverEditProfileDTO driverEditProfileDTO, Authentication authentication) {
         Map map=(Map) authentication.getCredentials();
@@ -76,5 +78,22 @@ public class DriverController {
 
     }
 
+    @PostMapping("/workingAddress")
+    @ResponseStatus(code = HttpStatus.OK)
+    public AddressSimpleDTO workingAddress(@RequestBody AddressSimpleDTO addressSimpleDTO, Authentication authentication) {
+        Map map=(Map) authentication.getCredentials();
+        int id =(int) map.get("id");
+        AddressSimpleDTO dto = driverService.addWorkingAddress(addressSimpleDTO, id);
+        return dto;
+    }
+
+    @GetMapping("/getAllPackagesForMe")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(Authentication authentication) {
+        Map map = (Map) authentication.getCredentials();
+        int id = (int) map.get("id");
+        List<PackageDriverRelatedInformationDTO> dto = driverService.getAllPackagesInMyCity(id);
+        return dto;
+    }
 
 }
