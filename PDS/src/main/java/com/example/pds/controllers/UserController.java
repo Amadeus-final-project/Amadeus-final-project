@@ -30,7 +30,7 @@ public class UserController {
     }
     @PutMapping("/forgottenPassword")
     @ResponseStatus(code = HttpStatus.OK)
-    public String forgottenPassword(@RequestParam String email) {
+    public String forgottenPassword(@RequestBody String email) {
         userService.forgottenPassword(email);
         return "New password token is sent to email";
     }
@@ -52,24 +52,6 @@ public class UserController {
         int id =(int) map.get("id");
         UserComplexResponseDTO dto = userService.editProfile(id, user);
         return ResponseEntity.status(200).body(dto);
-    }
-
-    @GetMapping("/getAllPackages")
-    @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPackages( Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int id =(int) map.get("id");
-        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id);
-        return dtoList;
-    }
-
-    @GetMapping("/getPackageById/{id}")
-    @ResponseStatus(code = HttpStatus.OK)
-    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id,  Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int userID =(int) map.get("id");
-        PackageGetMyPackagesDTO dto = userService.getPackageBydId(id, userID);
-        return dto;
     }
 
     @GetMapping("/getAllTransactions")
