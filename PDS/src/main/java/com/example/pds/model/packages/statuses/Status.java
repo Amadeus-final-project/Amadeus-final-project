@@ -1,8 +1,9 @@
-package com.example.pds.model.packages;
+package com.example.pds.model.packages.statuses;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 

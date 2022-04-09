@@ -1,7 +1,6 @@
 package com.example.pds.config;
 
-import com.example.pds.model.user.UserService;
-import com.example.pds.profiles.ProfilesService;
+import com.example.pds.controllers.profiles.ProfilesService;
 import com.example.pds.web.filters.JwtAuthenticationFilter;
 import com.example.pds.web.filters.JwtAuthorizationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,10 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().disable()
+                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/","/users/register","/login").permitAll()
+                .antMatchers("/","/users/register","/login", "/users/forgottenPassword").permitAll()
                 .antMatchers("/", "/users/**","/package/getAllMyPackages").hasAnyAuthority("USER")
                 .antMatchers("/", "/agent/**","/package/**").hasAnyAuthority("AGENT")
                 .antMatchers("/", "/driver/**") .hasAnyAuthority("DRIVER")

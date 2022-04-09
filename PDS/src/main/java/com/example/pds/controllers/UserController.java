@@ -1,10 +1,9 @@
 package com.example.pds.controllers;
 
-import com.example.pds.model.packages.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.packageDTO.PackageGetMyPackagesDTO;
 import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.user.*;
 import com.example.pds.model.user.userDTO.*;
-import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +31,7 @@ public class UserController {
     }
     @PutMapping("/forgottenPassword")
     @ResponseStatus(code = HttpStatus.OK)
-    public String forgottenPassword(@RequestParam String email) {
+    public String forgottenPassword(@RequestBody String email) {
         userService.forgottenPassword(email);
         return "New password token is sent to email";
     }
@@ -58,23 +55,6 @@ public class UserController {
         return ResponseEntity.status(200).body(dto);
     }
 
-    @GetMapping("/getAllPackages")
-    @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPackages( Authentication authentication, Pageable page) {
-        Map map=(Map) authentication.getCredentials();
-        int id =(int) map.get("id");
-        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id, page);
-        return dtoList;
-    }
-
-    @GetMapping("/getPackageById/{id}")
-    @ResponseStatus(code = HttpStatus.OK)
-    public PackageGetMyPackagesDTO getPackageById(@PathVariable int id,  Authentication authentication) {
-        Map map=(Map) authentication.getCredentials();
-        int userID =(int) map.get("id");
-        PackageGetMyPackagesDTO dto = userService.getPackageBydId(id, userID);
-        return dto;
-    }
 
     @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)

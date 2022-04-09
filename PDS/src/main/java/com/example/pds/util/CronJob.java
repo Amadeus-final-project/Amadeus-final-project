@@ -2,9 +2,9 @@ package com.example.pds.util;
 
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.PackageRepository;
-import com.example.pds.profiles.Profile;
+import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.user.UserRepository;
-import com.example.pds.profiles.ProfilesRepository;
+import com.example.pds.controllers.profiles.ProfilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Pageable;

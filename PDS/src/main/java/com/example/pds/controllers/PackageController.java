@@ -2,6 +2,10 @@ package com.example.pds.controllers;
 
 
 import com.example.pds.model.packages.*;
+import com.example.pds.model.packages.packageDTO.PackageComplexResponseDTO;
+import com.example.pds.model.packages.packageDTO.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.packageDTO.PackageSimpleResponseDTO;
+import com.example.pds.model.packages.packageDTO.SendPackageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +25,7 @@ public class PackageController {
 
     @PostMapping("/send")
     @ResponseStatus(code = HttpStatus.OK)
-    public PackageSimpleResponseDTO sendPackage(@RequestBody SendPackageDTO sendPackageDTO,Authentication authentication) {
+    public PackageSimpleResponseDTO sendPackage(@RequestBody SendPackageDTO sendPackageDTO, Authentication authentication) {
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
         PackageSimpleResponseDTO dto = packageService.sendPackage(id, sendPackageDTO);
@@ -30,7 +34,7 @@ public class PackageController {
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageComplexResponseDTO> getAllPackages(Authentication authentication, Pageable page) {
+    public List<PackageComplexResponseDTO> getAllPackages(Pageable page) {
         return packageService.getAllPackages(page);
     }
 
@@ -44,7 +48,7 @@ public class PackageController {
 
     @GetMapping("/getPendingPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request, Pageable page){
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Pageable page){
         List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages(page);
         return dto;
 

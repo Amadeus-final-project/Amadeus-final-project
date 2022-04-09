@@ -3,9 +3,9 @@ package com.example.pds.model.packages;
 import com.example.pds.model.address.Address;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.offices.Office;
+import com.example.pds.model.packages.statuses.Status;
 import com.example.pds.model.transaction.Transaction;
 import com.example.pds.model.user.UserProfile;
-import com.example.pds.profiles.Profile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,8 +31,8 @@ public class Package {
     @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private UserProfile recipient;
     @ManyToOne
-    @JoinColumn(name = "delivery_address_id", referencedColumnName = "id")
-    private Address address;
+    @JoinColumn(name = "delivery_office_id", referencedColumnName = "id")
+    private Office deliveryOffice;
     @ManyToOne
     @JoinColumn(name = "assigned_driver_id", referencedColumnName = "id")
     private DriverProfile driver;
