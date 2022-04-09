@@ -31,8 +31,8 @@ public class Package {
     @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private UserProfile recipient;
     @ManyToOne
-    @JoinColumn(name = "delivery_address_id", referencedColumnName = "id")
-    private Address address;
+    @JoinColumn(name = "delivery_office_id", referencedColumnName = "id")
+    private Office deliveryOffice;
     @ManyToOne
     @JoinColumn(name = "assigned_driver_id", referencedColumnName = "id")
     private DriverProfile driver;

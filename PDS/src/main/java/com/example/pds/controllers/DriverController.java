@@ -5,8 +5,7 @@ import com.example.pds.model.employees.driver.DriverService;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
-import com.example.pds.model.packages.PackageDriverRelatedInformationDTO;
-import com.example.pds.model.vacations.VacationInformationDTO;
+import com.example.pds.model.packages.packageDTO.PackageDriverRelatedInformationDTO;
 import com.example.pds.model.vacations.VacationSimpleInfoDTO;
 import com.example.pds.model.vacations.VacationType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -104,6 +102,14 @@ public class DriverController {
         int id = (int) map.get("id");
         List<VacationSimpleInfoDTO> dto = driverService.getAllMyVacations(id);
         return dto;
+    }
+    @PutMapping("/startWork")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void takeAssignedPackages(@RequestBody HashSet<Integer> officesIDs, Authentication authentication) {
+        Map map = (Map) authentication.getCredentials();
+        int id = (int) map.get("id");
+        driverService.takeAssignedPackages(officesIDs, id);
+
     }
 
 }

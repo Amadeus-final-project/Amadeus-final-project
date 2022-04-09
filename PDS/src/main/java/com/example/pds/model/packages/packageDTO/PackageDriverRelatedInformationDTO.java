@@ -1,6 +1,7 @@
-package com.example.pds.model.packages;
+package com.example.pds.model.packages.packageDTO;
 
 import com.example.pds.model.address.Address;
+import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.offices.Office;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class PackageDriverRelatedInformationDTO {
-    private Office currentLocation;
-    private Address deliveryAddress;
+    private Office deliveryOffice;
+    private Office office;
 }

@@ -1,4 +1,4 @@
-package com.example.pds.model.packages;
+package com.example.pds.model.packages.packageDTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

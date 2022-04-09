@@ -9,8 +9,9 @@ import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.offices.OfficeRepository;
 import com.example.pds.model.packages.Package;
-import com.example.pds.model.packages.PackageDriverRelatedInformationDTO;
+import com.example.pds.model.packages.packageDTO.PackageDriverRelatedInformationDTO;
 import com.example.pds.model.packages.PackageRepository;
+import com.example.pds.model.packages.statuses.StatusRepository;
 import com.example.pds.model.vacations.*;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.model.vehicle.VehicleRepository;
@@ -51,6 +52,8 @@ public class DriverService {
     private OfficeRepository officeRepository;
     @Autowired
     private VacationRepository vacationRepository;
+    @Autowired
+    private StatusRepository statusRepository;
 
 
     public void getVehicle(int id, int vehicleId) {
@@ -139,9 +142,9 @@ public class DriverService {
 
         PackageDriverRelatedInformationDTO pack = new PackageDriverRelatedInformationDTO();
         for (Package aPackage : listOfPackagesInMyCity) {
-            if (aPackage.getOffice().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity())){
-                pack.setCurrentLocation(aPackage.getOffice());
-                pack.setDeliveryAddress(aPackage.getAddress());
+            if (aPackage.getOffice().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity())&&( aPackage.getStatus()==statusRepository.findStatusById(2))){
+                pack.setOffice(aPackage.getOffice());
+                pack.setDeliveryOffice(aPackage.getDeliveryOffice());
                 packagesToReturn.add(pack);
             }
         }
@@ -194,6 +197,61 @@ public class DriverService {
 
         return DTOs;
 
+    }
+@Transactional
+    public void takeAssignedPackages(HashSet<Integer> officesIDs, int id) {
+        DriverProfile driver = driverRepository.findByProfileId(id);
+        HashSet<Integer> route =officesIDs;
+        List<Package> packages = packageRepository.findAll();
+        List<Package> toBePickedUp = new LinkedList<>();
+
+        if (driver.getVehicle()==null){
+            throw new BadRequestException("You dont have a car assigned");
+        }
+
+        Vehicle vehicle = vehicleRepository.findById(driver.getVehicle().getId());
+        for (Package pack : packages) {
+            if (pack.getOffice().getAddress().getCity().equals(driver.getWorkingAddress().getCity()) &&( pack.getStatus()==statusRepository.findStatusById(2))){
+                toBePickedUp.add(pack);
+            }
+
+        }
+        for (Package pack : toBePickedUp) {
+            //TODO add priority
+
+            if (route.contains(pack.getOffice().getId())) {
+                if (vehicle.getCapacity()>pack.getVolume()) {
+                    vehicle.setCapacity(vehicle.getCapacity() - pack.getVolume());
+                    pack.setDriver(driver);
+                    pack.setStatus(statusRepository.findStatusById(3));
+                    pack.setTrackingNumber(generateTrackingNumber());
+                    packageRepository.save(pack);
+                    vehicleRepository.save(vehicle);
+                }
+            }
+        }
+
+    }
+
+    private String generateTrackingNumber(){
+        int n = 10;
+
+            String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    + "0123456789"
+                    + "abcdefghijklmnopqrstuvxyz";
+
+            StringBuilder sb = new StringBuilder(n);
+
+            for (int i = 0; i < n; i++) {
+
+                int index
+                        = (int)(AlphaNumericString.length()
+                        * Math.random());
+                sb.append(AlphaNumericString
+                        .charAt(index));
+            }
+
+            return sb.toString();
     }
 }
 

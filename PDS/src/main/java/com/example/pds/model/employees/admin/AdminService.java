@@ -131,7 +131,7 @@ public class AdminService {
     }
 
     public List<VacationInformationDTO> getAllUnapprovedVacations() {
-        List<Vacation> vacations = vacationRepository.getAllByApprovedFalse();
+        List<Vacation> vacations = vacationRepository.getAllByIsApprovedFalse();
 
         List<VacationInformationDTO> DTOs = new ArrayList<>();
 

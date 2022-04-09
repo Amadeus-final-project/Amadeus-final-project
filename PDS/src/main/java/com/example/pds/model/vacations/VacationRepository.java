@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface VacationRepository extends JpaRepository<Vacation, Integer> {
 
-    List<Vacation> getAllByApprovedFalse();
+    List<Vacation> getAllByIsApprovedFalse();
 
     List<Vacation> getAllByProfileId(int id);
 

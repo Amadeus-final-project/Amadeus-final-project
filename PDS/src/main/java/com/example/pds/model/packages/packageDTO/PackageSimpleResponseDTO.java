@@ -1,4 +1,4 @@
-package com.example.pds.model.packages;
+package com.example.pds.model.packages.packageDTO;
 
 import com.example.pds.model.user.userDTO.UserReceivePackageDTO;
 import lombok.Getter;

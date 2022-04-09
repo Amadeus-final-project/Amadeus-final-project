@@ -1,18 +1,15 @@
 package com.example.pds.controllers;
 
-import com.example.pds.model.packages.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.packageDTO.PackageGetMyPackagesDTO;
 import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.user.*;
 import com.example.pds.model.user.userDTO.*;
-import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 

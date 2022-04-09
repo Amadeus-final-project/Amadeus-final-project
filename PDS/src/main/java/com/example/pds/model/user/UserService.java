@@ -1,7 +1,7 @@
 package com.example.pds.model.user;
 
 import com.example.pds.model.packages.Package;
-import com.example.pds.model.packages.PackageGetMyPackagesDTO;
+import com.example.pds.model.packages.packageDTO.PackageGetMyPackagesDTO;
 import com.example.pds.model.roles.RoleRepository;
 import com.example.pds.model.transaction.Transaction;
 import com.example.pds.model.transaction.TransactionResponseDTO;
