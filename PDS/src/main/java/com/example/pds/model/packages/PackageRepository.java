@@ -14,9 +14,6 @@ public interface PackageRepository extends JpaRepository<Package, Integer> {
 
     Page<Package> findAll(Pageable page);
 
-    //TODO make it less stupid
-    Package findByRecipient(UserProfile recipient);
-
     Package findById(int id);
 
     List<Package> findAllByStatusId(int id, Pageable page);
