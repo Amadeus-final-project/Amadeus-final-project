@@ -97,7 +97,7 @@ public class PackageService {
         if (id != userID){
             throw new UnauthorizedException("Not your package");
         }
-        Package myPackage = packageRepository.findByRecipient(user);
+        Package myPackage = packageRepository.findById(id);
         return modelMapper.map(myPackage,PackageGetMyPackagesDTO.class);
     }
 
