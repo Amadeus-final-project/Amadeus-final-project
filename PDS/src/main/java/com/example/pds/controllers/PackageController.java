@@ -44,8 +44,8 @@ public class PackageController {
 
     @GetMapping("/getPendingPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request){
-        List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages();
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(HttpServletRequest request, Pageable page){
+        List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages(page);
         return dto;
 
     }
@@ -53,10 +53,10 @@ public class PackageController {
     @GetMapping("/getAllMyPackages")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication){
+    public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication, Pageable page){
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        List<PackageGetMyPackagesDTO> dtoList= packageService.getAllMyPackages(id);
+        List<PackageGetMyPackagesDTO> dtoList= packageService.getAllMyPackages(id, page);
         return dtoList;
     }
 

@@ -26,7 +26,7 @@ public class DriverProfile {
     @Column
     private String phoneNumber;
     @Column
-    private String driverStatus;
+    private String driverStatusId;
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;

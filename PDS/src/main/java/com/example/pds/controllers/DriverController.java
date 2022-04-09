@@ -7,6 +7,7 @@ import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -44,8 +45,8 @@ public class DriverController {
 
     @GetMapping("/getAllDrivers")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<DriverSimpleResponseDTO> getAllDrivers() {
-        List<DriverSimpleResponseDTO> drivers = driverService.getAllDrivers();
+    public List<DriverSimpleResponseDTO> getAllDrivers(Pageable page) {
+        List<DriverSimpleResponseDTO> drivers = driverService.getAllDrivers(page);
         return drivers;
 
     }

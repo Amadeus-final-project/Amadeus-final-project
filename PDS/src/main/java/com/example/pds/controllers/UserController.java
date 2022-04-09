@@ -6,6 +6,7 @@ import com.example.pds.model.user.*;
 import com.example.pds.model.user.userDTO.*;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -59,10 +60,10 @@ public class UserController {
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPackages( Authentication authentication) {
+    public List<PackageGetMyPackagesDTO> getAllPackages( Authentication authentication, Pageable page) {
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id);
+        List<PackageGetMyPackagesDTO> dtoList = userService.getAllPackages(id, page);
         return dtoList;
     }
 
@@ -77,10 +78,10 @@ public class UserController {
 
     @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<TransactionResponseDTO> getAllTransactions(Authentication authentication) {
+    public List<TransactionResponseDTO> getAllTransactions(Authentication authentication, Pageable page) {
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id);
+        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id, page);
         return transactions;
     }
 

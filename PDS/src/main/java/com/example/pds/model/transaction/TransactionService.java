@@ -4,6 +4,7 @@ import com.example.pds.config.CheckAuthentications;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class TransactionService {
     @Autowired
     ModelMapper modelMapper;
 
-    public List<TransactionResponseDTO> getTransactions(Object isAdmin, Object isAgent, Object isLogged) {
+    public List<TransactionResponseDTO> getTransactions(Object isAdmin, Object isAgent, Object isLogged, Pageable page) {
 
         CheckAuthentications.checkIfLogged(isLogged);
         CheckAuthentications.checkIfAdmin(isAdmin);
@@ -25,7 +26,7 @@ public class TransactionService {
 
         List<TransactionResponseDTO> responseTransactions = new ArrayList<>();
 
-        List<Transaction> transactions = transactionRepository.findAll();
+        List<Transaction> transactions = transactionRepository.findAll(page).getContent();
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
         }

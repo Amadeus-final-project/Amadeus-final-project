@@ -7,6 +7,7 @@ import com.example.pds.model.user.UserRepository;
 import com.example.pds.profiles.ProfilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -67,7 +68,7 @@ public class CronJob {
     public void packageToReceive(){
         //TODO try findByStatusID
         Set<String> emails = new HashSet<>();
-        List<Package> packages = packageRepository.findAllByStatusId(3);
+        List<Package> packages = packageRepository.findAllByStatusId(3, null);
         for (Package pack : packages) {
             emails.add(pack.getRecipient().getProfile().getEmail());
         }
