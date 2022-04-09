@@ -12,6 +12,7 @@ import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,9 +54,9 @@ public class PackageService {
 
     }
 
-    public List<PackageComplexResponseDTO> getAllPackages() {
+    public List<PackageComplexResponseDTO> getAllPackages(Pageable page) {
         List<PackageComplexResponseDTO> complexPackages = new ArrayList<>();
-        List<Package> packages = packageRepository.findAll();
+        List<Package> packages = packageRepository.findAll(page).getContent();
         for (Package package1 : packages) {
             complexPackages.add(modelMapper.map(package1, PackageComplexResponseDTO.class));
         }
@@ -72,9 +73,9 @@ public class PackageService {
         return modelMapper.map(package1, PackageComplexResponseDTO.class);
     }
 
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages() {
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Pageable page) {
         List<PackageGetMyPackagesDTO> packageToReturn = new ArrayList<>();
-        List<Package> packages = packageRepository.findAllByStatusId(1);
+        List<Package> packages = packageRepository.findAllByStatusId(1, page);
         for (Package pack : packages) {
             packageToReturn.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));
 
@@ -82,9 +83,9 @@ public class PackageService {
         return packageToReturn;
     }
 
-    public List<PackageGetMyPackagesDTO> getAllMyPackages(int id) {
-        UserProfile user = userRepository.findByProfileId(id);
-        List<Package> myPackages = packageRepository.findAllByRecipient(user);
+    public List<PackageGetMyPackagesDTO> getAllMyPackages(int userId, Pageable page) {
+        UserProfile user = userRepository.findByProfileId(userId);
+        List<Package> myPackages = packageRepository.findAllByRecipient(user, page).getContent();
         List <PackageGetMyPackagesDTO> dtoList = new ArrayList<>();
         for (Package pack : myPackages) {
             dtoList.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));

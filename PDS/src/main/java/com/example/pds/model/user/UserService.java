@@ -15,6 +15,7 @@ import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -184,11 +185,10 @@ public class UserService {
         return token;
     }
 
-    public List<PackageGetMyPackagesDTO> getAllPackages(int id) {
+    public List<PackageGetMyPackagesDTO> getAllPackages(int id, Pageable page) {
 
         UserProfile userProfile = userRepository.findByProfileId(id);
-
-        List<Package> packages = packageRepository.findAllByRecipient(userProfile);
+        List<Package> packages = packageRepository.findAllByRecipient(userProfile, page).getContent();
 
         List<PackageGetMyPackagesDTO> packagesToReturn = new ArrayList<>();
         for (Package aPackage : packages) {
@@ -200,7 +200,7 @@ public class UserService {
 
     public PackageGetMyPackagesDTO getPackageBydId(int id, int userId) {
         if (packageRepository.findById(id) == null) {
-            throw new NotFoundException("Package doesn't  exist");
+            throw new NotFoundException("Package doesn't exist");
         }
         Package pack = packageRepository.findById(id);
         if  (userId != pack.getRecipient().getId()) {
@@ -211,10 +211,10 @@ public class UserService {
 
     }
 
-   public List<TransactionResponseDTO> getAllTransactions(int id) {
+   public List<TransactionResponseDTO> getAllTransactions(int id, Pageable page) {
 
         UserProfile profile = userRepository.findByProfileId(id);
-        List<Transaction> packages = transactionRepository.findAllByPayer(profile);
+        List<Transaction> packages = transactionRepository.findAllByPayer(profile, page);
 
         List<TransactionResponseDTO> packagesToReturn = new ArrayList<>();
         for (Transaction transaction : packages) {

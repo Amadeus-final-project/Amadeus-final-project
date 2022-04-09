@@ -5,6 +5,7 @@ import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.user.*;
 import com.example.pds.model.user.userDTO.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -54,12 +55,13 @@ public class UserController {
         return ResponseEntity.status(200).body(dto);
     }
 
+
     @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<TransactionResponseDTO> getAllTransactions(Authentication authentication) {
+    public List<TransactionResponseDTO> getAllTransactions(Authentication authentication, Pageable page) {
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id);
+        List<TransactionResponseDTO> transactions = userService.getAllTransactions(id, page);
         return transactions;
     }
 

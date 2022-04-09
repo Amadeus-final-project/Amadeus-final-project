@@ -1,6 +1,8 @@
 package com.example.pds.model.transaction;
 
 import com.example.pds.model.user.UserProfile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +14,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 
     Transaction getTransactionById(int id);
 
-    List<Transaction> findAllByPayer(UserProfile recipient);
+    List<Transaction> findAllByPayer(UserProfile recipient, Pageable page);
 }

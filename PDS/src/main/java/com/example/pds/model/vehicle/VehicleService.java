@@ -5,6 +5,7 @@ import com.example.pds.model.vehicle.vehicleProperties.VehicleComplexResponseDTO
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,13 +19,13 @@ public class VehicleService {
     @Autowired
     ModelMapper modelMapper;
 
-    public List<VehicleComplexResponseDTO> getAllVehicles(Object isUser, Object isLogged) {
+    public List<VehicleComplexResponseDTO> getAllVehicles(Object isUser, Object isLogged, Pageable page) {
 
         CheckAuthentications.checkIfLogged(isLogged);
         CheckAuthentications.checkIfEmployee(isUser);
 
         List<VehicleComplexResponseDTO> complexVehicle = new ArrayList<>();
-        List<Vehicle> vehicles = vehicleRepository.findAll();
+        List<Vehicle> vehicles = vehicleRepository.findAll(page).getContent();
         for (Vehicle vehicle : vehicles) {
             complexVehicle.add(modelMapper.map(vehicle, VehicleComplexResponseDTO.class));
         }
@@ -32,7 +33,6 @@ public class VehicleService {
     }
 
     public VehicleComplexResponseDTO getVehicleById(int id, Object isUser, Object isLogged) {
-
         CheckAuthentications.checkIfLogged(isLogged);
         CheckAuthentications.checkIfUser(isUser);
 

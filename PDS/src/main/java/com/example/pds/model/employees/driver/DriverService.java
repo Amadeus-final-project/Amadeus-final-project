@@ -20,6 +20,7 @@ import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,9 +87,9 @@ public class DriverService {
 
     }
 
-    public List<DriverSimpleResponseDTO> getAllDrivers() {
+    public List<DriverSimpleResponseDTO> getAllDrivers(Pageable page) {
         List<DriverSimpleResponseDTO> simpleDriver = new ArrayList<>();
-        List<DriverProfile> drivers = driverRepository.findAll();
+        List<DriverProfile> drivers = driverRepository.findAll(page).getContent();
         for (DriverProfile driver : drivers) {
             simpleDriver.add(modelMapper.map(driver, DriverSimpleResponseDTO.class));
         }

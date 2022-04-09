@@ -7,6 +7,8 @@ import com.example.pds.model.packages.packageDTO.PackageGetMyPackagesDTO;
 import com.example.pds.model.packages.packageDTO.PackageSimpleResponseDTO;
 import com.example.pds.model.packages.packageDTO.SendPackageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -32,10 +34,8 @@ public class PackageController {
 
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageComplexResponseDTO> getAllPackages() {
-        List<PackageComplexResponseDTO> packages = packageService.getAllPackages();
-        return packages;
-
+    public List<PackageComplexResponseDTO> getAllPackages(Pageable page) {
+        return packageService.getAllPackages(page);
     }
 
     @GetMapping("/{id}")
@@ -48,8 +48,8 @@ public class PackageController {
 
     @GetMapping("/getPendingPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(){
-        List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages();
+    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Pageable page){
+        List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages(page);
         return dto;
 
     }
@@ -57,10 +57,10 @@ public class PackageController {
     @GetMapping("/getAllMyPackages")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication){
+    public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication, Pageable page){
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        List<PackageGetMyPackagesDTO> dtoList= packageService.getAllMyPackages(id);
+        List<PackageGetMyPackagesDTO> dtoList= packageService.getAllMyPackages(id, page);
         return dtoList;
     }
 

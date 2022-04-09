@@ -4,6 +4,7 @@ import com.example.pds.model.transaction.TransactionResponseDTO;
 import com.example.pds.model.transaction.TransactionService;
 import com.example.pds.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +20,11 @@ public class TransactionController {
 
     @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request) {
+    public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request, Pageable page) {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
         Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
         Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        List<TransactionResponseDTO> transaction = transactionService.getTransactions(isAdmin, isAgent, isLogged);
+        List<TransactionResponseDTO> transaction = transactionService.getTransactions(isAdmin, isAgent, isLogged, page);
         return transaction;
     }
 
