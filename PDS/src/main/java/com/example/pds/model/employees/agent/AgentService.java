@@ -3,7 +3,6 @@ package com.example.pds.model.employees.agent;
 import com.example.pds.config.CheckViolations;
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.employees.agent.agentDTO.AgentEditProfileDTO;
-import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.PackageRepository;
 import com.example.pds.model.packages.statuses.StatusRepository;
@@ -16,6 +15,7 @@ import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -121,8 +121,8 @@ public class AgentService {
 
     }
 
-    public List<VacationSimpleInfoDTO> getAllMyVacations(int id) {
-        List<Vacation> vacations = vacationRepository.getAllByProfileId(id);
+    public List<VacationSimpleInfoDTO> getAllMyVacations(int id, Pageable page) {
+        List<Vacation> vacations = vacationRepository.getAllByProfileId(id, page);
 
         List<VacationSimpleInfoDTO> DTOs = new ArrayList<>();
 

@@ -134,7 +134,7 @@ public class DriverService {
         return modelMapper.map(address, AddressSimpleDTO.class);
     }
 
-    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(int id) {
+    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(int id, Pageable page) {
         DriverProfile driverProfile = driverRepository.findByProfileId(id);
 
         List<Package> listOfPackagesInMyCity = packageRepository.findAll();
@@ -182,8 +182,8 @@ public class DriverService {
     }
 
 
-    public List<VacationSimpleInfoDTO> getAllMyVacations(int id) {
-        List<Vacation> vacations = vacationRepository.getAllByProfileId(id);
+    public List<VacationSimpleInfoDTO> getAllMyVacations(int id, Pageable page) {
+        List<Vacation> vacations = vacationRepository.getAllByProfileId(id, page);
         List<VacationSimpleInfoDTO> DTOs = new ArrayList<>();
 
         for (Vacation vacation : vacations) {
