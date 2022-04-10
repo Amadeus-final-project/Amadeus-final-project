@@ -110,7 +110,14 @@ public class DriverController {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
         driverService.takeAssignedPackages(officesIDs, id);
-
     }
+    @PostMapping("/checkInOffice/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void checkInOffice(@PathVariable int id, Authentication authentication) {
+        Map map = (Map) authentication.getCredentials();
+        int driverID = (int) map.get("id");
+        driverService.checkInOffice(id,driverID );
+    }
+
 
 }

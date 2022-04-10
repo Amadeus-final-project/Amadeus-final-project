@@ -5,8 +5,11 @@ import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.address.Address;
 import com.example.pds.model.address.AddressRepository;
 import com.example.pds.model.address.AddressSimpleDTO;
+import com.example.pds.model.driversOffices.DriversOffices;
+import com.example.pds.model.driversOffices.DriversOfficesRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.model.offices.Office;
 import com.example.pds.model.offices.OfficeRepository;
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.packageDTO.PackageDriverRelatedInformationDTO;
@@ -55,6 +58,8 @@ public class DriverService {
     private VacationRepository vacationRepository;
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    DriversOfficesRepository driversOfficesRepository;
 
 
     public void getVehicle(int id, int vehicleId) {
@@ -143,7 +148,7 @@ public class DriverService {
 
         PackageDriverRelatedInformationDTO pack = new PackageDriverRelatedInformationDTO();
         for (Package aPackage : listOfPackagesInMyCity) {
-            if (aPackage.getOffice().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity())&&( aPackage.getStatus()==statusRepository.findStatusById(2))){
+            if (aPackage.getOffice().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity()) && (aPackage.getStatus() == statusRepository.findStatusById(2))) {
                 pack.setOffice(aPackage.getOffice());
                 pack.setDeliveryOffice(aPackage.getDeliveryOffice());
                 packagesToReturn.add(pack);
@@ -152,7 +157,7 @@ public class DriverService {
         return packagesToReturn;
     }
 
-    public String requestVacation(int id, LocalDate startDate, LocalDate endDate, String description, VacationType vacationType ) {
+    public String requestVacation(int id, LocalDate startDate, LocalDate endDate, String description, VacationType vacationType) {
 
         DriverProfile driver = driverRepository.findByProfileId(id);
 
@@ -199,20 +204,29 @@ public class DriverService {
         return DTOs;
 
     }
-@Transactional
+
+    @Transactional
     public void takeAssignedPackages(HashSet<Integer> officesIDs, int id) {
         DriverProfile driver = driverRepository.findByProfileId(id);
-        HashSet<Integer> route =officesIDs;
+
+        for (Integer officesID : officesIDs) {
+            DriversOffices driversOffices = new DriversOffices();
+            driversOffices.setDriver(driverRepository.findByProfileId(id));
+            driversOffices.setOffice(officeRepository.getById(officesID));
+            driversOfficesRepository.save(driversOffices);
+        }
+
+        HashSet<Integer> route = officesIDs;
         List<Package> packages = packageRepository.findAll();
         List<Package> toBePickedUp = new LinkedList<>();
 
-        if (driver.getVehicle()==null){
+        if (driver.getVehicle() == null) {
             throw new BadRequestException("You dont have a car assigned");
         }
 
         Vehicle vehicle = vehicleRepository.findById(driver.getVehicle().getId());
         for (Package pack : packages) {
-            if (pack.getOffice().getAddress().getCity().equals(driver.getWorkingAddress().getCity()) &&( pack.getStatus()==statusRepository.findStatusById(2))){
+            if (pack.getOffice().getAddress().getCity().equals(driver.getWorkingAddress().getCity()) && (pack.getStatus() == statusRepository.findStatusById(2))) {
                 toBePickedUp.add(pack);
             }
 
@@ -221,7 +235,7 @@ public class DriverService {
             //TODO add priority
 
             if (route.contains(pack.getOffice().getId())) {
-                if (vehicle.getCapacity()>pack.getVolume()) {
+                if (vehicle.getCapacity() > pack.getVolume()) {
                     vehicle.setCapacity(vehicle.getCapacity() - pack.getVolume());
                     pack.setDriver(driver);
                     pack.setStatus(statusRepository.findStatusById(3));
@@ -234,25 +248,71 @@ public class DriverService {
 
     }
 
-    private String generateTrackingNumber(){
+    private String generateTrackingNumber() {
         int n = 10;
 
-            String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    + "0123456789"
-                    + "abcdefghijklmnopqrstuvxyz";
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
 
-            StringBuilder sb = new StringBuilder(n);
+        StringBuilder sb = new StringBuilder(n);
 
-            for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
 
-                int index
-                        = (int)(AlphaNumericString.length()
-                        * Math.random());
-                sb.append(AlphaNumericString
-                        .charAt(index));
+            int index
+                    = (int) (AlphaNumericString.length()
+                    * Math.random());
+            sb.append(AlphaNumericString
+                    .charAt(index));
+        }
+
+        return sb.toString();
+    }
+
+    @Transactional
+    public void checkInOffice(int id, int driverID) {
+        DriverProfile driverProfile = driverRepository.findByProfileId(driverID);
+        Office office = officeRepository.getById(id);
+        Vehicle vehicle = driverProfile.getVehicle();
+
+        List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);
+
+        for (Package aPack : packages) {
+            //status 4 -> delivered
+            aPack.setStatus(statusRepository.findStatusById(4));
+            aPack.setDriver(null);
+            aPack.setOffice(office);
+            packageRepository.save(aPack);
+
+            vehicle.setCapacity(vehicle.getCapacity() + aPack.getVolume());
+            vehicleRepository.save(vehicle);
+        }
+        driversOfficesRepository.delete(driversOfficesRepository.findByDriverAndOffice(driverProfile, office));
+        List<Package> packagesWaitingForDriverInTheCurrentOffice = packageRepository.findAllByOfficeAndStatus(office, statusRepository.findStatusById(2));
+
+        HashSet<Integer> route = new HashSet<>();
+
+        List<DriversOffices> driversOffices = driversOfficesRepository.findAllByDriver(driverProfile);
+        for (DriversOffices driversOffice : driversOffices) {
+            route.add(driversOffice.getOffice().getId());
+        }
+
+
+        for (Package aPackage : packagesWaitingForDriverInTheCurrentOffice) {
+            if (route.contains(aPackage.getDeliveryOffice().getId())) {
+                if (vehicle.getCapacity() > aPackage.getVolume()) {
+                    vehicle.setCapacity(vehicle.getCapacity() - aPackage.getVolume());
+                    aPackage.setDriver(driverProfile);
+                    aPackage.setStatus(statusRepository.findStatusById(3));
+                    aPackage.setTrackingNumber(generateTrackingNumber());
+                    packageRepository.save(aPackage);
+                    vehicleRepository.save(vehicle);
+
+                }
             }
 
-            return sb.toString();
+
+        }
     }
 }
 
