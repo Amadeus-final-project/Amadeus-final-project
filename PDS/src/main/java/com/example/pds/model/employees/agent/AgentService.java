@@ -1,9 +1,7 @@
 package com.example.pds.model.employees.agent;
 
-import com.example.pds.config.CheckViolations;
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.employees.agent.agentDTO.AgentEditProfileDTO;
-import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.PackageRepository;
 import com.example.pds.model.packages.statuses.StatusRepository;
@@ -47,7 +45,6 @@ public class AgentService {
     @Transactional
     public void editProfile(int id, AgentEditProfileDTO agentDTO) {
 
-        CheckViolations.check(validator, agentDTO);
 
         AgentProfile agent = agentRepository.findByProfileId(id);
 

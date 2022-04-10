@@ -1,6 +1,5 @@
 package com.example.pds.model.employees.driver;
 
-import com.example.pds.config.CheckViolations;
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.address.Address;
 import com.example.pds.model.address.AddressRepository;
@@ -42,8 +41,6 @@ public class DriverService {
     private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private Validator validator;
     @Autowired
     private VehicleRepository vehicleRepository;
     @Autowired
@@ -112,8 +109,6 @@ public class DriverService {
     //    public EmployeeSimpleResponseDTO editProfile(Object id, EmployeeProfileChangeDTO employeeProfileChangeDTO, Object isDriver) {
 //
     public void editProfile(int id, DriverEditProfileDTO driverDTO) {
-
-        CheckViolations.check(validator, driverDTO);
 
         DriverProfile driver = driverRepository.findByProfileId(id);
 
@@ -239,7 +234,6 @@ public class DriverService {
                     vehicle.setCapacity(vehicle.getCapacity() - pack.getVolume());
                     pack.setDriver(driver);
                     pack.setStatus(statusRepository.findStatusById(3));
-                    pack.setTrackingNumber(generateTrackingNumber());
                     packageRepository.save(pack);
                     vehicleRepository.save(vehicle);
                 }

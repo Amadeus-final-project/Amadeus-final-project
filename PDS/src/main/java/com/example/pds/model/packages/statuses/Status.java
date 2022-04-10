@@ -1,9 +1,6 @@
 package com.example.pds.model.packages.statuses;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,7 +9,9 @@ import javax.persistence.*;
 @Setter
 @Table(name = "statuses")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Status {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

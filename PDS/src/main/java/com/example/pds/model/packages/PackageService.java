@@ -1,22 +1,29 @@
 package com.example.pds.model.packages;
 
+import com.example.pds.model.offices.OfficeRepository;
 import com.example.pds.model.packages.packageDTO.PackageComplexResponseDTO;
 import com.example.pds.model.packages.packageDTO.PackageGetMyPackagesDTO;
 import com.example.pds.model.packages.packageDTO.PackageSimpleResponseDTO;
 import com.example.pds.model.packages.packageDTO.SendPackageDTO;
+import com.example.pds.model.packages.statuses.Status;
+import com.example.pds.model.packages.statuses.StatusRepository;
 import com.example.pds.model.user.UserProfile;
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.user.UserRepository;
 import com.example.pds.controllers.profiles.ProfilesRepository;
 import com.example.pds.util.exceptions.NotFoundException;
 import com.example.pds.util.exceptions.UnauthorizedException;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class PackageService {
@@ -28,25 +35,39 @@ public class PackageService {
     UserRepository userRepository;
     @Autowired
     ProfilesRepository profilesRepository;
+    @Autowired
+    OfficeRepository officeRepository;
+    @Autowired
+    DeliveryTypeRepository deliveryTypeRepository;
+    @Autowired
+    StatusRepository statusRepository;
+
 
     public PackageSimpleResponseDTO sendPackage(int id, SendPackageDTO sendPackageDTO) {
-        Profile recipient = profilesRepository.findByUsername(sendPackageDTO.getRecipient());
-
         Package currentPackage = new Package();
+
         currentPackage.setSender(userRepository.findByProfileId(id));
-
-        //currentPackage.setAddress(recipient.getAddress());
-        currentPackage.setRecipient(userRepository.findByProfileId(recipient.getId()));
-
-
-        Double volume = sendPackageDTO.getHeight() * sendPackageDTO.getWidth() * sendPackageDTO.getLength();
-        currentPackage.setVolume(volume);
-        currentPackage.setWeight(currentPackage.getWeight());
-        currentPackage.setTrackingNumber(currentPackage.getTrackingNumber());
+        currentPackage.setRecipient(userRepository.findByProfileId(profilesRepository.findByEmail(sendPackageDTO.getRecipient()).getId()));
+        currentPackage.setDeliveryOffice(officeRepository.findByName(sendPackageDTO.getDeliveryOffice()));
+        currentPackage.setTrackingNumber(String.valueOf(LocalDateTime.now().getNano()));
         currentPackage.setIsFragile(sendPackageDTO.getIsFragile());
         currentPackage.setIsSigned(sendPackageDTO.getIsSigned());
         currentPackage.setDescription(sendPackageDTO.getDescription());
         currentPackage.setWeight(sendPackageDTO.getWeight());
+        currentPackage.setOffice(officeRepository.findByName(sendPackageDTO.getDeliveryToOffice()));
+        currentPackage.setStatus(statusRepository.findStatusById(1));
+
+        Double volume = sendPackageDTO.getHeight() * sendPackageDTO.getWidth() * sendPackageDTO.getLength();
+        currentPackage.setVolume(volume);
+
+        DeliveryType deliveryType = deliveryTypeRepository.getById(sendPackageDTO.getDeliveryType());
+        currentPackage.setDeliveryType(deliveryType);
+
+        if (deliveryType.getId() == 1){
+        currentPackage.setDueDate(LocalDate.now().plusDays(1));
+        }else {
+            currentPackage.setDueDate(LocalDate.now().plusDays(2));
+        }
 
         packageRepository.save(currentPackage);
 

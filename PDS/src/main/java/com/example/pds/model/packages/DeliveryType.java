@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class DeliveryType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column
     private String type;
 }

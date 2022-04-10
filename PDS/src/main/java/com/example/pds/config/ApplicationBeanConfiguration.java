@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Properties;
+import java.util.Random;
 
 @Configuration
 public class ApplicationBeanConfiguration {
@@ -25,10 +26,7 @@ public class ApplicationBeanConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public Validator validator() {
-        return Validation.buildDefaultValidatorFactory().getValidator();
-    }
+
 
     @Bean
     public JavaMailSender getJavaMailSender() {

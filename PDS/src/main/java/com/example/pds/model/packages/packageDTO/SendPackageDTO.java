@@ -1,5 +1,6 @@
 package com.example.pds.model.packages.packageDTO;
 
+import com.example.pds.model.offices.Office;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,9 @@ import lombok.Setter;
 public class SendPackageDTO {
     private int id;
     private String recipient;
-
-    private String deliveryType;
+    private String deliveryOffice;
+    private String deliveryToOffice;
+    private Integer deliveryType;
     private Boolean isSigned;
     private Boolean isFragile;
     private String description;

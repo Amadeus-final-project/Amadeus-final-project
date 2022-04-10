@@ -40,8 +40,6 @@ public class UserService {
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
-    private Validator validator;
-    @Autowired
     private PackageRepository packageRepository;
     @Autowired
     private TransactionRepository transactionRepository;

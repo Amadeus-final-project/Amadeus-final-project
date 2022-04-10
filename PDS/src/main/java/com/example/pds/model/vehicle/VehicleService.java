@@ -33,8 +33,6 @@ public class VehicleService {
     }
 
     public VehicleComplexResponseDTO getVehicleById(int id, Object isUser, Object isLogged) {
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfUser(isUser);
 
         if (vehicleRepository.findById(id) == null) {
             throw new NotFoundException("Driver does not exist");
