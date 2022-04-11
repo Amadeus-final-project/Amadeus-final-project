@@ -89,19 +89,19 @@ public class DriverController {
 
     @GetMapping("/getAllPackagesForMe")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(Authentication authentication, Pageable page) {
+    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(Authentication authentication) {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
-        List<PackageDriverRelatedInformationDTO> dto = driverService.getAllPackagesInMyCity(id, page);
+        List<PackageDriverRelatedInformationDTO> dto = driverService.getAllPackagesInMyCity(id);
         return dto;
     }
 
     @GetMapping("/viewAllVacations")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<VacationSimpleInfoDTO> getAllVacations(Authentication authentication, Pageable page) {
+    public List<VacationSimpleInfoDTO> getAllVacations(Authentication authentication) {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
-        List<VacationSimpleInfoDTO> dto = driverService.getAllMyVacations(id, page);
+        List<VacationSimpleInfoDTO> dto = driverService.getAllMyVacations(id);
         return dto;
     }
     @PutMapping("/startWork")

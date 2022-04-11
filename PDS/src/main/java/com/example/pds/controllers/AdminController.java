@@ -8,7 +8,6 @@ import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
 import com.example.pds.model.vacations.VacationInformationDTO;
 import com.example.pds.model.vehicle.VehicleComplexDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +63,7 @@ public class AdminController {
 
     @GetMapping("/viewVacations")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<VacationInformationDTO> viewVacations(Pageable page) {
-        return adminService.getAllUnapprovedVacations(page);
+    public List<VacationInformationDTO> viewVacations() {
+        return adminService.getAllUnapprovedVacations();
     }
 }

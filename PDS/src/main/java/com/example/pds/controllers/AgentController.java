@@ -7,7 +7,6 @@ import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO
 import com.example.pds.model.vacations.VacationSimpleInfoDTO;
 import com.example.pds.model.vacations.VacationType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -57,10 +56,10 @@ public class AgentController {
 
     @GetMapping("/viewAllVacations")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<VacationSimpleInfoDTO> getAllVacations(Authentication authentication, Pageable page) {
+    public List<VacationSimpleInfoDTO> getAllVacations(Authentication authentication) {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
-        List<VacationSimpleInfoDTO> dto = agentService.getAllMyVacations(id, page);
+        List<VacationSimpleInfoDTO> dto = agentService.getAllMyVacations(id);
         return dto;
     }
 }

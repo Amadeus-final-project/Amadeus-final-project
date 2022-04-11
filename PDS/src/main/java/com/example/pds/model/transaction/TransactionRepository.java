@@ -15,5 +15,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     Transaction getTransactionById(int id);
 
     List<Transaction> findAllByPayer(UserProfile recipient, Pageable page);
-
 }
