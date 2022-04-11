@@ -14,6 +14,7 @@ import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -118,8 +119,8 @@ public class AgentService {
 
     }
 
-    public List<VacationSimpleInfoDTO> getAllMyVacations(int id) {
-        List<Vacation> vacations = vacationRepository.getAllByProfileId(id);
+    public List<VacationSimpleInfoDTO> getAllMyVacations(int id, Pageable page) {
+        List<Vacation> vacations = vacationRepository.getAllByProfileId(id, page);
 
         List<VacationSimpleInfoDTO> DTOs = new ArrayList<>();
 
