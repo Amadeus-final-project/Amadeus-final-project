@@ -20,7 +20,6 @@ import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -131,8 +130,8 @@ public class AdminService {
         agentRepository.delete(agent);
     }
 
-    public List<VacationInformationDTO> getAllUnapprovedVacations(Pageable page) {
-        List<Vacation> vacations = vacationRepository.getAllByIsApprovedFalse(page);
+    public List<VacationInformationDTO> getAllUnapprovedVacations() {
+        List<Vacation> vacations = vacationRepository.getAllByIsApprovedFalse();
 
         List<VacationInformationDTO> DTOs = new ArrayList<>();
 
