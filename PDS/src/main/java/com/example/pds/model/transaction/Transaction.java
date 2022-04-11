@@ -18,8 +18,6 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column
-    private Boolean isPaid;
     @ManyToOne
     @JoinColumn(name = "payer_id", referencedColumnName = "id")
     private Profile payer;
@@ -27,4 +25,6 @@ public class Transaction {
     private BigDecimal price;
     @Column(name = "paid_at")
     private LocalDate paidAt = LocalDate.now();
+    @Column
+    private String paymentType;
 }

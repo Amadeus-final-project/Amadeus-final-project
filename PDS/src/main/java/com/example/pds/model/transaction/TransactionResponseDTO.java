@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 public class TransactionResponseDTO {
 
     private int id;
-    private Boolean isPaid;
+    private String paymentType;
     private UserComplexResponseDTO payer;
     private BigDecimal price;
     private LocalDate paidAt;

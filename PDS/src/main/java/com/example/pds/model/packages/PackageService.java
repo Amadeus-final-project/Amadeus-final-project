@@ -7,6 +7,8 @@ import com.example.pds.model.packages.packageDTO.PackageSimpleResponseDTO;
 import com.example.pds.model.packages.packageDTO.SendPackageDTO;
 import com.example.pds.model.packages.statuses.Status;
 import com.example.pds.model.packages.statuses.StatusRepository;
+import com.example.pds.model.transaction.Transaction;
+import com.example.pds.model.transaction.TransactionRepository;
 import com.example.pds.model.user.UserProfile;
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.user.UserRepository;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,10 +45,24 @@ public class PackageService {
     DeliveryTypeRepository deliveryTypeRepository;
     @Autowired
     StatusRepository statusRepository;
-
-
+    @Autowired
+    TransactionRepository transactionRepository;
+    @Transactional
     public PackageSimpleResponseDTO sendPackage(int id, SendPackageDTO sendPackageDTO) {
         Package currentPackage = new Package();
+        Transaction transaction = new Transaction();
+        transaction.setPaidAt(LocalDate.now());
+        transaction.setPayer(profilesRepository.findById(id));
+        transaction.setPaymentType(sendPackageDTO.getPaymentType());
+        int i = sendPackageDTO.getDeliveryType();
+
+
+        // 2 == express
+        if (sendPackageDTO.getDeliveryType() == 2 ){ // multiply by 1.5 because it's express delivery
+            transaction.setPrice(BigDecimal.valueOf(sendPackageDTO.getWeight()*2.3*1.5));
+        }else
+            transaction.setPrice(BigDecimal.valueOf(sendPackageDTO.getWeight()*2.3));
+        transactionRepository.save(transaction);
 
         currentPackage.setSender(userRepository.findByProfileId(id));
         currentPackage.setRecipient(userRepository.findByProfileId(profilesRepository.findByEmail(sendPackageDTO.getRecipient()).getId()));
@@ -56,6 +74,7 @@ public class PackageService {
         currentPackage.setWeight(sendPackageDTO.getWeight());
         currentPackage.setOffice(officeRepository.findByName(sendPackageDTO.getDeliveryToOffice()));
         currentPackage.setStatus(statusRepository.findStatusById(1));
+        currentPackage.setTransaction(transaction);
 
         Double volume = sendPackageDTO.getHeight() * sendPackageDTO.getWidth() * sendPackageDTO.getLength();
         currentPackage.setVolume(volume);

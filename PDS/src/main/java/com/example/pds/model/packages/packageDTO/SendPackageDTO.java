@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -21,4 +23,5 @@ public class SendPackageDTO {
     private Double height;
     private Double width;
     private Double length;
+    private String paymentType;
 }
