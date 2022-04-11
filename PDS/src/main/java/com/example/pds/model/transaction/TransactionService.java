@@ -48,5 +48,31 @@ public class TransactionService {
         Transaction transaction = transactionRepository.getTransactionById(id);
         return modelMapper.map(transaction, TransactionResponseDTO.class);
     }
-}
 
+    public TransactionResponseDTO createTransaction (Object isAdmin, Object isLogged,TransactionResponseDTO transactionResponseDTO){
+
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
+        Transaction transaction = modelMapper.map(transactionResponseDTO, Transaction.class);
+        transactionRepository.saveAndFlush(transaction);
+        return modelMapper.map(transaction, TransactionResponseDTO.class);
+
+    }
+
+    public TransactionResponseDTO deleteTransaction (Object isAdmin, Object isLogged, int id) {
+
+        CheckAuthentications.checkIfLogged(isLogged);
+        CheckAuthentications.checkIfAdmin(isAdmin);
+
+        Transaction transaction = transactionRepository.getTransactionById(id);
+
+        if (transaction == null) {
+            throw new NotFoundException("No such transaction");
+        }
+
+        transactionRepository.delete(transaction);
+        return modelMapper.map(transaction, TransactionResponseDTO.class);
+
+    }
+}

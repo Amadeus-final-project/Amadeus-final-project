@@ -24,8 +24,8 @@ public class TransactionController {
         Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
         Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
         Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        List<TransactionResponseDTO> transaction = transactionService.getTransactions(isAdmin, isAgent, isLogged, page);
-        return transaction;
+        List<TransactionResponseDTO> transactions = transactionService.getTransactions(isAdmin, isAgent, isLogged, page);
+        return transactions;
     }
 
     @GetMapping("/{id}")
@@ -38,4 +38,23 @@ public class TransactionController {
         return transaction;
     }
 
+    @GetMapping("/createTransaction")
+    @ResponseStatus(code = HttpStatus.OK)
+    public TransactionResponseDTO createTransaction (TransactionResponseDTO transactionResponseDTO, HttpServletRequest request) {
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
+        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
+        TransactionResponseDTO transaction = transactionService.createTransaction(isAdmin, isLogged, transactionResponseDTO);
+        return transaction;
+    }
+
+    @GetMapping("/deleteTransaction")
+    @ResponseStatus(code = HttpStatus.OK)
+    public TransactionResponseDTO deleteTransaction (int id, HttpServletRequest request) {
+        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
+        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
+        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
+        TransactionResponseDTO transaction = transactionService.deleteTransaction(isAdmin, isLogged, id);
+        return transaction;
+    }
 }
