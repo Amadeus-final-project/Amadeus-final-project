@@ -12,7 +12,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class VacationInformationDTO {
 
-    private int id;
+    private int vacationId;
+
+    private int employeeId;
 
     private LocalDate startDate;
 

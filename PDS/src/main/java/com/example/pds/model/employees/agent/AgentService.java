@@ -2,14 +2,13 @@ package com.example.pds.model.employees.agent;
 
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.employees.agent.agentDTO.AgentEditProfileDTO;
+import com.example.pds.model.employees.agent.agentDTO.AgentRequestVacationDTO;
+import com.example.pds.model.packages.DeliveryType;
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.PackageRepository;
 import com.example.pds.model.packages.statuses.StatusRepository;
 import com.example.pds.controllers.profiles.ProfilesRepository;
-import com.example.pds.model.vacations.Vacation;
-import com.example.pds.model.vacations.VacationRepository;
-import com.example.pds.model.vacations.VacationSimpleInfoDTO;
-import com.example.pds.model.vacations.VacationType;
+import com.example.pds.model.vacations.*;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -42,6 +41,9 @@ public class AgentService {
     @Autowired
     VacationRepository vacationRepository;
 
+    @Autowired
+    VacationTypeRepository vacationTypeRepository;
+
     @Transactional
     public void editProfile(int id, AgentEditProfileDTO agentDTO) {
 
@@ -70,6 +72,22 @@ public class AgentService {
             throw new BadRequestException("This package isn't waiting for approval");
         }
         //status(2) -> approved
+        DeliveryType deliveryType = pack.getDeliveryType();
+
+        LocalDate dueDate = LocalDate.now();
+
+        switch (deliveryType.getType()) {
+            case "STANDARD":
+                dueDate = dueDate.plusDays(3);
+                break;
+            case "EXPRESS":
+                dueDate = dueDate.plusDays(1);
+                break;
+            default:
+                break;
+        }
+
+        pack.setDueDate(dueDate);
         pack.setStatus(statusRepository.findStatusById(2));
         packageRepository.save(pack);
 
@@ -90,11 +108,18 @@ public class AgentService {
 
     }
 
-    public String requestVacation(int id, LocalDate startDate, LocalDate endDate, String description, VacationType vacationType ) {
+    public String requestVacation(int id, AgentRequestVacationDTO dto) {
+
+        LocalDate startDate = dto.getStartDate();
+        LocalDate endDate = dto.getEndDate();
+        String description = dto.getDescription();
+        String type = dto.getVacationType();
 
         AgentProfile agent = agentRepository.findByProfileId(id);
 
         Profile profile = agent.getProfile();
+
+        VacationType vacationType = vacationTypeRepository.findByType(type);
 
         if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())) {
             throw new BadRequestException("All dates must be in the future");
@@ -106,7 +131,7 @@ public class AgentService {
 
         int lengthOfVacation = (int) ChronoUnit.DAYS.between(startDate, endDate);
 
-        if (vacationType.toString().equals("PAID_LEAVE") && lengthOfVacation > agent.getAvailablePaidLeave()) {
+        if (vacationType.getType().equals("PAID_LEAVE") && lengthOfVacation > agent.getAvailablePaidLeave()) {
             throw new BadRequestException("Not enough available paid leave days.");
         }
 
@@ -115,7 +140,6 @@ public class AgentService {
         this.vacationRepository.save(vacation);
 
         return "Vacation booked successfully.";
-
     }
 
     public List<VacationSimpleInfoDTO> getAllMyVacations(int id) {

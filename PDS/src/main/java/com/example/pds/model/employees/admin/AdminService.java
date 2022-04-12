@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Validator;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,15 +142,15 @@ public class AdminService {
     }
 
     public List<VacationInformationDTO> getAllUnapprovedVacations() {
-        List<Vacation> vacations = vacationRepository.getAllByIsApprovedFalse();
+        List<Vacation> vacations = vacationRepository.getAllByIsApprovedFalseAndIsRejectedFalse();
 
         List<VacationInformationDTO> DTOs = new ArrayList<>();
 
         for (Vacation vacation : vacations) {
             VacationInformationDTO dto = new VacationInformationDTO();
 
-
-            dto.setId(vacation.getProfile().getId());
+            dto.setVacationId(vacation.getId());
+            dto.setEmployeeId(vacation.getProfile().getId());
             dto.setStartDate(vacation.getStartDate());
             dto.setEndDate(vacation.getEndDate());
             dto.setDescription(vacation.getDescription());
@@ -171,31 +173,42 @@ public class AdminService {
         return DTOs;
     }
 
-    public String reviewVacation(VacationInformationDTO dto, boolean isApproved) {
+    public String reviewVacation(int id, boolean approved) {        
 
-        int id = dto.getId();
+        Vacation vacation = vacationRepository.findById(id);
 
-        Vacation vacation = vacationRepository.getById(id);
+        VacationInformationDTO dto = getEmployeeInformation(vacation);
 
-        if (isApproved) {
+        if (approved) {
+            if (vacation.getVacationType().getType().equals("PAID_LEAVE")) {
+                reducePaidLeave(vacation);
+            }
+
             vacation.setApproved(true);
+            vacation.setRejected(false);
             vacationRepository.save(vacation);
+
             return String.format("Vacation of employee %s %s from %s to %s approved successfully.",
                     dto.getFirstName(),
                     dto.getLastName(),
-                    dto.getStartDate().toString(),
-                    dto.getEndDate().toString());
+                    vacation.getStartDate().toString(),
+                    vacation.getEndDate().toString());
         } else {
-            return String.format("Vacation of employee %s %s from %s to %s denied.",
+            vacation.setRejected(true);
+            vacation.setApproved(false);
+            vacationRepository.save(vacation);
+            return String.format("Vacation of employee %s %s from %s to %s rejected.",
                     dto.getFirstName(),
                     dto.getLastName(),
-                    dto.getStartDate().toString(),
-                    dto.getEndDate().toString());
+                    vacation.getStartDate().toString(),
+                    vacation.getEndDate().toString());
         }
 
         //TODO: Send email to employee?
     }
-@Transactional
+
+
+    @Transactional
     public OfficeComplexResponseDTO addOffice(OfficeComplexResponseDTO officeAddDTO) {
         Address address = new Address();
         address.setCity(officeAddDTO.getCity());
@@ -213,8 +226,40 @@ public class AdminService {
     public void deleteOffice(int id) {
         if (!officeRepository.findById(id).equals(null)) {
             officeRepository.delete(officeRepository.getById(id));
-        }else {
+        } else {
             throw new NotFoundException("No office found");
+        }
+    }
+
+
+    private VacationInformationDTO getEmployeeInformation(Vacation vacation) {
+        VacationInformationDTO dto = new VacationInformationDTO();
+        if (vacation.getProfile().getRole().getId() == 2) {
+            DriverProfile driver = driverRepository.findByProfileId(vacation.getProfile().getId());
+
+            dto.setFirstName(driver.getFirstName());
+            dto.setLastName(driver.getLastName());
+
+        } else if (vacation.getProfile().getRole().getId() == 3) {
+            AgentProfile agent = agentRepository.findByProfileId(vacation.getProfile().getId());
+
+            dto.setFirstName(agent.getFirstName());
+            dto.setLastName(agent.getLastName());
+        }
+
+        return dto;
+    }
+
+    private void reducePaidLeave(Vacation vacation) {
+        int vacationLength =  (int) vacation.getStartDate().until(vacation.getEndDate(), ChronoUnit.DAYS);
+
+
+        if (vacation.getProfile().getRole().getId() == 2) {
+            DriverProfile driver = driverRepository.findByProfileId(vacation.getProfile().getId());
+            driver.setAvailablePaidLeave(driver.getAvailablePaidLeave() - vacationLength);
+        } else if (vacation.getProfile().getRole().getId() == 3) {
+            AgentProfile agent = agentRepository.findByProfileId(vacation.getProfile().getId());
+            agent.setAvailablePaidLeave(agent.getAvailablePaidLeave() - vacationLength);
         }
     }
 }

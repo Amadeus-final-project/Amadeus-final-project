@@ -33,11 +33,16 @@ public class Vacation {
     @Column
     private boolean isApproved;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
     private VacationType vacationType;
 
     @ManyToOne
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
+
+    @Column
+    private boolean isRejected;
 
     public Vacation(LocalDate startDate, LocalDate endDate, String description, VacationType vacationType, Profile profile) {
         this.startDate = startDate;
@@ -46,5 +51,6 @@ public class Vacation {
         this.isApproved = false;
         this.vacationType = vacationType;
         this.profile = profile;
+        this.isRejected = false;
     }
 }

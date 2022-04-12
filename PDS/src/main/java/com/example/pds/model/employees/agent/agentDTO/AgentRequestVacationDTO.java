@@ -1,6 +1,5 @@
 package com.example.pds.model.employees.agent.agentDTO;
 
-import com.example.pds.model.vacations.VacationType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AgentRequestVacationDTO {
 
-    private int id;
+    private int agentID;
 
     @NotBlank(message = "Please type vacation start date.")
     private LocalDate startDate;
@@ -25,5 +24,5 @@ public class AgentRequestVacationDTO {
     private String description;
 
     @NotBlank(message = "Please select vacation type.")
-    private VacationType vacationType;
+    private String vacationType;
 }

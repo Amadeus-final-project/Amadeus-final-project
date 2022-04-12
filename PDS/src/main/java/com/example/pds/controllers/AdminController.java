@@ -68,16 +68,25 @@ public class AdminController {
         return adminService.getAllUnapprovedVacations();
     }
 
+    @PostMapping("/vacation/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String reviewVacation(@PathVariable int id, @RequestBody boolean approved) {
+        return adminService.reviewVacation(id, approved);
+    }
+
+
     @PostMapping("/addOffice")
     @ResponseStatus(code = HttpStatus.OK)
-    public OfficeComplexResponseDTO addOffice(@RequestBody OfficeComplexResponseDTO officeAddDTO){
-       OfficeComplexResponseDTO dto = adminService.addOffice(officeAddDTO);
-       return dto;
+    public OfficeComplexResponseDTO addOffice(@RequestBody OfficeComplexResponseDTO officeAddDTO) {
+        OfficeComplexResponseDTO dto = adminService.addOffice(officeAddDTO);
+        return dto;
     }
+
 
     @DeleteMapping("/office/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void deleteOffice(@PathVariable int id){
+    public void deleteOffice(@PathVariable int id) {
         adminService.deleteOffice(id);
     }
+
 }

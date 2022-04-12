@@ -57,16 +57,15 @@ public class DriverController {
         return driver;
     }
 
+    //tested and works
     @PutMapping("/requestVacation")
     @ResponseStatus(code = HttpStatus.OK)
-    public String requestVacation(@RequestBody DriverRequestVacationDTO dto) {
-        int id = dto.getId();
-        LocalDate startDate = dto.getStartDate();
-        LocalDate endDate = dto.getEndDate();
-        String description = dto.getDescription();
-        VacationType vacationType = dto.getVacationType();
+    public String requestVacation(@RequestBody DriverRequestVacationDTO dto, Authentication authentication) {
 
-        return driverService.requestVacation(id, startDate, endDate, description, vacationType);
+        Map map=(Map) authentication.getCredentials();
+        int driverID =(int) map.get("id");
+
+        return driverService.requestVacation(driverID, dto);
     }
 
     @PutMapping("/edit")
@@ -96,6 +95,7 @@ public class DriverController {
         return dto;
     }
 
+    //tested and works
     @GetMapping("/viewAllVacations")
     @ResponseStatus(code = HttpStatus.OK)
     public List<VacationSimpleInfoDTO> getAllVacations(Authentication authentication) {

@@ -8,8 +8,10 @@ import java.util.List;
 @Repository
 public interface VacationRepository extends JpaRepository<Vacation, Integer> {
 
-    List<Vacation> getAllByIsApprovedFalse();
+    List<Vacation> getAllByIsApprovedFalseAndIsRejectedFalse();
 
     List<Vacation> getAllByProfileId(int id);
+
+    Vacation findById(int id);
 
 }

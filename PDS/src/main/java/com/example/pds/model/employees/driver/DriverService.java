@@ -7,6 +7,7 @@ import com.example.pds.model.address.AddressSimpleDTO;
 import com.example.pds.model.driversOffices.DriversOffices;
 import com.example.pds.model.driversOffices.DriversOfficesRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
+import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.offices.OfficeRepository;
@@ -57,7 +58,8 @@ public class DriverService {
     private StatusRepository statusRepository;
     @Autowired
     DriversOfficesRepository driversOfficesRepository;
-
+    @Autowired
+    VacationTypeRepository vacationTypeRepository;
 
     public void getVehicle(int id, int vehicleId) {
         DriverProfile driver = driverRepository.getById(id);
@@ -112,6 +114,7 @@ public class DriverService {
 
         DriverProfile driver = driverRepository.findByProfileId(id);
 
+
         if (!driver.getFirstName().equals(driverDTO.getFirstName())) {
             driver.setFirstName(driverDTO.getFirstName());
         }
@@ -152,12 +155,18 @@ public class DriverService {
         return packagesToReturn;
     }
 
-    public String requestVacation(int id, LocalDate startDate, LocalDate endDate, String description, VacationType vacationType) {
+    public String requestVacation(int id, DriverRequestVacationDTO dto) {
+
+        LocalDate startDate = dto.getStartDate();
+        LocalDate endDate = dto.getEndDate();
+        String description = dto.getDescription();
+        String type = dto.getVacationType();
 
         DriverProfile driver = driverRepository.findByProfileId(id);
 
         Profile profile = driver.getProfile();
 
+        VacationType vacationType = vacationTypeRepository.findByType(type);
 
         if (startDate.isBefore(LocalDate.now()) || endDate.isBefore(LocalDate.now())) {
             throw new BadRequestException("All dates must be in the future");
@@ -169,7 +178,7 @@ public class DriverService {
 
         int lengthOfVacation = (int) ChronoUnit.DAYS.between(startDate, endDate);
 
-        if (vacationType.toString().equals("PAID_LEAVE") && lengthOfVacation > driver.getAvailablePaidLeave()) {
+        if (vacationType.getType().equals("PAID_LEAVE") && lengthOfVacation > driver.getAvailablePaidLeave()) {
             throw new BadRequestException("Not enough available paid leave days.");
         }
 

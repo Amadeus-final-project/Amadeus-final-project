@@ -3,9 +3,7 @@ package com.example.pds.controllers;
 import com.example.pds.model.employees.agent.AgentService;
 import com.example.pds.model.employees.agent.agentDTO.AgentEditProfileDTO;
 import com.example.pds.model.employees.agent.agentDTO.AgentRequestVacationDTO;
-import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO;
 import com.example.pds.model.vacations.VacationSimpleInfoDTO;
-import com.example.pds.model.vacations.VacationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -16,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/agent")
 public class AgentController {
 
@@ -41,18 +39,18 @@ public class AgentController {
         agentService.disapprovePackage(id);
     }
 
+
+
     @PutMapping("/requestVacation")
     @ResponseStatus(code = HttpStatus.OK)
-    public String requestVacation(@RequestBody AgentRequestVacationDTO dto) {
+    public String requestVacation(@RequestBody AgentRequestVacationDTO dto, Authentication authentication) {
 
-        int id = dto.getId();
-        LocalDate startDate = dto.getStartDate();
-        LocalDate endDate = dto.getEndDate();
-        String description = dto.getDescription();
-        VacationType vacationType = dto.getVacationType();
+        Map map=(Map) authentication.getCredentials();
+        int agentID =(int) map.get("id");
 
-        return agentService.requestVacation(id, startDate, endDate, description, vacationType);
+        return agentService.requestVacation(agentID, dto);
     }
+
 
     @GetMapping("/viewAllVacations")
     @ResponseStatus(code = HttpStatus.OK)

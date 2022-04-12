@@ -26,5 +26,5 @@ public class DriverRequestVacationDTO {
     private String description;
 
     @NotBlank(message = "Please select vacation type.")
-    private VacationType vacationType;
+    private String vacationType;
 }
