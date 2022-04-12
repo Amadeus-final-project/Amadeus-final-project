@@ -20,21 +20,22 @@ public class TransactionController {
 
     @GetMapping("/getAllTransactions")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<TransactionResponseDTO> getAllTransactions(HttpServletRequest request, Pageable page) {
-        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
-        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        List<TransactionResponseDTO> transaction = transactionService.getTransactions(isAdmin, isAgent, isLogged, page);
+    public List<TransactionResponseDTO> getAllTransactions(Pageable page) {
+        List<TransactionResponseDTO> transaction = transactionService.getTransactions(page);
         return transaction;
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public TransactionResponseDTO getTransaction(@PathVariable int id, HttpServletRequest request) {
-        Object isAdmin = request.getSession().getAttribute(Constants.IS_ADMIN);
-        Object isAgent = request.getSession().getAttribute(Constants.IS_AGENT);
-        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        TransactionResponseDTO transaction = transactionService.getTransactionById(id, isAdmin, isAgent, isLogged);
+    public TransactionResponseDTO getTransaction(@PathVariable int id) {
+        TransactionResponseDTO transaction = transactionService.getTransactionById(id);
+        return transaction;
+    }
+
+    @GetMapping("/getAllTransaction/{username}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<TransactionResponseDTO> getTranscationByUser(@PathVariable String username){
+        List<TransactionResponseDTO> transaction = transactionService.getTransactionByUsername(username);
         return transaction;
     }
 

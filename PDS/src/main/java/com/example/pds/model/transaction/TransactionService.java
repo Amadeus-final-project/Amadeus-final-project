@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -18,12 +19,7 @@ public class TransactionService {
     @Autowired
     ModelMapper modelMapper;
 
-    public List<TransactionResponseDTO> getTransactions(Object isAdmin, Object isAgent, Object isLogged, Pageable page) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfAdmin(isAdmin);
-
-
+    public List<TransactionResponseDTO> getTransactions(Pageable page) {
         List<TransactionResponseDTO> responseTransactions = new ArrayList<>();
 
         List<Transaction> transactions = transactionRepository.findAll(page).getContent();
@@ -36,17 +32,22 @@ public class TransactionService {
         return responseTransactions;
     }
 
-    public TransactionResponseDTO getTransactionById(int id, Object isAdmin, Object isAgent, Object isLogged) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfAdmin(isAdmin);
-
+    public TransactionResponseDTO getTransactionById(int id) {
 
         if (transactionRepository.getTransactionById(id) == null) {
             throw new NotFoundException("Package does not exist");
         }
         Transaction transaction = transactionRepository.getTransactionById(id);
         return modelMapper.map(transaction, TransactionResponseDTO.class);
+    }
+
+    public List<TransactionResponseDTO> getTransactionByUsername(String username) {
+        List<Transaction> transactions = transactionRepository.findAllByPayerUsername(username);
+        List<TransactionResponseDTO> transactionsDto = new LinkedList<>();
+        for (Transaction transaction : transactions) {
+            transactionsDto.add(modelMapper.map(transaction,TransactionResponseDTO.class));
+        }
+        return transactionsDto;
     }
 }
 

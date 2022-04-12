@@ -9,9 +9,8 @@ import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
 import com.example.pds.model.offices.Office;
-import com.example.pds.model.offices.OfficeAddDTO;
+import com.example.pds.model.offices.OfficeComplexResponseDTO;
 import com.example.pds.model.offices.OfficeRepository;
-import com.example.pds.model.roles.Role;
 import com.example.pds.model.roles.RoleRepository;
 import com.example.pds.model.vacations.Vacation;
 import com.example.pds.model.vacations.VacationInformationDTO;
@@ -197,7 +196,7 @@ public class AdminService {
         //TODO: Send email to employee?
     }
 @Transactional
-    public OfficeAddDTO addOffice(OfficeAddDTO officeAddDTO) {
+    public OfficeComplexResponseDTO addOffice(OfficeComplexResponseDTO officeAddDTO) {
         Address address = new Address();
         address.setCity(officeAddDTO.getCity());
         address.setCountry(officeAddDTO.getCountry());
