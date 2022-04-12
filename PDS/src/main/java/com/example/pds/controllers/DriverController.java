@@ -19,7 +19,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("driver")
+@RequestMapping("/driver")
 public class DriverController {
 
     @Autowired

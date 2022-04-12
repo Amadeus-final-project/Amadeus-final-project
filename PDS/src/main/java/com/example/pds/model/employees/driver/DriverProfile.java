@@ -49,6 +49,6 @@ public class DriverProfile {
     private Address workingAddress;
 
     @Column(name = "available_paid_leave")
-    private int availablePaidLeave;
+    private Integer availablePaidLeave;
 
 }
