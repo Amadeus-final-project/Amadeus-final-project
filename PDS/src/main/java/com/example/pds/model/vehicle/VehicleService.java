@@ -19,10 +19,7 @@ public class VehicleService {
     @Autowired
     ModelMapper modelMapper;
 
-    public List<VehicleComplexResponseDTO> getAllVehicles(Object isUser, Object isLogged, Pageable page) {
-
-        CheckAuthentications.checkIfLogged(isLogged);
-        CheckAuthentications.checkIfEmployee(isUser);
+    public List<VehicleComplexResponseDTO> getAllVehicles(Pageable page) {
 
         List<VehicleComplexResponseDTO> complexVehicle = new ArrayList<>();
         List<Vehicle> vehicles = vehicleRepository.findAll(page).getContent();
@@ -32,7 +29,7 @@ public class VehicleService {
         return complexVehicle;
     }
 
-    public VehicleComplexResponseDTO getVehicleById(int id, Object isUser, Object isLogged) {
+    public VehicleComplexResponseDTO getVehicleById(int id) {
 
         if (vehicleRepository.findById(id) == null) {
             throw new NotFoundException("Driver does not exist");

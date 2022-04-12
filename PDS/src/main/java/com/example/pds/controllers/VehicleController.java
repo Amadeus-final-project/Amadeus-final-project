@@ -20,19 +20,15 @@ public class VehicleController {
 
     @GetMapping("/getAllVehicles")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<VehicleComplexResponseDTO> getAllVehicles(HttpServletRequest request, Pageable page) {
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        List<VehicleComplexResponseDTO> vehicles = vehicleService.getAllVehicles(isUser, isLogged, page);
+    public List<VehicleComplexResponseDTO> getAllVehicles(Pageable page) {
+        List<VehicleComplexResponseDTO> vehicles = vehicleService.getAllVehicles(page);
         return vehicles;
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public VehicleComplexResponseDTO getVehicle(@PathVariable int id, HttpServletRequest request) {
-        Object isUser = request.getSession().getAttribute(Constants.IS_USER);
-        Object isLogged = request.getSession().getAttribute(Constants.LOGGED);
-        VehicleComplexResponseDTO vehicle = vehicleService.getVehicleById(id, isUser, isLogged);
+    public VehicleComplexResponseDTO getVehicle(@PathVariable int id) {
+        VehicleComplexResponseDTO vehicle = vehicleService.getVehicleById(id);
         return vehicle;
     }
 }
