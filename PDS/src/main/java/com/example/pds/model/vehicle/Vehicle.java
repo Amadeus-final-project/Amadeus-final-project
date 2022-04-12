@@ -31,4 +31,10 @@ public class Vehicle {
     private Integer year;
     @Column
     private String fuelType;
+
+
+    @Override
+    public String toString() {
+        return brand.toString();
+    }
 }

@@ -17,4 +17,9 @@ public class Brand {
     private int id;
     @Column
     private String brandName;
+
+    @Override
+    public String toString() {
+        return brandName;
+    }
 }

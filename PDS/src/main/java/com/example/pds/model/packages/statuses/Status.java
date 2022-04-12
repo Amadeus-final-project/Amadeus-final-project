@@ -17,4 +17,10 @@ public class Status {
     private int id;
     @Column
     String currentStatus;
+
+    @Override
+    public String toString() {
+        return currentStatus;
+
+    }
 }

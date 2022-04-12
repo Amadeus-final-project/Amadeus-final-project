@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Setter
 @Getter
 @NoArgsConstructor
-
 public class DriverSimpleResponseDTO {
     private int id;
-    private Office lastCheckedIn;
-    private Vehicle vehicle;
+    private String lastCheckedIn;
+    private String vehicle;
+    private String firstName;
+    private String driverStatus;
 }

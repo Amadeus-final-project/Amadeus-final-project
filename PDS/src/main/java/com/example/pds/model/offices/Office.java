@@ -21,4 +21,13 @@ public class Office {
     @OneToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
+
+
+    @Override
+    public String toString() {
+        return name +
+                ", Address=" + address;
+    }
 }
+
+

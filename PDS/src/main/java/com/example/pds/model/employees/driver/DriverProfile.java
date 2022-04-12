@@ -51,4 +51,6 @@ public class DriverProfile {
     @Column(name = "available_paid_leave")
     private Integer availablePaidLeave;
 
+
+
 }
