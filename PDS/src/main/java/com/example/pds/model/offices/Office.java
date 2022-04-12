@@ -25,8 +25,7 @@ public class Office {
 
     @Override
     public String toString() {
-        return name +
-                ", Address=" + address;
+        return name + address;
     }
 }
 

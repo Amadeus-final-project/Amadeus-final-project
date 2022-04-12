@@ -28,5 +28,14 @@ public class Address {
     @Column
     private String apartmentNumber;
 
-
+    @Override
+    public String toString() {
+        return " Address" +
+                ", country:'" + country + '\'' +
+                ", city:'" + city + '\'' +
+                ", postCode:'" + postCode + '\'' +
+                ", region:'" + region + '\'' +
+                ", floor:'" + floor + '\'' +
+                ", apartmentNumber:'" + apartmentNumber;
+    }
 }
