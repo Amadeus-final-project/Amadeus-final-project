@@ -5,6 +5,7 @@ import com.example.pds.model.employees.agent.AgentProfile;
 import com.example.pds.model.employees.agent.agentDTO.AgentRegisterDTO;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
+import com.example.pds.model.offices.OfficeAddDTO;
 import com.example.pds.model.vacations.VacationInformationDTO;
 import com.example.pds.model.vehicle.VehicleComplexDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,18 @@ public class AdminController {
     @ResponseStatus(code = HttpStatus.OK)
     public List<VacationInformationDTO> viewVacations() {
         return adminService.getAllUnapprovedVacations();
+    }
+
+    @PostMapping("/addOffice")
+    @ResponseStatus(code = HttpStatus.OK)
+    public OfficeAddDTO addOffice(@RequestBody OfficeAddDTO officeAddDTO){
+       OfficeAddDTO dto = adminService.addOffice(officeAddDTO);
+       return dto;
+    }
+
+    @DeleteMapping("/office/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void deleteOffice(@PathVariable int id){
+        adminService.deleteOffice(id);
     }
 }

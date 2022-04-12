@@ -1,11 +1,16 @@
 package com.example.pds.model.employees.admin;
 
+import com.example.pds.model.address.Address;
+import com.example.pds.model.address.AddressRepository;
 import com.example.pds.model.employees.agent.AgentProfile;
 import com.example.pds.model.employees.agent.AgentRepository;
 import com.example.pds.model.employees.agent.agentDTO.AgentRegisterDTO;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverRegisterDTO;
+import com.example.pds.model.offices.Office;
+import com.example.pds.model.offices.OfficeAddDTO;
+import com.example.pds.model.offices.OfficeRepository;
 import com.example.pds.model.roles.Role;
 import com.example.pds.model.roles.RoleRepository;
 import com.example.pds.model.vacations.Vacation;
@@ -48,9 +53,14 @@ public class AdminService {
     private ProfilesRepository profilesRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private VacationRepository vacationRepository;
+
+    @Autowired
+    private OfficeRepository officeRepository;
 
 
     public void removeVehicle(int id) {
@@ -185,5 +195,27 @@ public class AdminService {
         }
 
         //TODO: Send email to employee?
+    }
+@Transactional
+    public OfficeAddDTO addOffice(OfficeAddDTO officeAddDTO) {
+        Address address = new Address();
+        address.setCity(officeAddDTO.getCity());
+        address.setCountry(officeAddDTO.getCountry());
+        address.setRegion(officeAddDTO.getRegion());
+        address.setPostCode(officeAddDTO.getPostcode());
+        addressRepository.save(address);
+        Office office = new Office();
+        office.setName(officeAddDTO.getName());
+        office.setAddress(address);
+        officeRepository.save(office);
+        return officeAddDTO;
+    }
+
+    public void deleteOffice(int id) {
+        if (!officeRepository.findById(id).equals(null)) {
+            officeRepository.delete(officeRepository.getById(id));
+        }else {
+            throw new NotFoundException("No office found");
+        }
     }
 }
