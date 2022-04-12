@@ -20,6 +20,8 @@ import com.example.pds.model.vehicle.VehicleComplexDTO;
 import com.example.pds.model.vehicle.VehicleRepository;
 import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.controllers.profiles.ProfilesRepository;
+import com.example.pds.model.vehicle.vehicleProperties.Brand;
+import com.example.pds.model.vehicle.vehicleProperties.Range;
 import com.example.pds.util.exceptions.BadRequestException;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
@@ -73,10 +75,23 @@ public class AdminService {
     }
 
     public VehicleComplexDTO addVehicle(VehicleComplexDTO vehicleComplexDTO) {
-        Vehicle vehicle = modelMapper.map(vehicleComplexDTO, Vehicle.class);
+        Vehicle vehicle = new Vehicle();
+        vehicle.setCapacity(vehicleComplexDTO.getCapacity());
+        vehicle.setIsAvailable(true);
+        Range range = new Range();
+        range.setRangeType(vehicleComplexDTO.getRange());
+        Brand brand = new Brand();
+        brand.setBrandName(vehicleComplexDTO.getBrand());
+        vehicle.setYear(vehicleComplexDTO.getYear());
+        vehicle.setFuelType(vehicleComplexDTO.getFuelType());
         vehicleRepository.save(vehicle);
         return modelMapper.map(vehicle, VehicleComplexDTO.class);
     }
+
+
+    private String fuelType;
+
+    //    private String fuelType;
 
     @Transactional
     public DriverProfile addDriver(DriverRegisterDTO driverRegisterDTO) {

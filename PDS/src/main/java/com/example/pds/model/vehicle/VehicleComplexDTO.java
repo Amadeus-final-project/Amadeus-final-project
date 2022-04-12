@@ -14,8 +14,8 @@ public class VehicleComplexDTO {
     private int id;
     private Boolean isAvailable;
     private Double capacity;
-    private Range range;
-    private Brand brand;
+    private String range;
+    private String brand;
     private Integer year;
     private String fuelType;
 

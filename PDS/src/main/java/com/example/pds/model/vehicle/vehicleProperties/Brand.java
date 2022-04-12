@@ -22,4 +22,5 @@ public class Brand {
     public String toString() {
         return brandName;
     }
+
 }
