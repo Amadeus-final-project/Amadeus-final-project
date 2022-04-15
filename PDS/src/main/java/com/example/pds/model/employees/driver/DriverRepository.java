@@ -10,4 +10,6 @@ public interface DriverRepository extends JpaRepository<DriverProfile, Integer> 
     DriverProfile findById(int id);
 
     DriverProfile findByProfileId(int id);
+
+    DriverProfile getByProfileId(int id);
 }

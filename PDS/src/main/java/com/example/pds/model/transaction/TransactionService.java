@@ -1,6 +1,5 @@
 package com.example.pds.model.transaction;
 
-import com.example.pds.config.CheckAuthentications;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

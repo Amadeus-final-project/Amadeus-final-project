@@ -1,6 +1,5 @@
 package com.example.pds.model.vehicle;
 
-import com.example.pds.config.CheckAuthentications;
 import com.example.pds.model.vehicle.vehicleProperties.VehicleComplexResponseDTO;
 import com.example.pds.util.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;

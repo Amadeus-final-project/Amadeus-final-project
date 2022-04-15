@@ -96,10 +96,13 @@ public class PackageService {
 
     public List<PackageComplexResponseDTO> getAllPackages(Pageable page) {
         List<PackageComplexResponseDTO> complexPackages = new ArrayList<>();
+        System.out.println(1);
         List<Package> packages = packageRepository.findAll(page).getContent();
+        System.out.println(2);
         for (Package package1 : packages) {
             complexPackages.add(modelMapper.map(package1, PackageComplexResponseDTO.class));
         }
+        System.out.println(3);
         return complexPackages;
     }
 

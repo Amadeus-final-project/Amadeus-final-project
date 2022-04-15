@@ -62,7 +62,7 @@ public class DriverService {
     VacationTypeRepository vacationTypeRepository;
 
     public void getVehicle(int id, int vehicleId) {
-        DriverProfile driver = driverRepository.getById(id);
+        DriverProfile driver = driverRepository.getByProfileId(id);
 
         Vehicle vehicle = vehicleRepository.getById(vehicleId);
         if (driver.getVehicle() != null) {
@@ -80,7 +80,7 @@ public class DriverService {
     }
 
     public void releaseVehicle(int id) {
-        DriverProfile driver = driverRepository.getById((id));
+        DriverProfile driver = driverRepository.getByProfileId(id);
         if (driver.getVehicle() != null) {
             Vehicle vehicle = driver.getVehicle();
             vehicle.setIsAvailable(true);
@@ -274,10 +274,10 @@ public class DriverService {
 
     @Transactional
     public void checkInOffice(int id, int driverID) {
-        DriverProfile driverProfile = driverRepository.findByProfileId(driverID);
+        DriverProfile driverProfile = driverRepository.getByProfileId(driverID);
         Office office = officeRepository.getById(id);
         Vehicle vehicle = driverProfile.getVehicle();
-
+        System.out.println(1);
         List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);
 
         for (Package aPack : packages) {
@@ -290,6 +290,7 @@ public class DriverService {
             vehicle.setCapacity(vehicle.getCapacity() + aPack.getVolume());
             vehicleRepository.save(vehicle);
         }
+        System.out.println(2);
         driversOfficesRepository.delete(driversOfficesRepository.findByDriverAndOffice(driverProfile, office));
         List<Package> packagesWaitingForDriverInTheCurrentOffice = packageRepository.findAllByOfficeAndStatus(office, statusRepository.findStatusById(2));
 
@@ -299,7 +300,7 @@ public class DriverService {
         for (DriversOffices driversOffice : driversOffices) {
             route.add(driversOffice.getOffice().getId());
         }
-
+        System.out.println(3);
 
         for (Package aPackage : packagesWaitingForDriverInTheCurrentOffice) {
             if (route.contains(aPackage.getDeliveryOffice().getId())) {

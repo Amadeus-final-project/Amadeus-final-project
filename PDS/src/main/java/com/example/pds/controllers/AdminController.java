@@ -20,7 +20,7 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @DeleteMapping("/vehicle{id}")
+    @DeleteMapping("/vehicle/{id}")
     @ResponseStatus(code = HttpStatus.OK)
     public String deleteVehicleByID(@PathVariable int id) {
         adminService.removeVehicle(id);
