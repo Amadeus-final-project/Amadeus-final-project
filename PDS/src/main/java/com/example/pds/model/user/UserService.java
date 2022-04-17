@@ -212,7 +212,7 @@ public class UserService {
    public List<TransactionResponseDTO> getAllTransactions(int id, Pageable page) {
 
         UserProfile profile = userRepository.findByProfileId(id);
-        List<Transaction> packages = transactionRepository.findAllByPayer(profile, page);
+        List<Transaction> packages = transactionRepository.findAllByPayer(profilesRepository.getById(id), page);
 
         List<TransactionResponseDTO> packagesToReturn = new ArrayList<>();
         for (Transaction transaction : packages) {

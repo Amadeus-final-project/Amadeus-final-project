@@ -1,5 +1,6 @@
 package com.example.pds.model.transaction;
 
+import com.example.pds.controllers.profiles.Profile;
 import com.example.pds.model.user.UserProfile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 
     Transaction getTransactionById(int id);
 
-    List<Transaction> findAllByPayer(UserProfile recipient, Pageable page);
+    List<Transaction> findAllByPayer(Profile recipient, Pageable page);
     List<Transaction> findAllByPayerUsername(String username);
 }
