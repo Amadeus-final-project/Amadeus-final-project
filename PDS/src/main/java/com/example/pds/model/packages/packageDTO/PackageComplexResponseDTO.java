@@ -28,7 +28,7 @@ public class PackageComplexResponseDTO {
     private Office address;
     private DriverSimpleResponseDTO driver;
     private Status status;
-    private Office office;
+    private Office currentLocation;
     private Transaction transaction;
     private DeliveryType deliveryType;
     private Double volume;

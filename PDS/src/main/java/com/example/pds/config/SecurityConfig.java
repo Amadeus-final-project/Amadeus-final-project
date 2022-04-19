@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/","/users/register","/login", "/users/forgottenPassword","/swagger-ui.html","/v2/api-docs","/configuration/ui","/swagger-resources/**","/configuration/security","/webjars/**").permitAll()
-                .antMatchers("/", "/users/**","/package/getAllMyPackages", "package/send").hasAnyAuthority("USER")
+                .antMatchers("/", "/users/**","/package/getAllMyPackages", "/package/send").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/", "/agent/**","/package/**").hasAnyAuthority("AGENT", "ADMIN")
                 .antMatchers("/", "/driver/**") .hasAnyAuthority("DRIVER", "ADMIN")
                 .antMatchers("/", "/vehicle/**") .hasAnyAuthority("DRIVER", "ADMIN")

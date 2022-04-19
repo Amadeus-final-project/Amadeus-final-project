@@ -41,7 +41,7 @@ public class Package {
     private Status status;
     @ManyToOne
     @JoinColumn(name = "current_location_office_id", referencedColumnName = "id")
-    private Office office;
+    private Office currentLocation;
     @OneToOne
     @JoinColumn(name = "transaction_id", referencedColumnName = "id")
     private Transaction transaction;

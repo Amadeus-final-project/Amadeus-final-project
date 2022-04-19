@@ -12,5 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PackageDriverRelatedInformationDTO {
     private Office deliveryOffice;
-    private Office office;
+    private Office currentLocation;
 }

@@ -24,7 +24,7 @@ public interface PackageRepository extends JpaRepository<Package, Integer> {
 
     List<Package> findAllByDriverAndDeliveryOffice(DriverProfile driverProfile, Office office);
 
-    List<Package> findAllByOfficeAndStatus(Office office, Status status);
+    List<Package> findAllByCurrentLocationAndStatus(Office office, Status status);
 
     Package findByTrackingNumber(String trackingNumber);
 }

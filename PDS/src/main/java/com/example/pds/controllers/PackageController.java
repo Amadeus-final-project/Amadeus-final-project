@@ -49,18 +49,18 @@ public class PackageController {
 
     @GetMapping("/getPendingPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Pageable page){
-        List<PackageGetMyPackagesDTO> dto = packageService.getAllPendingPackages(page);
+    public List<PackageSimpleResponseDTO> getAllPendingPackages(Pageable page){
+        List<PackageSimpleResponseDTO> dto = packageService.getAllPendingPackages(page);
         return dto;
 
     }
 
     @GetMapping("/getAllMyPackages")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication, Pageable page){
+    public List<PackageSimpleResponseDTO> getAllMyPackages(Authentication authentication, Pageable page){
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        List<PackageGetMyPackagesDTO> dtoList= packageService.getAllMyPackages(id, page);
+        List<PackageSimpleResponseDTO> dtoList= packageService.getAllMyPackages(id, page);
         return dtoList;
     }
     @GetMapping("/getAllPackagesSendByMe")

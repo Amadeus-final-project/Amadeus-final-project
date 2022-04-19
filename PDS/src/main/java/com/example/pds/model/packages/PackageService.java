@@ -72,7 +72,7 @@ public class PackageService {
         currentPackage.setIsSigned(sendPackageDTO.getIsSigned());
         currentPackage.setDescription(sendPackageDTO.getDescription());
         currentPackage.setWeight(sendPackageDTO.getWeight());
-        currentPackage.setOffice(officeRepository.findByName(sendPackageDTO.getDeliveryToOffice()));
+        currentPackage.setCurrentLocation(officeRepository.findByName(sendPackageDTO.getCurrentLocation()));
         currentPackage.setStatus(statusRepository.findStatusById(1));
         currentPackage.setTransaction(transaction);
 
@@ -87,10 +87,8 @@ public class PackageService {
         }else {
             currentPackage.setDueDate(LocalDate.now().plusDays(2));
         }
-
         packageRepository.save(currentPackage);
-
-        return modelMapper.map(currentPackage, PackageSimpleResponseDTO.class);
+        return modelMapper.map(sendPackageDTO, PackageSimpleResponseDTO.class);
 
     }
 
@@ -102,7 +100,6 @@ public class PackageService {
         for (Package package1 : packages) {
             complexPackages.add(modelMapper.map(package1, PackageComplexResponseDTO.class));
         }
-        System.out.println(3);
         return complexPackages;
     }
 
@@ -116,22 +113,22 @@ public class PackageService {
         return modelMapper.map(package1, PackageComplexResponseDTO.class);
     }
 
-    public List<PackageGetMyPackagesDTO> getAllPendingPackages(Pageable page) {
-        List<PackageGetMyPackagesDTO> packageToReturn = new ArrayList<>();
+    public List<PackageSimpleResponseDTO> getAllPendingPackages(Pageable page) {
+        List<PackageSimpleResponseDTO> packageToReturn = new ArrayList<>();
         List<Package> packages = packageRepository.findAllByStatusId(1, page);
         for (Package pack : packages) {
-            packageToReturn.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));
+            packageToReturn.add(modelMapper.map(pack, PackageSimpleResponseDTO.class));
 
         }
         return packageToReturn;
     }
 
-    public List<PackageGetMyPackagesDTO> getAllMyPackages(int userId, Pageable page) {
+    public List<PackageSimpleResponseDTO> getAllMyPackages(int userId, Pageable page) {
         UserProfile user = userRepository.findByProfileId(userId);
         List<Package> myPackages = packageRepository.findAllByRecipient(user, page).getContent();
-        List <PackageGetMyPackagesDTO> dtoList = new ArrayList<>();
+        List <PackageSimpleResponseDTO> dtoList = new ArrayList<>();
         for (Package pack : myPackages) {
-            dtoList.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));
+            dtoList.add(modelMapper.map(pack, PackageSimpleResponseDTO.class));
         }
         return dtoList;
     }

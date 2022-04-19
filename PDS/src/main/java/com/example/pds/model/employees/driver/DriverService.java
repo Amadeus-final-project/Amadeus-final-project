@@ -146,8 +146,8 @@ public class DriverService {
 
         PackageDriverRelatedInformationDTO pack = new PackageDriverRelatedInformationDTO();
         for (Package aPackage : listOfPackagesInMyCity) {
-            if (aPackage.getOffice().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity()) && (aPackage.getStatus() == statusRepository.findStatusById(2))) {
-                pack.setOffice(aPackage.getOffice());
+            if (aPackage.getCurrentLocation().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity()) && (aPackage.getStatus() == statusRepository.findStatusById(2))) {
+                pack.setCurrentLocation(aPackage.getCurrentLocation());
                 pack.setDeliveryOffice(aPackage.getDeliveryOffice());
                 packagesToReturn.add(pack);
             }
@@ -230,7 +230,7 @@ public class DriverService {
 
         Vehicle vehicle = vehicleRepository.findById(driver.getVehicle().getId());
         for (Package pack : packages) {
-            if (pack.getOffice().getAddress().getCity().equals(driver.getWorkingAddress().getCity()) && (pack.getStatus() == statusRepository.findStatusById(2))) {
+            if (pack.getCurrentLocation().getAddress().getCity().equals(driver.getWorkingAddress().getCity()) && (pack.getStatus() == statusRepository.findStatusById(2))) {
                 toBePickedUp.add(pack);
             }
 
@@ -238,7 +238,7 @@ public class DriverService {
         for (Package pack : toBePickedUp) {
             //TODO add priority
 
-            if (route.contains(pack.getOffice().getId())) {
+            if (route.contains(pack.getCurrentLocation().getId())) {
                 if (vehicle.getCapacity() > pack.getVolume()) {
                     vehicle.setCapacity(vehicle.getCapacity() - pack.getVolume());
                     pack.setDriver(driver);
@@ -283,7 +283,7 @@ public class DriverService {
             //status 4 -> delivered
             aPack.setStatus(statusRepository.findStatusById(4));
             aPack.setDriver(null);
-            aPack.setOffice(office);
+            aPack.setCurrentLocation(office);
             packageRepository.save(aPack);
 
             vehicle.setCapacity(vehicle.getCapacity() + aPack.getVolume());
@@ -291,7 +291,7 @@ public class DriverService {
         }
         System.out.println(2);
         driversOfficesRepository.delete(driversOfficesRepository.findByDriverAndOffice(driverProfile, office));
-        List<Package> packagesWaitingForDriverInTheCurrentOffice = packageRepository.findAllByOfficeAndStatus(office, statusRepository.findStatusById(2));
+        List<Package> packagesWaitingForDriverInTheCurrentOffice = packageRepository.findAllByCurrentLocationAndStatus(office, statusRepository.findStatusById(2));
 
         HashSet<Integer> route = new HashSet<>();
 

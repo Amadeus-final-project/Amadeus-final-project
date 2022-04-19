@@ -78,10 +78,6 @@ public class AdminService {
         Vehicle vehicle = new Vehicle();
         vehicle.setCapacity(vehicleComplexDTO.getCapacity());
         vehicle.setIsAvailable(true);
-        Range range = new Range();
-        range.setRangeType(vehicleComplexDTO.getRange());
-        Brand brand = new Brand();
-        brand.setBrandName(vehicleComplexDTO.getBrand());
         vehicle.setYear(vehicleComplexDTO.getYear());
         vehicle.setFuelType(vehicleComplexDTO.getFuelType());
         vehicleRepository.save(vehicle);
@@ -112,6 +108,7 @@ public class AdminService {
         driver.setLastName(driverRegisterDTO.getLastName());
         driver.setPhoneNumber(driverRegisterDTO.getPhoneNumber());
         driver.setProfile(profile);
+        driver.setAvailablePaidLeave(driverRegisterDTO.getRemainingPaidLeave());
         driverRepository.save(driver);
 
         return driver;
@@ -135,24 +132,29 @@ public class AdminService {
         agent.setLastName(agentRegisterDTO.getLastName());
         agent.setPhoneNumber(agentRegisterDTO.getPhoneNumber());
         agent.setProfile(profile);
+        agent.setAvailablePaidLeave(agentRegisterDTO.getRemainingPaidLeave());
         agentRepository.save(agent);
 
         return agent;
     }
 
+    @Transactional
     public void removeDriver(int id) {
         if (driverRepository.findById(id) == null) {
             throw new NotFoundException("No such driver");
         }
         DriverProfile driver = driverRepository.getById(id);
+        profilesRepository.delete(driver.getProfile());
         driverRepository.delete(driver);
-    }
 
+    }
+    @Transactional
     public void removeAgent(int id) {
         if (agentRepository.findById(id) == null) {
             throw new NotFoundException("No such agent");
         }
         AgentProfile agent = agentRepository.getById(id);
+        profilesRepository.delete(agent.getProfile());
         agentRepository.delete(agent);
     }
 
@@ -240,7 +242,9 @@ public class AdminService {
 
     public void deleteOffice(int id) {
         if (!officeRepository.findById(id).equals(null)) {
+            Address currentAddress = officeRepository.getById(id).getAddress();
             officeRepository.delete(officeRepository.getById(id));
+            addressRepository.delete(currentAddress);
         } else {
             throw new NotFoundException("No office found");
         }

@@ -14,7 +14,7 @@ public class SendPackageDTO {
     private int id;
     private String recipient;
     private String deliveryOffice;
-    private String deliveryToOffice;
+    private String currentLocation;
     private Integer deliveryType;
     private Boolean isSigned;
     private Boolean isFragile;
