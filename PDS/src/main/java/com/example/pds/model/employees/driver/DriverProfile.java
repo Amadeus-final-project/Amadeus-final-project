@@ -1,6 +1,7 @@
 package com.example.pds.model.employees.driver;
 
 import com.example.pds.model.address.Address;
+import com.example.pds.model.employees.employeeStatus.EmployeeStatus;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.vehicle.Vehicle;
 import com.example.pds.controllers.profiles.Profile;
@@ -29,8 +30,9 @@ public class DriverProfile {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "driver_status")
-    private String driverStatus;
+    @ManyToOne
+    @JoinColumn(name = "driver_status_id", referencedColumnName = "id")
+    private EmployeeStatus driverStatus;
 
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")

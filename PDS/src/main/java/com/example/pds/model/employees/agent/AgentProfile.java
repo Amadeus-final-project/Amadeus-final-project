@@ -1,6 +1,7 @@
 package com.example.pds.model.employees.agent;
 
 import com.example.pds.controllers.profiles.Profile;
+import com.example.pds.model.employees.employeeStatus.EmployeeStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +34,8 @@ public class AgentProfile {
     @Column(name = "available_paid_leave")
     private int availablePaidLeave;
 
-    @Column(name = "agent_status")
-    private String agentStatus;
-
+    @ManyToOne
+    @JoinColumn(name = "agent_status_id", referencedColumnName = "id")
+    private EmployeeStatus agentStatus;
 
 }

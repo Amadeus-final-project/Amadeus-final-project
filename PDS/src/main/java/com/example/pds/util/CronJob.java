@@ -1,9 +1,11 @@
 package com.example.pds.util;
 
+import com.example.pds.model.employees.employeeStatus.EmployeeStatus;
 import com.example.pds.model.employees.agent.AgentProfile;
 import com.example.pds.model.employees.agent.AgentRepository;
 import com.example.pds.model.employees.driver.DriverProfile;
 import com.example.pds.model.employees.driver.DriverRepository;
+import com.example.pds.model.employees.employeeStatus.EmployeeStatusRepository;
 import com.example.pds.model.packages.Package;
 import com.example.pds.model.packages.PackageRepository;
 import com.example.pds.controllers.profiles.Profile;
@@ -14,7 +16,6 @@ import com.example.pds.model.vacations.VacationRepository;
 import com.example.pds.model.vacations.VacationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -47,6 +48,9 @@ public class CronJob {
 
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private EmployeeStatusRepository employeeStatusRepository;
 
     @Scheduled(cron = "0 0 8 25 12 ?")
     public void christmasWish() {
@@ -112,24 +116,8 @@ public class CronJob {
         //your status should be changed to working at exactly 00:00 on 06.06.2022, and you must go to work that day.
 
         List<Vacation> vacationsEndingToday = vacationRepository.findAllByEndDateAndIsRejected(currentDate.minusDays(1), false);
-        setStatusesToWorking(vacationsEndingToday);
 
 
-    }
-
-    private void setStatusesToWorking(List<Vacation> vacationsEndingToday) {
-        for (Vacation vacation : vacationsEndingToday) {
-            Profile profile = vacation.getProfile();
-
-            Optional<AgentProfile> optionalAgent = agentRepository.findByProfile(profile);
-            Optional<DriverProfile> optionalDriver = driverRepository.findByProfile(profile);
-
-            if (optionalDriver.isPresent()) {
-                optionalDriver.get().setDriverStatus("WORKING");
-            } else if (optionalAgent.isPresent()) {
-                optionalAgent.get().setAgentStatus("WORKING");
-            }
-        }
     }
 
     private void setStatusesToVacation(List<Vacation> vacationsStartingToday) {
@@ -140,11 +128,12 @@ public class CronJob {
 
             Optional<AgentProfile> optionalAgent = agentRepository.findByProfile(profile);
             Optional<DriverProfile> optionalDriver = driverRepository.findByProfile(profile);
+            //status 2 -> vacation
 
             if (optionalDriver.isPresent()) {
-                optionalDriver.get().setDriverStatus(vacationType.getType());
+                optionalDriver.get().setDriverStatus(employeeStatusRepository.getById(2));
             } else if (optionalAgent.isPresent()) {
-                optionalAgent.get().setAgentStatus(vacationType.getType());
+                optionalAgent.get().setAgentStatus(employeeStatusRepository.getById(2));
             }
 
         }

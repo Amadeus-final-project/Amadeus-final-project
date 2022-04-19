@@ -9,6 +9,7 @@ import com.example.pds.model.driversOffices.DriversOfficesRepository;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.model.employees.employeeStatus.EmployeeStatusRepository;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.offices.OfficeRepository;
 import com.example.pds.model.packages.Package;
@@ -60,6 +61,8 @@ public class DriverService {
     DriversOfficesRepository driversOfficesRepository;
     @Autowired
     VacationTypeRepository vacationTypeRepository;
+    @Autowired
+    EmployeeStatusRepository employeeStatusRepository;
 
     public void getVehicle(int id, int vehicleId) {
         DriverProfile driver = driverRepository.getByProfileId(id);
@@ -212,6 +215,12 @@ public class DriverService {
     @Transactional
     public void takeAssignedPackages(HashSet<Integer> officesIDs, int id) {
         DriverProfile driver = driverRepository.findByProfileId(id);
+        //status 1-> working
+        if (driver.getDriverStatus()== employeeStatusRepository.getById(1)){
+            throw new BadRequestException("You are already working");
+        }
+        driver.setDriverStatus(employeeStatusRepository.getById(1));
+
 
         for (Integer officesID : officesIDs) {
             DriversOffices driversOffices = new DriversOffices();
@@ -262,6 +271,7 @@ public class DriverService {
                 }
             }
         }
+        driverRepository.save(driver);
 
     }
 
