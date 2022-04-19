@@ -213,23 +213,18 @@ public class DriverService {
     }
 
     @Transactional
-    public void takeAssignedPackages(HashSet<Integer> officesIDs, int id) {
+    public void takeAssignedPackages(HashSet<String> officesIDs, int id) {
         DriverProfile driver = driverRepository.findByProfileId(id);
-        //status 1-> working
-        if (driver.getDriverStatus()== employeeStatusRepository.getById(1)){
-            throw new BadRequestException("You are already working");
-        }
-        driver.setDriverStatus(employeeStatusRepository.getById(1));
 
-
-        for (Integer officesID : officesIDs) {
+        for (String officesID : officesIDs) {
+            int officeId = Integer.parseInt(officesID);
             DriversOffices driversOffices = new DriversOffices();
             driversOffices.setDriver(driverRepository.findByProfileId(id));
-            driversOffices.setOffice(officeRepository.getById(officesID));
+            driversOffices.setOffice(officeRepository.getById(officeId));
             driversOfficesRepository.save(driversOffices);
         }
 
-        HashSet<Integer> route = officesIDs;
+        Set<Integer> route = officesIDs.stream().map(Integer::parseInt).collect(Collectors.toSet());
         List<Package> packages = packageRepository.findAll();
         List<Package> toBePickedUp = new LinkedList<>();
 
@@ -271,7 +266,6 @@ public class DriverService {
                 }
             }
         }
-        driverRepository.save(driver);
 
     }
 

@@ -106,7 +106,7 @@ public class DriverController {
     }
     @PutMapping("/startWork")
     @ResponseStatus(code = HttpStatus.OK)
-    public void takeAssignedPackages(@RequestBody HashSet<Integer> officesIDs, Authentication authentication) {
+    public void takeAssignedPackages(@RequestBody HashSet<String> officesIDs, Authentication authentication) {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
         driverService.takeAssignedPackages(officesIDs, id);
