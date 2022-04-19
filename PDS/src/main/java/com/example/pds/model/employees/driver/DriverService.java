@@ -235,8 +235,22 @@ public class DriverService {
             }
 
         }
+
+        Collections.sort(toBePickedUp, (p1, p2) -> {
+
+            LocalDate p1DueDate = p1.getDueDate();
+            LocalDate p2DueDate = p2.getDueDate();
+
+            if (p1DueDate.isBefore(p2DueDate)) {
+                return 1;
+            } else if (p2DueDate.isBefore(p1DueDate)) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
         for (Package pack : toBePickedUp) {
-            //TODO add priority
 
             if (route.contains(pack.getOffice().getId())) {
                 if (vehicle.getCapacity() > pack.getVolume()) {
@@ -277,8 +291,9 @@ public class DriverService {
         DriverProfile driverProfile = driverRepository.getByProfileId(driverID);
         Office office = officeRepository.getById(id);
         Vehicle vehicle = driverProfile.getVehicle();
-        List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);
         System.out.println(1);
+        List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);
+
         for (Package aPack : packages) {
             //status 4 -> delivered
             aPack.setStatus(statusRepository.findStatusById(4));

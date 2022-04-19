@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/office")
+@RequestMapping("office")
 public class OfficeController {
     @Autowired
     private OfficeService officeService;

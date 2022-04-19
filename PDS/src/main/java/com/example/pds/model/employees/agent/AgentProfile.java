@@ -16,11 +16,14 @@ public class AgentProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column
+
+    @Column(name = "first_name")
     private String firstName;
-    @Column
+
+    @Column(name = "last_name")
     private String lastName;
-    @Column
+
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @OneToOne
@@ -29,4 +32,9 @@ public class AgentProfile {
 
     @Column(name = "available_paid_leave")
     private int availablePaidLeave;
+
+    @Column(name = "agent_status")
+    private String agentStatus;
+
+
 }
