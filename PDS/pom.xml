@@ -123,11 +123,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 2e58d6063342f4e838276c0b53ee6267d6449227
     </dependencies>
 
 </project>

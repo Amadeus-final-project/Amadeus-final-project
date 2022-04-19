@@ -28,7 +28,6 @@ public class PackageController {
     public PackageSimpleResponseDTO sendPackage(@RequestBody SendPackageDTO sendPackageDTO, Authentication authentication) {
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
-        System.out.println(sendPackageDTO);
         PackageSimpleResponseDTO dto = packageService.sendPackage(id, sendPackageDTO);
         return dto;
     }

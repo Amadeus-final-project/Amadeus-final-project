@@ -277,9 +277,8 @@ public class DriverService {
         DriverProfile driverProfile = driverRepository.getByProfileId(driverID);
         Office office = officeRepository.getById(id);
         Vehicle vehicle = driverProfile.getVehicle();
-        System.out.println(1);
         List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);
-
+        System.out.println(1);
         for (Package aPack : packages) {
             //status 4 -> delivered
             aPack.setStatus(statusRepository.findStatusById(4));
