@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public interface PackageRepository extends JpaRepository<Package, Integer> {
     Page<Package> findAllByRecipient(UserProfile recipient, Pageable page);
+    List<Package> findAllBySender(UserProfile sender);
 
     Page<Package> findAll(Pageable page);
 
@@ -24,4 +25,6 @@ public interface PackageRepository extends JpaRepository<Package, Integer> {
     List<Package> findAllByDriverAndDeliveryOffice(DriverProfile driverProfile, Office office);
 
     List<Package> findAllByOfficeAndStatus(Office office, Status status);
+
+    Package findByTrackingNumber(String trackingNumber);
 }
