@@ -144,5 +144,23 @@ public class PackageService {
         return modelMapper.map(myPackage,PackageGetMyPackagesDTO.class);
     }
 
+    public List<PackageGetMyPackagesDTO> getAllPackagesSendByMe(int id) {
+        UserProfile user = userRepository.findByProfileId(id);
+        List<Package> myPackages = packageRepository.findAllBySender(user);
+        List <PackageGetMyPackagesDTO> dtoList = new ArrayList<>();
+        for (Package pack : myPackages) {
+            dtoList.add(modelMapper.map(pack, PackageGetMyPackagesDTO.class));
+        }
+        return dtoList;
+    }
+
+    public PackageGetMyPackagesDTO findPackageByTrackingNumber(String trackingNumber) {
+        if (packageRepository.findByTrackingNumber(trackingNumber)==null) {
+            throw new NotFoundException("Package not found");
+        }
+        Package pack = packageRepository.findByTrackingNumber(trackingNumber);
+        return modelMapper.map(pack, PackageGetMyPackagesDTO.class);
+
+    }
 }
 

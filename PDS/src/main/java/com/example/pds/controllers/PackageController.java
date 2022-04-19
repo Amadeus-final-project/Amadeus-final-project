@@ -57,12 +57,19 @@ public class PackageController {
     }
 
     @GetMapping("/getAllMyPackages")
-    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(code = HttpStatus.OK)
     public List<PackageGetMyPackagesDTO> getAllMyPackages(Authentication authentication, Pageable page){
         Map map=(Map) authentication.getCredentials();
         int id =(int) map.get("id");
         List<PackageGetMyPackagesDTO> dtoList= packageService.getAllMyPackages(id, page);
+        return dtoList;
+    }
+    @GetMapping("/getAllPackagesSendByMe")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PackageGetMyPackagesDTO> getAllPackagesSendByMe(Authentication authentication){
+        Map map=(Map) authentication.getCredentials();
+        int id =(int) map.get("id");
+        List<PackageGetMyPackagesDTO> dtoList= packageService.getAllPackagesSendByMe(id);
         return dtoList;
     }
 
@@ -72,6 +79,13 @@ public class PackageController {
         Map map=(Map) authentication.getCredentials();
         int UserID =(int) map.get("id");
         PackageGetMyPackagesDTO dto = packageService.getMyPackage(id , UserID);
+        return dto;
+    }
+
+    @GetMapping("/getMyPackage/{trackingNumber}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public PackageGetMyPackagesDTO findPackageByTrackingNumber(@PathVariable String trackingNumber){
+        PackageGetMyPackagesDTO dto = packageService.findPackageByTrackingNumber(trackingNumber);
         return dto;
     }
 
