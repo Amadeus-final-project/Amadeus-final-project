@@ -11,8 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DriverSimpleResponseDTO {
     private int id;
-    private String lastCheckedIn;
-    private String vehicle;
+    private Office lastCheckedIn;
+    private Vehicle vehicle;
     private String firstName;
-    private String driverStatus;
 }

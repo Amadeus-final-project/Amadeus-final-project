@@ -25,7 +25,7 @@ public class PackageComplexResponseDTO {
     private String description;
     private Boolean isSigned;
     private UserSimpleResponseDTO sender;
-    private Office address;
+    private Office deliveryOffice;
     private DriverSimpleResponseDTO driver;
     private Status status;
     private Office currentLocation;

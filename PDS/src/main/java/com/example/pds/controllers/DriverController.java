@@ -5,6 +5,7 @@ import com.example.pds.model.employees.driver.DriverService;
 import com.example.pds.model.employees.driver.driverDTO.DriverEditProfileDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverRequestVacationDTO;
 import com.example.pds.model.employees.driver.driverDTO.DriverSimpleResponseDTO;
+import com.example.pds.model.packages.packageDTO.PackageComplexResponseDTO;
 import com.example.pds.model.packages.packageDTO.PackageDriverRelatedInformationDTO;
 import com.example.pds.model.vacations.VacationSimpleInfoDTO;
 import com.example.pds.model.vacations.VacationType;
@@ -88,10 +89,10 @@ public class DriverController {
 
     @GetMapping("/getAllPackagesForMe")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(Authentication authentication) {
+    public List<PackageComplexResponseDTO> getAllPackagesInMyCity(Authentication authentication) {
         Map map = (Map) authentication.getCredentials();
         int id = (int) map.get("id");
-        List<PackageDriverRelatedInformationDTO> dto = driverService.getAllPackagesInMyCity(id);
+        List<PackageComplexResponseDTO> dto = driverService.getAllPackagesInMyCity(id);
         return dto;
     }
 

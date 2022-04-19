@@ -13,6 +13,7 @@ import com.example.pds.model.employees.employeeStatus.EmployeeStatusRepository;
 import com.example.pds.model.offices.Office;
 import com.example.pds.model.offices.OfficeRepository;
 import com.example.pds.model.packages.Package;
+import com.example.pds.model.packages.packageDTO.PackageComplexResponseDTO;
 import com.example.pds.model.packages.packageDTO.PackageDriverRelatedInformationDTO;
 import com.example.pds.model.packages.PackageRepository;
 import com.example.pds.model.packages.statuses.StatusRepository;
@@ -141,14 +142,14 @@ public class DriverService {
         return modelMapper.map(address, AddressSimpleDTO.class);
     }
 
-    public List<PackageDriverRelatedInformationDTO> getAllPackagesInMyCity(int id) {
+    public List<PackageComplexResponseDTO> getAllPackagesInMyCity(int id) {
         DriverProfile driverProfile = driverRepository.findByProfileId(id);
 
         List<Package> listOfPackagesInMyCity = packageRepository.findAll();
 
-        List<PackageDriverRelatedInformationDTO> packagesToReturn = new LinkedList<>();
+        List<PackageComplexResponseDTO> packagesToReturn = new LinkedList<>();
 
-        PackageDriverRelatedInformationDTO pack = new PackageDriverRelatedInformationDTO();
+        PackageComplexResponseDTO pack = new PackageComplexResponseDTO();
         for (Package aPackage : listOfPackagesInMyCity) {
             if (aPackage.getCurrentLocation().getAddress().getCity().equals(driverProfile.getWorkingAddress().getCity()) && (aPackage.getStatus() == statusRepository.findStatusById(2))) {
                 pack.setCurrentLocation(aPackage.getCurrentLocation());
@@ -291,10 +292,10 @@ public class DriverService {
         return sb.toString();
     }
 
-    @Transactional
+
     public void checkInOffice(int id, int driverID) {
         DriverProfile driverProfile = driverRepository.getByProfileId(driverID);
-        Office office = officeRepository.getById(id);
+        Office office = officeRepository.findById(id).orElse(null);
         Vehicle vehicle = driverProfile.getVehicle();
         System.out.println(1);
         List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);
@@ -310,14 +311,20 @@ public class DriverService {
             vehicleRepository.save(vehicle);
         }
         System.out.println(2);
-        driversOfficesRepository.delete(driversOfficesRepository.findByDriverAndOffice(driverProfile, office));
+        DriversOffices driverAndOffice = driversOfficesRepository.findByDriverAndOffice(driverProfile, office);
+        if (driverAndOffice != null){
+       // driversOfficesRepository.delete(driverAndOffice);
+        driversOfficesRepository.flush();
+        }
         List<Package> packagesWaitingForDriverInTheCurrentOffice = packageRepository.findAllByCurrentLocationAndStatus(office, statusRepository.findStatusById(2));
 
         HashSet<Integer> route = new HashSet<>();
 
         List<DriversOffices> driversOffices = driversOfficesRepository.findAllByDriver(driverProfile);
+        if (driversOffices.size() > 0){
         for (DriversOffices driversOffice : driversOffices) {
             route.add(driversOffice.getOffice().getId());
+        }
         }
         System.out.println(3);
 
