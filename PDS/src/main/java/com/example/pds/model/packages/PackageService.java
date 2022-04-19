@@ -72,6 +72,7 @@ public class PackageService {
         currentPackage.setIsSigned(sendPackageDTO.getIsSigned());
         currentPackage.setDescription(sendPackageDTO.getDescription());
         currentPackage.setWeight(sendPackageDTO.getWeight());
+        System.out.println(sendPackageDTO.getCurrentLocation());
         currentPackage.setCurrentLocation(officeRepository.findByName(sendPackageDTO.getCurrentLocation()));
         currentPackage.setStatus(statusRepository.findStatusById(1));
         currentPackage.setTransaction(transaction);
@@ -118,7 +119,6 @@ public class PackageService {
         List<Package> packages = packageRepository.findAllByStatusId(1, page);
         for (Package pack : packages) {
             packageToReturn.add(modelMapper.map(pack, PackageSimpleResponseDTO.class));
-
         }
         return packageToReturn;
     }
