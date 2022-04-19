@@ -103,11 +103,11 @@ public class AgentService {
         if (pack == null) {
             throw new NotFoundException("Package Not Found");
         }
-        if (pack.getStatus().getId() == 1) {
-            throw new BadRequestException("This package is already disapproved");
+        if (pack.getStatus().getId() != 1) {
+            throw new BadRequestException("This package isn't waiting for approval");
         }
-        //status(1) -> disapproved
-        pack.setStatus(statusRepository.findStatusById(1));
+        //status(0) -> disapproved
+        pack.setStatus(statusRepository.findStatusById(0));
         packageRepository.save(pack);
 
     }

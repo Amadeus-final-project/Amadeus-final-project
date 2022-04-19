@@ -21,7 +21,7 @@ public class OfficeService {
      List<Office> allOffices =  officeRepository.findAll();
      List<OfficeComplexResponseDTO> officesDTO= new LinkedList<>();
         for (Office allOffice : allOffices) {
-            OfficeComplexResponseDTO dto = new OfficeComplexResponseDTO();
+     OfficeComplexResponseDTO dto = new OfficeComplexResponseDTO();
             dto.setCity(allOffice.getAddress().getCity());
             dto.setCountry(allOffice.getAddress().getCountry());
             dto.setRegion(allOffice.getAddress().getRegion());

@@ -35,7 +35,6 @@ public class PackageController {
     @GetMapping("/getAllPackages")
     @ResponseStatus(code = HttpStatus.OK)
     public List<PackageComplexResponseDTO> getAllPackages(Pageable page) {
-        System.out.println("omg");
         return packageService.getAllPackages(page);
     }
 
