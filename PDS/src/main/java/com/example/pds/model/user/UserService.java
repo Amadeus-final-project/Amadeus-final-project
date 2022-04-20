@@ -85,21 +85,6 @@ public class UserService {
         return modelMapper.map(userProfile, UserSimpleResponseDTO.class);
     }
 
-//    public UserSimpleResponseDTO login(LoginDTO loginDTO) {
-//
-//        CheckViolations.check(validator, loginDTO);/
-//
-//        Profile user = userRepository.findByUsername(loginDTO.getUsername());
-//
-//        if (user == null) {
-//            throw new NotFoundException("No username found");
-//        }
-//        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-//            throw new BadRequestException("Wrong credentials");
-//        }
-//
-//        return modelMapper.map(user, UserSimpleResponseDTO.class);
-//    }
     public void forgottenPassword(String email) {
         Profile profile = profilesRepository.findByEmail(email);
         if (profile == null) {

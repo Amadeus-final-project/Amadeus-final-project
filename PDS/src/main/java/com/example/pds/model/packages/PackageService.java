@@ -54,8 +54,6 @@ public class PackageService {
         transaction.setPaidAt(LocalDate.now());
         transaction.setPayer(profilesRepository.findById(id));
         transaction.setPaymentType(sendPackageDTO.getPaymentType());
-        int i = sendPackageDTO.getDeliveryType();
-
 
         // 2 == express
         if (sendPackageDTO.getDeliveryType() == 2 ){ // multiply by 1.5 because it's express delivery
@@ -72,7 +70,6 @@ public class PackageService {
         currentPackage.setIsSigned(sendPackageDTO.getIsSigned());
         currentPackage.setDescription(sendPackageDTO.getDescription());
         currentPackage.setWeight(sendPackageDTO.getWeight());
-        System.out.println(sendPackageDTO.getCurrentLocation());
         currentPackage.setCurrentLocation(officeRepository.findByName(sendPackageDTO.getCurrentLocation()));
         currentPackage.setStatus(statusRepository.findStatusById(1));
         currentPackage.setTransaction(transaction);
