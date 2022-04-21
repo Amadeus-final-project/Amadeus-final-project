@@ -68,10 +68,16 @@ public class AdminController {
         return adminService.getAllUnapprovedVacations();
     }
 
-    @PostMapping("/vacation/{id}")
+    @PostMapping("/approveVacation/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public String reviewVacation(@PathVariable int id, @RequestBody boolean approved) {
-        return adminService.reviewVacation(id, approved);
+    public String approveVacation(@PathVariable int id) {
+        return adminService.approveVacation(id);
+    }
+
+    @PostMapping("/disapproveVacation/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public String disapproveVacation(@PathVariable int id) {
+        return adminService.disapproveVacation(id);
     }
 
 

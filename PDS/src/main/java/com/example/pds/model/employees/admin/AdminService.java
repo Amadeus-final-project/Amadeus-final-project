@@ -190,13 +190,13 @@ public class AdminService {
         return DTOs;
     }
 
-    public String reviewVacation(int id, boolean approved) {        
+    public String approveVacation(int id) {
 
         Vacation vacation = vacationRepository.findById(id);
 
         VacationInformationDTO dto = getEmployeeInformation(vacation);
 
-        if (approved) {
+
             if (vacation.getVacationType().getType().equals("PAID_LEAVE")) {
                 reducePaidLeave(vacation);
             }
@@ -210,19 +210,28 @@ public class AdminService {
                     dto.getLastName(),
                     vacation.getStartDate().toString(),
                     vacation.getEndDate().toString());
-        } else {
-            vacation.setRejected(true);
-            vacation.setApproved(false);
-            vacationRepository.save(vacation);
-            return String.format("Vacation of employee %s %s from %s to %s rejected.",
-                    dto.getFirstName(),
-                    dto.getLastName(),
-                    vacation.getStartDate().toString(),
-                    vacation.getEndDate().toString());
         }
 
         //TODO: Send email to employee?
+
+    public String disapproveVacation(int id) {
+
+        Vacation vacation = vacationRepository.findById(id);
+
+        VacationInformationDTO dto = getEmployeeInformation(vacation);
+
+        vacation.setRejected(true);
+        vacation.setApproved(false);
+        vacationRepository.save(vacation);
+        return String.format("Vacation of employee %s %s from %s to %s rejected.",
+                dto.getFirstName(),
+                dto.getLastName(),
+                vacation.getStartDate().toString(),
+                vacation.getEndDate().toString());
     }
+
+
+
 
 
     @Transactional
