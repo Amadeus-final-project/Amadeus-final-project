@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class OfficeComplexResponseDTO {
+    private Integer id;
     private String name;
     private String country;
     private String city;

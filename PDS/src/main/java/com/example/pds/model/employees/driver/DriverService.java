@@ -233,6 +233,10 @@ public class DriverService {
         if (driver.getVehicle() == null) {
             throw new BadRequestException("You dont have a car assigned");
         }
+        if (driver.getDriverStatus()== employeeStatusRepository.getById(1)){
+            throw new BadRequestException("You are already working");
+        }
+        driver.setDriverStatus(employeeStatusRepository.getById(1));
 
         Vehicle vehicle = vehicleRepository.findById(driver.getVehicle().getId());
         for (Package pack : packages) {
@@ -268,6 +272,7 @@ public class DriverService {
                 }
             }
         }
+        driverRepository.save(driver);
 
     }
 
@@ -296,6 +301,8 @@ public class DriverService {
     public void checkInOffice(int id, int driverID) {
         DriverProfile driverProfile = driverRepository.getByProfileId(driverID);
         Office office = officeRepository.findById(id).orElse(null);
+        driverProfile.setLastCheckedIn(office);
+        driverRepository.save(driverProfile);
         Vehicle vehicle = driverProfile.getVehicle();
         System.out.println(1);
         List<Package> packages = packageRepository.findAllByDriverAndDeliveryOffice(driverProfile, office);

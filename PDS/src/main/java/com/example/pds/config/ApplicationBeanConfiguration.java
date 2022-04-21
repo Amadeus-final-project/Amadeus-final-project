@@ -34,8 +34,8 @@ public class ApplicationBeanConfiguration {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("pdsamadeus@gmail.com");
-        mailSender.setPassword("pdsAmadeus1!@");
+        mailSender.setUsername("amadeuspdsproject@gmail.com");
+        mailSender.setPassword("AmadeusPDSProject!1");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

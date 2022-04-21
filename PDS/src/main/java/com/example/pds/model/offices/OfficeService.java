@@ -17,11 +17,12 @@ public class OfficeService {
     ModelMapper modelMapper;
 
 
-    public List<OfficeComplexResponseDTO> getAllOffices(){
-     List<Office> allOffices =  officeRepository.findAll();
-     List<OfficeComplexResponseDTO> officesDTO= new LinkedList<>();
+    public List<OfficeComplexResponseDTO> getAllOffices() {
+        List<Office> allOffices = officeRepository.findAll();
+        List<OfficeComplexResponseDTO> officesDTO = new LinkedList<>();
         for (Office allOffice : allOffices) {
-     OfficeComplexResponseDTO dto = new OfficeComplexResponseDTO();
+            OfficeComplexResponseDTO dto = new OfficeComplexResponseDTO();
+            dto.setId(allOffice.getId());
             dto.setCity(allOffice.getAddress().getCity());
             dto.setCountry(allOffice.getAddress().getCountry());
             dto.setRegion(allOffice.getAddress().getRegion());

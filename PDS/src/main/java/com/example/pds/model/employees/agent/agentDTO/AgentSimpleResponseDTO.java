@@ -10,6 +10,7 @@ import javax.persistence.Column;
 @Getter
 @NoArgsConstructor
 public class AgentSimpleResponseDTO {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String phoneNumber;

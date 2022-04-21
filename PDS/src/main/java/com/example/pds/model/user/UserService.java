@@ -98,7 +98,7 @@ public class UserService {
         message.setFrom("pdsamadeus@abv.bg");
         message.setTo(email);
         message.setSubject("Reset password token");
-        message.setText(token);
+        message.setText("Your new password is: " + token);
         javaMailSender.send(message);
     }
 
